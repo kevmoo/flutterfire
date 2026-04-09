@@ -1,0 +1,20 @@
+name: firebase_storage_dart
+description: A pure Dart implementation of Firebase Storage using REST APIs.
+version: 0.1.0-wip
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  firebase_app_check: ^0.4.2
+  firebase_auth: ^6.3.0
+  firebase_core: ^4.6.0
+  firebase_core_platform_interface: ^6.0.3
+  firebase_storage_platform_interface: ^5.2.19
+  http: ^1.1.0
+  meta: ^1.18.0
+  mime: ^2.0.0
+  pedantic: ^1.11.0
+
+dev_dependencies:
+  test: ^1.31.0
