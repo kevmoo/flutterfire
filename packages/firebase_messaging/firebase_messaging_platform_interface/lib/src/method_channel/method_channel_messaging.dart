@@ -63,7 +63,7 @@ void _firebaseMessagingCallbackDispatcher() {
 
   // Once we've finished initializing, let the native portion of the plugin
   // know that it can start scheduling alarms.
-  _channel.invokeMethod<void>('MessagingBackground#initialized');
+  channel.invokeMethod<void>('MessagingBackground#initialized');
 }
 
 /// The entry point for accessing a Messaging.
