@@ -12,7 +12,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:http/http.dart' as http;
+import 'package:pedantic/pedantic.dart';
 
+import 'crc32c.dart';
 import 'rest_list_result.dart';
 import 'rest_task_snapshot.dart';
 
@@ -197,9 +199,38 @@ class RestReference extends ReferencePlatform {
       );
     }
 
-    return response.bodyBytes;
+    final data = response.bodyBytes;
+
+    // Checksum validation (borrowed logic from google_cloud_storage)
+    final hashHeader = response.headers['x-goog-hash'];
+    if (hashHeader != null) {
+      final hashes = _parseHashes(hashHeader.split(','));
+      if (hashes['crc32c'] case final crc32c?) {
+        final calculatedCrc32c = Crc32c()..update(data);
+        if (calculatedCrc32c.toBase64() != crc32c) {
+          throw FirebaseException(
+            plugin: 'firebase_storage',
+            code: 'checksum-mismatch',
+            message: 'CRC32C checksum mismatch.',
+          );
+        }
+      }
+    }
+
+    return data;
   }
 
+  Map<String, String> _parseHashes(List<String> hashes) {
+    final result = <String, String>{};
+    for (final hash in hashes) {
+      final equalsIndex = hash.indexOf('=');
+      if (equalsIndex != -1) {
+        result[hash.substring(0, equalsIndex).trim()] =
+            hash.substring(equalsIndex + 1).trim();
+      }
+    }
+    return result;
+  }
   FullMetadata _mapMetadata(Map<String, dynamic> data) {
     return FullMetadata({
       'bucket': data['bucket'],
@@ -287,12 +318,19 @@ class RestReference extends ReferencePlatform {
 
   @override
   TaskPlatform putData(Uint8List data, [SettableMetadata? metadata]) {
+    if (data.length > 1024 * 1024) {
+      return RestResumableUploadTask(this, data, metadata);
+    }
     return RestUploadTask(this, data, metadata);
   }
 
   @override
   TaskPlatform putFile(File file, [SettableMetadata? metadata]) {
-    return RestUploadTask(this, file.readAsBytesSync(), metadata);
+    final data = file.readAsBytesSync();
+    if (data.length > 1024 * 1024) {
+      return RestResumableUploadTask(this, data, metadata);
+    }
+    return RestUploadTask(this, data, metadata);
   }
 
   @override
@@ -500,6 +538,165 @@ class RestDownloadTask extends TaskPlatform {
         {
           'bytesTransferred': 0,
           'totalBytes': 0,
+          'path': reference.fullPath,
+        },
+      );
+      _controller.addError(e, stack);
+      _completer.completeError(e, stack);
+    } finally {
+      await _controller.close();
+    }
+  }
+
+  @override
+  Future<bool> cancel() async => false;
+
+  @override
+  Future<bool> pause() async => false;
+
+  @override
+  Future<bool> resume() async => false;
+}
+
+/// A pure Dart implementation of [TaskPlatform] for resumable uploads.
+class RestResumableUploadTask extends TaskPlatform {
+  /// Create an instance of [RestResumableUploadTask].
+  RestResumableUploadTask(this.reference, this.data, this.metadata) {
+    unawaited(_startUpload());
+  }
+
+  /// The reference to the storage object.
+  final RestReference reference;
+  /// The data to be uploaded.
+  final Uint8List data;
+  /// The metadata to be set on the storage object.
+  final SettableMetadata? metadata;
+
+  final StreamController<TaskSnapshotPlatform> _controller = StreamController.broadcast();
+  late TaskSnapshotPlatform _snapshot;
+  final Completer<TaskSnapshotPlatform> _completer = Completer();
+
+  @override
+  Stream<TaskSnapshotPlatform> get snapshotEvents => _controller.stream;
+
+  @override
+  TaskSnapshotPlatform get snapshot => _snapshot;
+
+  @override
+  Future<TaskSnapshotPlatform> get onComplete => _completer.future;
+
+  Future<void> _startUpload() async {
+    _snapshot = RestTaskSnapshot(
+      reference._storage,
+      TaskState.running,
+      {
+        'bytesTransferred': 0,
+        'totalBytes': data.length,
+        'path': reference.fullPath,
+      },
+    );
+    _controller.add(_snapshot);
+
+    try {
+      // 1. Initiate resumable upload
+      final initiateUri = reference._storage.baseUri.replace(
+        queryParameters: {
+          'uploadType': 'resumable',
+          'name': reference.fullPath.startsWith('/') ? reference.fullPath.substring(1) : reference.fullPath,
+        },
+      );
+
+      final initiateResponse = await http.post(
+        initiateUri,
+        headers: {
+          ...await reference._storage.getHeaders(),
+          'X-Goog-Upload-Protocol': 'resumable',
+          'X-Goog-Upload-Command': 'start',
+          'X-Goog-Upload-Header-Content-Length': data.length.toString(),
+          if (metadata?.contentType != null) 'X-Goog-Upload-Header-Content-Type': metadata!.contentType!,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(metadata != null ? {
+          'cacheControl': metadata!.cacheControl,
+          'contentDisposition': metadata!.contentDisposition,
+          'contentEncoding': metadata!.contentEncoding,
+          'contentLanguage': metadata!.contentLanguage,
+          'contentType': metadata!.contentType,
+          'metadata': metadata!.customMetadata,
+        } : {}),
+      );
+
+      if (initiateResponse.statusCode != 200) {
+        throw FirebaseException(
+          plugin: 'firebase_storage',
+          code: 'upload-failed',
+          message: 'Failed to initiate resumable upload: ${initiateResponse.body}',
+        );
+      }
+
+      final uploadUrl = initiateResponse.headers['x-goog-upload-url'];
+      if (uploadUrl == null) {
+        throw FirebaseException(
+          plugin: 'firebase_storage',
+          code: 'upload-failed',
+          message: 'No upload URL returned from initiation.',
+        );
+      }
+
+      final uri = Uri.parse(uploadUrl);
+
+      // 2. Upload data in chunks (or all at once for simplicity in this stab, 
+      // but using the resumable protocol).
+      // Standard GCS expects chunks to be multiples of 256KB.
+      
+      const chunkSize = 256 * 1024;
+      int offset = 0;
+
+      while (offset < data.length) {
+        final end = (offset + chunkSize < data.length) ? offset + chunkSize : data.length;
+        final chunk = data.sublist(offset, end);
+        final isLast = end == data.length;
+
+        final response = await http.put(
+          uri,
+          headers: {
+            ...await reference._storage.getHeaders(),
+            'X-Goog-Upload-Command': isLast ? 'upload, finalize' : 'upload',
+            'X-Goog-Upload-Offset': offset.toString(),
+          },
+          body: chunk,
+        );
+
+        if (response.statusCode != 200) {
+           throw FirebaseException(
+            plugin: 'firebase_storage',
+            code: 'upload-failed',
+            message: 'Failed to upload chunk: ${response.body}',
+          );
+        }
+
+        offset = end;
+        _snapshot = RestTaskSnapshot(
+          reference._storage,
+          isLast ? TaskState.success : TaskState.running,
+          {
+            'bytesTransferred': offset,
+            'totalBytes': data.length,
+            'path': reference.fullPath,
+            if (isLast) 'metadata': jsonDecode(response.body),
+          },
+        );
+        _controller.add(_snapshot);
+      }
+
+      _completer.complete(_snapshot);
+    } catch (e, stack) {
+      _snapshot = RestTaskSnapshot(
+        reference._storage,
+        TaskState.error,
+        {
+          'bytesTransferred': 0,
+          'totalBytes': data.length,
           'path': reference.fullPath,
         },
       );

@@ -2,6 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-export 'src/rest_list_result.dart';
-export 'src/rest_storage.dart';
-export 'src/rest_task_snapshot.dart';
+library firebase_storage_dart;
+
+export 'src/rest_storage.dart' show RestFirebaseStorage;

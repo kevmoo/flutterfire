@@ -21,6 +21,8 @@ environment:
 dependencies:
   firebase_core: ^4.6.0
   firebase_core_platform_interface: ^6.0.3
+  firebase_storage_dart:
+    path: ../firebase_storage_dart
   firebase_storage_platform_interface: ^5.2.19
   firebase_storage_web: ^3.11.4
   flutter:
