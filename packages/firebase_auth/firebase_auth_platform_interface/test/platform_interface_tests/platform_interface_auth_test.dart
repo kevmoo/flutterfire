@@ -341,7 +341,7 @@ void main() {
           verificationCompleted: (_) {},
           verificationFailed: (_) {},
           codeAutoRetrievalTimeout: (_) {},
-          codeSent: (_, __) {},
+          codeSent: (_, _) {},
         ),
         throwsUnimplementedError,
       );

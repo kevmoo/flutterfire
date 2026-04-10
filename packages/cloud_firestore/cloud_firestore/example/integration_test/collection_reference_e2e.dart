@@ -211,8 +211,8 @@ void runCollectionReferenceTests() {
           final foo = await initializeTest('foo');
           await foo.add({'value': 42});
           final fooConverter = foo.withConverter(
-            fromFirestore: (_, __) => null,
-            toFirestore: (_, __) => {}, // unused
+            fromFirestore: (_, _) => null,
+            toFirestore: (_, _) => {}, // unused
           );
 
           final fooConverterSnapshot = fooConverter.snapshots();

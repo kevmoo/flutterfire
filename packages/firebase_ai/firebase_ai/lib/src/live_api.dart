@@ -28,9 +28,7 @@ class PrebuiltVoiceConfig {
   /// sound demos.
   final String? voiceName;
   // ignore: public_member_api_docs
-  Map<String, Object?> toJson() => {
-    if (voiceName case final voiceName?) 'voice_name': voiceName,
-  };
+  Map<String, Object?> toJson() => {'voice_name': ?voiceName};
 }
 
 /// Configuration for the voice to be used in speech synthesis.

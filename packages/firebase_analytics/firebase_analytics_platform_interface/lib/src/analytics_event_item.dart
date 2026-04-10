@@ -140,7 +140,7 @@ class AnalyticsEventItem {
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
-      if (parameters != null) ...parameters!,
+      ...?parameters,
       if (affiliation != null) 'affiliation': affiliation,
       if (currency != null) 'currency': currency,
       if (coupon != null) 'coupon': coupon,

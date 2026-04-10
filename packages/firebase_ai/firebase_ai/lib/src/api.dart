@@ -1100,12 +1100,10 @@ class ThinkingConfig {
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
-    if (thinkingBudget case final thinkingBudget?)
-      'thinkingBudget': thinkingBudget,
+    'thinkingBudget': ?thinkingBudget,
     if (thinkingLevel case final thinkingLevel?)
       'thinkingLevel': thinkingLevel.toJson(),
-    if (includeThoughts case final includeThoughts?)
-      'includeThoughts': includeThoughts,
+    'includeThoughts': ?includeThoughts,
   };
 }
 
@@ -1202,17 +1200,13 @@ abstract class BaseGenerationConfig {
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
-    if (candidateCount case final candidateCount?)
-      'candidateCount': candidateCount,
-    if (maxOutputTokens case final maxOutputTokens?)
-      'maxOutputTokens': maxOutputTokens,
-    if (temperature case final temperature?) 'temperature': temperature,
-    if (topP case final topP?) 'topP': topP,
-    if (topK case final topK?) 'topK': topK,
-    if (presencePenalty case final presencePenalty?)
-      'presencePenalty': presencePenalty,
-    if (frequencyPenalty case final frequencyPenalty?)
-      'frequencyPenalty': frequencyPenalty,
+    'candidateCount': ?candidateCount,
+    'maxOutputTokens': ?maxOutputTokens,
+    'temperature': ?temperature,
+    'topP': ?topP,
+    'topK': ?topK,
+    'presencePenalty': ?presencePenalty,
+    'frequencyPenalty': ?frequencyPenalty,
     if (responseModalities case final responseModalities?)
       'responseModalities': responseModalities
           .map((modality) => modality.toJson())
@@ -1292,12 +1286,10 @@ final class GenerationConfig extends BaseGenerationConfig {
     ...super.toJson(),
     if (stopSequences case final stopSequences? when stopSequences.isNotEmpty)
       'stopSequences': stopSequences,
-    if (responseMimeType case final responseMimeType?)
-      'responseMimeType': responseMimeType,
+    'responseMimeType': ?responseMimeType,
     if (responseSchema case final responseSchema?)
       'responseSchema': responseSchema.toJson(),
-    if (responseJsonSchema case final responseJsonSchema?)
-      'responseJsonSchema': responseJsonSchema,
+    'responseJsonSchema': ?responseJsonSchema,
     if (thinkingConfig case final thinkingConfig?)
       'thinkingConfig': thinkingConfig.toJson(),
   };

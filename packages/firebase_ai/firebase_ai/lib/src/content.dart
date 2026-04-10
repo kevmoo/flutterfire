@@ -67,7 +67,7 @@ final class Content {
 
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
-    if (role case final role?) 'role': role,
+    'role': ?role,
     'parts': parts.map((p) {
       return p.toJson();
     }).toList(),
@@ -208,9 +208,8 @@ sealed class Part {
 
   /// Convert the [Part] content to json format.
   Object toJson() => {
-    if (isThought case final isThought?) 'thought': isThought,
-    if (_thoughtSignature case final thoughtSignature?)
-      'thoughtSignature': thoughtSignature,
+    'thought': ?isThought,
+    'thoughtSignature': ?_thoughtSignature,
   };
 }
 

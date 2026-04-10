@@ -80,7 +80,7 @@ class MessageWidget extends StatelessWidget {
             child: Column(
               children: [
                 if (text case final text?) MarkdownBody(data: text),
-                if (image case final image?) image,
+                ?image,
               ],
             ),
           ),

@@ -67,14 +67,12 @@ final class ImagenModel extends BaseApiClientModel {
 
   Map<String, Object?> _generateImagenRequest(String prompt, {String? gcsUri}) {
     final parameters = <String, Object?>{
-      if (gcsUri != null) 'storageUri': gcsUri,
+      'storageUri': ?gcsUri,
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
       if (_generationConfig?.aspectRatio case final aspectRatio?)
         'aspectRatio': aspectRatio.toJson(),
-      if (_generationConfig?.negativePrompt case final negativePrompt?)
-        'negativePrompt': negativePrompt,
-      if (_generationConfig?.addWatermark case final addWatermark?)
-        'addWatermark': addWatermark,
+      'negativePrompt': ?_generationConfig?.negativePrompt,
+      'addWatermark': ?_generationConfig?.addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
       if (_safetySettings case final safetySettings?)
@@ -152,10 +150,8 @@ final class ImagenModel extends BaseApiClientModel {
       if (config?.editMode case final editMode?) 'editMode': editMode.toJson(),
       if (config?.editSteps case final editSteps?)
         'editConfig': {'baseSteps': editSteps},
-      if (_generationConfig?.negativePrompt case final negativePrompt?)
-        'negativePrompt': negativePrompt,
-      if (_generationConfig?.addWatermark case final addWatermark?)
-        'addWatermark': addWatermark,
+      'negativePrompt': ?_generationConfig?.negativePrompt,
+      'addWatermark': ?_generationConfig?.addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
       if (_safetySettings case final safetySettings?)

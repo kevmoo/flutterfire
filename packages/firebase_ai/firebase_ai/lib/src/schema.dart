@@ -257,16 +257,16 @@ final class Schema {
   Map<String, Object> toJson() => {
     if (type != SchemaType.anyOf)
       'type': type.toJson(), // Omit the field while type is anyOf
-    if (format case final format?) 'format': format,
-    if (description case final description?) 'description': description,
-    if (title case final title?) 'title': title,
-    if (nullable case final nullable?) 'nullable': nullable,
-    if (enumValues case final enumValues?) 'enum': enumValues,
+    'format': ?format,
+    'description': ?description,
+    'title': ?title,
+    'nullable': ?nullable,
+    'enum': ?enumValues,
     if (items case final items?) 'items': items.toJson(),
-    if (minItems case final minItems?) 'minItems': minItems,
-    if (maxItems case final maxItems?) 'maxItems': maxItems,
-    if (minimum case final minimum?) 'minimum': minimum,
-    if (maximum case final maximum?) 'maximum': maximum,
+    'minItems': ?minItems,
+    'maxItems': ?maxItems,
+    'minimum': ?minimum,
+    'maximum': ?maximum,
     if (properties case final properties?)
       'properties': {
         for (final MapEntry(:key, :value) in properties.entries)
@@ -279,8 +279,7 @@ final class Schema {
                 .where((key) => !optionalProperties!.contains(key))
                 .toList()
           : properties!.keys.toList(),
-    if (propertyOrdering case final propertyOrdering?)
-      'propertyOrdering': propertyOrdering,
+    'propertyOrdering': ?propertyOrdering,
     if (anyOf case final anyOf?) 'anyOf': anyOf.map((e) => e.toJson()).toList(),
   };
 }
@@ -486,20 +485,20 @@ final class JSONSchema extends Schema {
   Map<String, Object> toJson() => {
     if (type != SchemaType.anyOf && type != SchemaType.ref)
       'type': nullable == true ? [type.name, 'null'] : type.name,
-    if (ref case final ref?) r'$ref': ref,
+    r'$ref': ?ref,
     if (defs case final defs?)
       r'$defs': {
         for (final MapEntry(:key, :value) in defs.entries) key: value.toJson(),
       },
-    if (format case final format?) 'format': format,
-    if (description case final description?) 'description': description,
-    if (title case final title?) 'title': title,
-    if (enumValues case final enumValues?) 'enum': enumValues,
+    'format': ?format,
+    'description': ?description,
+    'title': ?title,
+    'enum': ?enumValues,
     if (items case final items?) 'items': items.toJson(),
-    if (minItems case final minItems?) 'minItems': minItems,
-    if (maxItems case final maxItems?) 'maxItems': maxItems,
-    if (minimum case final minimum?) 'minimum': minimum,
-    if (maximum case final maximum?) 'maximum': maximum,
+    'minItems': ?minItems,
+    'maxItems': ?maxItems,
+    'minimum': ?minimum,
+    'maximum': ?maximum,
     if (properties case final properties?)
       'properties': {
         for (final MapEntry(:key, :value) in properties.entries)

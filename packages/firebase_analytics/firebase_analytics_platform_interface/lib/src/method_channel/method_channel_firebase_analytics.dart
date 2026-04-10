@@ -87,15 +87,11 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }) async {
     try {
       return _api.setConsent(<String, bool?>{
-        if (adStorageConsentGranted != null)
-          'adStorageConsentGranted': adStorageConsentGranted,
-        if (analyticsStorageConsentGranted != null)
-          'analyticsStorageConsentGranted': analyticsStorageConsentGranted,
-        if (adPersonalizationSignalsConsentGranted != null)
-          'adPersonalizationSignalsConsentGranted':
-              adPersonalizationSignalsConsentGranted,
-        if (adUserDataConsentGranted != null)
-          'adUserDataConsentGranted': adUserDataConsentGranted,
+        'adStorageConsentGranted': ?adStorageConsentGranted,
+        'analyticsStorageConsentGranted': ?analyticsStorageConsentGranted,
+        'adPersonalizationSignalsConsentGranted':
+            ?adPersonalizationSignalsConsentGranted,
+        'adUserDataConsentGranted': ?adUserDataConsentGranted,
       });
     } catch (e, s) {
       convertPlatformException(e, s);

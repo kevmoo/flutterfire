@@ -345,7 +345,7 @@ void main() {
           ),
           isNot(
             query.withConverter<int>(
-              fromFirestore: (_, __) => 21,
+              fromFirestore: (_, _) => 21,
               toFirestore: toFirestore,
             ),
           ),
@@ -358,7 +358,7 @@ void main() {
           isNot(
             query.withConverter<int>(
               fromFirestore: fromFirestore,
-              toFirestore: (_, __) => {},
+              toFirestore: (_, _) => {},
             ),
           ),
         );

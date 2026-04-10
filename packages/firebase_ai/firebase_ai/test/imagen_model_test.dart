@@ -25,14 +25,12 @@ Map<String, Object?> generateImagenRequest(
   ImagenSafetySettings? safetySettings,
 }) {
   final parameters = <String, Object?>{
-    if (gcsUri != null) 'storageUri': gcsUri,
+    'storageUri': ?gcsUri,
     'sampleCount': generationConfig?.numberOfImages ?? 1,
     if (generationConfig?.aspectRatio case final aspectRatio?)
       'aspectRatio': aspectRatio.toJson(),
-    if (generationConfig?.negativePrompt case final negativePrompt?)
-      'negativePrompt': negativePrompt,
-    if (generationConfig?.addWatermark case final addWatermark?)
-      'addWatermark': addWatermark,
+    'negativePrompt': ?generationConfig?.negativePrompt,
+    'addWatermark': ?generationConfig?.addWatermark,
     if (generationConfig?.imageFormat case final imageFormat?)
       'outputOption': imageFormat.toJson(),
     if (safetySettings case final safetySettings?) ...safetySettings.toJson(),
@@ -67,10 +65,8 @@ Map<String, Object?> generateImagenEditRequest(
     if (config?.editMode case final editMode?) 'editMode': editMode.toJson(),
     if (config?.editSteps case final editSteps?)
       'editConfig': {'baseSteps': editSteps},
-    if (generationConfig?.negativePrompt case final negativePrompt?)
-      'negativePrompt': negativePrompt,
-    if (generationConfig?.addWatermark case final addWatermark?)
-      'addWatermark': addWatermark,
+    'negativePrompt': ?generationConfig?.negativePrompt,
+    'addWatermark': ?generationConfig?.addWatermark,
     if (generationConfig?.imageFormat case final imageFormat?)
       'outputOption': imageFormat.toJson(),
     if (safetySettings case final safetySettings?) ...safetySettings.toJson(),
