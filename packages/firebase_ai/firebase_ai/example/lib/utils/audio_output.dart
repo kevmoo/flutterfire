@@ -69,7 +69,7 @@ class AudioOutput {
       return null;
     }
     // Play audio stream
-    handle = SoLoud.instance.play(myStream);
+    handle = await SoLoud.instance.play(myStream);
     return stream = myStream;
   }
 

@@ -9,7 +9,7 @@ environment:
   flutter: '>=3.22.0'
 
 dependencies:
-  collection: ^1.18.0
+  collection: ^1.19.1
   firebase_core: ^4.6.0
   firebase_core_web: ^3.5.1
   firebase_database_platform_interface: ^0.3.1
