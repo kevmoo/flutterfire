@@ -1,11 +1,15 @@
 part of 'movies.dart';
 
 class AddDirectorToMovieVariablesBuilder {
-  Optional<AddDirectorToMovieVariablesPersonId> _personId = Optional.optional(
-    AddDirectorToMovieVariablesPersonId.fromJson,
-    defaultSerializer,
+  final Optional<AddDirectorToMovieVariablesPersonId> _personId =
+      Optional.optional(
+        AddDirectorToMovieVariablesPersonId.fromJson,
+        defaultSerializer,
+      );
+  final Optional<String> _movieId = Optional.optional(
+    nativeFromJson,
+    nativeToJson,
   );
-  Optional<String> _movieId = Optional.optional(nativeFromJson, nativeToJson);
 
   final FirebaseDataConnect _dataConnect;
   AddDirectorToMovieVariablesBuilder personId(

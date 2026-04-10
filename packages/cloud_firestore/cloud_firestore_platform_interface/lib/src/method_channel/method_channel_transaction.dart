@@ -18,7 +18,7 @@ class MethodChannelTransaction extends TransactionPlatform {
   /// [FirebaseApp] name used for this [MethodChannelTransaction]
   final String appName;
   final String databaseId;
-  late String _transactionId;
+  late final String _transactionId;
   late FirebaseFirestorePlatform _firestore;
   FirestorePigeonFirebaseApp pigeonApp;
 
@@ -36,7 +36,7 @@ class MethodChannelTransaction extends TransactionPlatform {
     );
   }
 
-  List<PigeonTransactionCommand> _commands = [];
+  final List<PigeonTransactionCommand> _commands = [];
 
   /// Returns all transaction commands for the current instance.
   @override

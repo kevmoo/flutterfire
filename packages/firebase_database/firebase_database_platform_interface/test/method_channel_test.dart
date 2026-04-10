@@ -515,7 +515,7 @@ void main() {
 
 /// Queue whose remove operation is asynchronous, awaiting a corresponding add.
 class AsyncQueue<T> {
-  Map<int, Completer<T>> _completers = <int, Completer<T>>{};
+  final Map<int, Completer<T>> _completers = <int, Completer<T>>{};
   int _nextToRemove = 0;
   int _nextToAdd = 0;
 

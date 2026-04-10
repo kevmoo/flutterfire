@@ -19,7 +19,7 @@ abstract class ReferencePlatform extends PlatformInterface {
     : _pointer = Pointer(path),
       super(token: _token);
 
-  Pointer _pointer;
+  final Pointer _pointer;
 
   static final Object _token = Object();
 

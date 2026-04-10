@@ -160,7 +160,7 @@ abstract class MethodChannelTask extends TaskPlatform {
 
   late Stream<TaskSnapshotPlatform> _stream;
 
-  Future<String> _initialTask;
+  final Future<String> _initialTask;
 
   final int _handle;
 

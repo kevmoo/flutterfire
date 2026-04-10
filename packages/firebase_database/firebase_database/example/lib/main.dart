@@ -52,8 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
   late StreamSubscription<DatabaseEvent> _messagesSubscription;
   bool _anchorToBottom = false;
 
-  String _kTestKey = 'Hello';
-  String _kTestValue = 'world!';
+  final String _kTestKey = 'Hello';
+  final String _kTestValue = 'world!';
   FirebaseException? _error;
   bool initialized = false;
 

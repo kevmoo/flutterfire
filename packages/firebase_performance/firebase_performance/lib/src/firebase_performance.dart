@@ -22,7 +22,8 @@ class FirebasePerformance extends FirebasePluginPlatform {
     return FirebasePerformance.instanceFor(app: defaultAppInstance);
   }
 
-  static Map<String, FirebasePerformance> _firebasePerformanceInstances = {};
+  static final Map<String, FirebasePerformance> _firebasePerformanceInstances =
+      {};
 
   /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
   FirebaseApp app;

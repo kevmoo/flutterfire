@@ -34,11 +34,11 @@ typedef EnsurePluginInitialized =
 ///
 /// You can get an instance by calling [FirebaseCore.instance].
 class FirebaseCoreWeb extends FirebasePlatform {
-  static Map<String, FirebaseWebService> _services = {
+  static final Map<String, FirebaseWebService> _services = {
     'core': FirebaseWebService._('app', override: 'core'),
   };
 
-  static Map<String, String> _libraryVersions = {};
+  static final Map<String, String> _libraryVersions = {};
 
   /// Internally registers a Firebase Service to be initialized.
   static void registerService(

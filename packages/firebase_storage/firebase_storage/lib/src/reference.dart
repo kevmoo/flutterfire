@@ -12,7 +12,7 @@ class Reference {
     ReferencePlatform.verify(_delegate);
   }
 
-  ReferencePlatform _delegate;
+  final ReferencePlatform _delegate;
 
   /// The storage service associated with this reference.
   final FirebaseStorage storage;

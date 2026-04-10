@@ -17,9 +17,9 @@ class ListResultWeb extends ListResultPlatform {
        _prefixes = prefixes ?? [],
        super(storage, nextPageToken);
 
-  List<String> _items;
+  final List<String> _items;
 
-  List<String> _prefixes;
+  final List<String> _prefixes;
 
   @override
   List<ReferencePlatform> get items {

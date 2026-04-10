@@ -36,7 +36,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   /// registering the web delegates or listeners.
   FirebaseAuthWeb._() : _webAuth = null, super(appInstance: null);
 
-  Completer<void> _initialized = Completer();
+  final Completer<void> _initialized = Completer();
 
   /// The entry point for the [FirebaseAuthWeb] class.
   FirebaseAuthWeb({required FirebaseApp app}) : super(appInstance: app) {
@@ -90,14 +90,14 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         RecaptchaVerifierFactoryWeb.instance;
   }
 
-  static Map<String, StreamController<UserPlatform?>>
+  static final Map<String, StreamController<UserPlatform?>>
   _authStateChangesListeners = <String, StreamController<UserPlatform?>>{};
 
-  static Map<String, StreamController<UserPlatform?>> _idTokenChangesListeners =
-      <String, StreamController<UserPlatform?>>{};
+  static final Map<String, StreamController<UserPlatform?>>
+  _idTokenChangesListeners = <String, StreamController<UserPlatform?>>{};
 
-  static Map<String, StreamController<UserPlatform?>> _userChangesListeners =
-      <String, StreamController<UserPlatform?>>{};
+  static final Map<String, StreamController<UserPlatform?>>
+  _userChangesListeners = <String, StreamController<UserPlatform?>>{};
 
   /// Initializes a stub instance to allow the class to be registered.
   static FirebaseAuthWeb get instance {

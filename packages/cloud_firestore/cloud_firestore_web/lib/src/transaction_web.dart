@@ -15,7 +15,7 @@ class TransactionWeb extends TransactionPlatform {
   final firestore_interop.Firestore _webFirestoreDelegate;
   final firestore_interop.Transaction _webTransactionDelegate;
 
-  FirebaseFirestorePlatform _firestore;
+  final FirebaseFirestorePlatform _firestore;
 
   /// Constructor.
   TransactionWeb(

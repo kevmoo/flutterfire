@@ -9,7 +9,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalytics._({required this.app, this.webOptions})
     : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
-  static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
+  static final Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
 
   final Map<String, dynamic>? webOptions;
 

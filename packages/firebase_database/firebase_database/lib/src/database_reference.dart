@@ -13,7 +13,7 @@ part of '../firebase_database.dart';
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 class DatabaseReference extends Query {
-  DatabaseReferencePlatform _delegate;
+  final DatabaseReferencePlatform _delegate;
 
   DatabaseReference._(this._delegate) : super._(_delegate);
 

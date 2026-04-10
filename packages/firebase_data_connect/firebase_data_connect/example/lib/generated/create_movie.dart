@@ -4,8 +4,11 @@ class CreateMovieVariablesBuilder {
   String title;
   int releaseYear;
   String genre;
-  Optional<double> _rating = Optional.optional(nativeFromJson, nativeToJson);
-  Optional<String> _description = Optional.optional(
+  final Optional<double> _rating = Optional.optional(
+    nativeFromJson,
+    nativeToJson,
+  );
+  final Optional<String> _description = Optional.optional(
     nativeFromJson,
     nativeToJson,
   );

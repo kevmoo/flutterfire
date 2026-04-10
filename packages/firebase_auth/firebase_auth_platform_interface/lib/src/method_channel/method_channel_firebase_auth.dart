@@ -31,7 +31,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   static Map<String, MethodChannelFirebaseAuth>
   methodChannelFirebaseAuthInstances = <String, MethodChannelFirebaseAuth>{};
 
-  static Map<String, MethodChannelMultiFactor> _multiFactorInstances =
+  static final Map<String, MethodChannelMultiFactor> _multiFactorInstances =
       <String, MethodChannelMultiFactor>{};
 
   static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>

@@ -24,7 +24,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   final FirestorePigeonFirebaseApp pigeonApp;
 
   /// Keeps track of all batch writes in order.
-  List<PigeonTransactionCommand> _writes = [];
+  final List<PigeonTransactionCommand> _writes = [];
 
   /// The committed state of this batch.
   ///

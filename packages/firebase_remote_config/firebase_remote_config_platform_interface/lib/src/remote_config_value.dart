@@ -38,7 +38,7 @@ class RemoteConfigValue {
   /// Default value for Bool
   static const bool defaultValueForBool = false;
 
-  List<int>? _value;
+  final List<int>? _value;
 
   /// Indicates at which source this value came from.
   final ValueSource source;

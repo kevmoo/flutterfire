@@ -1,7 +1,10 @@
 part of 'movies.dart';
 
 class AddPersonVariablesBuilder {
-  Optional<String> _name = Optional.optional(nativeFromJson, nativeToJson);
+  final Optional<String> _name = Optional.optional(
+    nativeFromJson,
+    nativeToJson,
+  );
 
   final FirebaseDataConnect _dataConnect;
   AddPersonVariablesBuilder name(String? t) {

@@ -9,9 +9,9 @@ import 'method_channel_data_snapshot.dart';
 class MethodChannelTransactionResult extends TransactionResultPlatform {
   MethodChannelTransactionResult(super.committed, this._ref, this._snapshot);
 
-  DatabaseReferencePlatform _ref;
+  final DatabaseReferencePlatform _ref;
 
-  Map<String, dynamic> _snapshot;
+  final Map<String, dynamic> _snapshot;
 
   @override
   DataSnapshotPlatform get snapshot {

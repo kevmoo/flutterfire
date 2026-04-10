@@ -53,7 +53,7 @@ abstract class OperationRef<Data, Variables> {
   );
   Variables? variables;
   String operationName;
-  DataConnectTransport _transport;
+  final DataConnectTransport _transport;
   Deserializer<Data> deserializer;
   Serializer<Variables> serializer;
   String? _lastToken;
@@ -240,7 +240,7 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
         variables,
       );
 
-  QueryManager _queryManager;
+  final QueryManager _queryManager;
 
   @override
   Future<QueryResult<Data, Variables>> execute({

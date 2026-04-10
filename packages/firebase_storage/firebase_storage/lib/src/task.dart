@@ -11,7 +11,7 @@ abstract class Task implements Future<TaskSnapshot> {
     TaskPlatform.verify(_delegate);
   }
 
-  TaskPlatform _delegate;
+  final TaskPlatform _delegate;
 
   /// The [FirebaseStorage] instance associated with this task.
   final FirebaseStorage storage;

@@ -11,7 +11,7 @@ class TaskSnapshot {
     TaskSnapshotPlatform.verify(_delegate);
   }
 
-  TaskSnapshotPlatform _delegate;
+  final TaskSnapshotPlatform _delegate;
 
   /// The [FirebaseStorage] instance used to create the task.
   final FirebaseStorage storage;

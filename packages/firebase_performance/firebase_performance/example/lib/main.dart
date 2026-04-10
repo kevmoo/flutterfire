@@ -69,7 +69,7 @@ class _MetricHttpClient extends BaseClient {
 }
 
 class _MyAppState extends State<MyApp> {
-  FirebasePerformance _performance = FirebasePerformance.instance;
+  final FirebasePerformance _performance = FirebasePerformance.instance;
   bool _isPerformanceCollectionEnabled = false;
   String _performanceCollectionMessage =
       'Unknown status of performance collection.';

@@ -12,7 +12,7 @@ class ListResult {
     ListResultPlatform.verify(_delegate);
   }
 
-  ListResultPlatform _delegate;
+  final ListResultPlatform _delegate;
 
   /// The [FirebaseStorage] instance for this result.
   final FirebaseStorage storage;

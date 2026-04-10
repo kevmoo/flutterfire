@@ -8,7 +8,7 @@ import 'package:firebase_database_platform_interface/firebase_database_platform_
 class MethodChannelDataSnapshot extends DataSnapshotPlatform {
   MethodChannelDataSnapshot(this._ref, this._data) : super(_ref, _data);
 
-  DatabaseReferencePlatform _ref;
+  final DatabaseReferencePlatform _ref;
 
   final Map<String, dynamic> _data;
 

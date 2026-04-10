@@ -44,7 +44,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   static final Map<String, StreamController<String?>> _tokenChangesListeners =
       {};
 
-  static Map<String, MethodChannelFirebaseAppCheck>
+  static final Map<String, MethodChannelFirebaseAppCheck>
   _methodChannelFirebaseAppCheckInstances =
       <String, MethodChannelFirebaseAppCheck>{};
 

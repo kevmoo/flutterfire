@@ -60,7 +60,7 @@ class GoogleAuthProvider extends AuthProvider {
     return _kProviderId;
   }
 
-  List<String> _scopes = [];
+  final List<String> _scopes = [];
   Map<dynamic, dynamic> _parameters = {};
 
   /// Returns the currently assigned scopes to this provider instance.

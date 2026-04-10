@@ -1,7 +1,7 @@
 part of 'movies.dart';
 
 class ThingVariablesBuilder {
-  Optional<AnyValue> _title = Optional.optional(
+  final Optional<AnyValue> _title = Optional.optional(
     AnyValue.fromJson,
     defaultSerializer,
   );

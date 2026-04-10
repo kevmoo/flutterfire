@@ -57,7 +57,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// The [MethodChannelFirebaseStorage] method channel.
   static const MethodChannel channel = MethodChannel(storageMethodChannelName);
 
-  static Map<String, MethodChannelFirebaseStorage>
+  static final Map<String, MethodChannelFirebaseStorage>
   _methodChannelFirebaseStorageInstances =
       <String, MethodChannelFirebaseStorage>{};
 
