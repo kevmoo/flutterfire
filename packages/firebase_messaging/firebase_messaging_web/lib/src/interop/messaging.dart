@@ -86,16 +86,17 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     StreamController<MessagePayload>? _controller = controller;
     if (_controller == null) {
       _controller = StreamController.broadcast(sync: true);
-      final nextWrapper = (JSAny payload) {
+      void nextWrapper(JSAny payload) {
         _controller!.add(
           MessagePayload._fromJsObject(
             payload as messaging_interop.MessagePayloadJsImpl,
           ),
         );
-      };
-      final errorWrapper = (JSError e) {
+      }
+
+      void errorWrapper(JSError e) {
         _controller!.addError(e);
-      };
+      }
 
       messaging_interop.onMessage(
         jsObject,

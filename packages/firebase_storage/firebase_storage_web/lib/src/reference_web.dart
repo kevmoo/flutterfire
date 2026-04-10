@@ -184,24 +184,24 @@ class ReferenceWeb extends ReferencePlatform {
     PutStringFormat format, [
     SettableMetadata? metadata,
   ]) {
-    late Uint8List _data;
+    late Uint8List data0;
 
     // The universal package is converting raw to base64, so we need to convert
     // Any base64 string values into a Uint8List.
     if (format == PutStringFormat.base64) {
-      _data = base64Decode(data);
+      data0 = base64Decode(data);
     } else if (format == PutStringFormat.base64Url) {
-      _data = base64Url.decode(data);
+      data0 = base64Url.decode(data);
     } else {
       // If the format is not base64 or base64Url, we need to encode the data
       // as a base64 string.
-      _data = Uint8List.fromList(base64Encode(utf8.encode(data)).codeUnits);
+      data0 = Uint8List.fromList(base64Encode(utf8.encode(data)).codeUnits);
     }
 
     return TaskWeb(
       this,
       _ref.put(
-        _data.toJS,
+        data0.toJS,
         settableMetadataToFbUploadMetadata(
           _cache.store(metadata),
           // md5 is computed server-side, so we don't have to unpack a potentially huge Blob.

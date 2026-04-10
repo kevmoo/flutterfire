@@ -164,15 +164,16 @@ class RemoteConfig
     if (_onConfigUpdatedController == null) {
       _onConfigUpdatedController =
           StreamController<RemoteConfigUpdatePayload>.broadcast(sync: true);
-      final errorWrapper = (JSObject error) {
+      void errorWrapper(JSObject error) {
         _onConfigUpdatedController?.addError(error);
-      };
-      final nextWrapper =
-          (remote_config_interop.ConfigUpdateJsImpl configUpdate) {
-            _onConfigUpdatedController?.add(
-              RemoteConfigUpdatePayload._fromJsObject(configUpdate),
-            );
-          };
+      }
+
+      void nextWrapper(remote_config_interop.ConfigUpdateJsImpl configUpdate) {
+        _onConfigUpdatedController?.add(
+          RemoteConfigUpdatePayload._fromJsObject(configUpdate),
+        );
+      }
+
       remote_config_interop.ConfigUpdateObserver observer =
           remote_config_interop.ConfigUpdateObserver(
             error: errorWrapper.toJS,
@@ -248,9 +249,10 @@ class RemoteConfigUpdatePayload
 
   Set<String> get updatedKeys {
     final updatedKeysSet = <String>{};
-    final callback = (JSAny key, JSString value, JSAny set) {
+    void callback(JSAny key, JSString value, JSAny set) {
       updatedKeysSet.add(value.toDart);
-    };
+    }
+
     jsObject.getUpdatedKeys().forEach(callback.toJS);
     return updatedKeysSet;
   }

@@ -94,8 +94,8 @@ FirebaseAuthException getFirebaseAuthException(
   final customData = exception.customData as auth_interop.AuthErrorCustomData;
 
   if (code == 'multi-factor-auth-required') {
-    final _auth = auth;
-    if (_auth == null) {
+    final auth0 = auth;
+    if (auth0 == null) {
       throw ArgumentError(
         'Multi-factor authentication is required, but the auth instance is null. '
         'Please ensure that the auth instance is not null before calling '
@@ -103,7 +103,7 @@ FirebaseAuthException getFirebaseAuthException(
       );
     }
     final resolverWeb = multi_factor_interop.getMultiFactorResolver(
-      _auth,
+      auth0,
       exception as dynamic,
     );
 

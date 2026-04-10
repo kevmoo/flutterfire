@@ -149,13 +149,14 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     Function(Transaction?) updateFunction,
     int maxAttempts,
   ) async {
-    final updateFunctionWrap =
-        (firestore_interop.TransactionJsImpl transaction) {
-          return handleFutureWithMapper(
-            updateFunction(Transaction.getInstance(transaction)),
-            jsify,
-          );
-        };
+    JSPromise<JSAny?> updateFunctionWrap(
+      firestore_interop.TransactionJsImpl transaction,
+    ) {
+      return handleFutureWithMapper(
+        updateFunction(Transaction.getInstance(transaction)),
+        jsify,
+      );
+    }
 
     final future = firestore_interop
         .runTransaction(
@@ -590,7 +591,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
   // purely for debug mode and tracking listeners to clean up on "hot restart"
   static final Map<String, int> _snapshotListeners = {};
-  String _querySnapshotWindowsKey(hashCode) {
+  String _querySnapshotWindowsKey(int hashCode) {
     if (kDebugMode) {
       final key = 'flutterfire-${firestore.app.name}_${hashCode}_querySnapshot';
       if (_snapshotListeners.containsKey(key)) {

@@ -89,8 +89,8 @@ void runQueryTests() {
           .execute();
       final result3 = value3.data;
       expect(result3.movies.length, 1);
-      expect(result3.movies[0].directed_by.length, 1);
-      expect(result3.movies[0].directed_by[0].name, 'Keanu Reeves');
+      expect(result3.movies[0].directedBy.length, 1);
+      expect(result3.movies[0].directedBy[0].name, 'Keanu Reeves');
     });
 
     testWidgets('can delete a movie', (WidgetTester tester) async {

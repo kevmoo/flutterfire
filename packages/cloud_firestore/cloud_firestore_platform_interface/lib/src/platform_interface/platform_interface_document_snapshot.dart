@@ -87,7 +87,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
       );
     }
 
-    dynamic _findKeyValueInMap(String key, Map<String, dynamic> map) {
+    dynamic findKeyValueInMap(String key, Map<String, dynamic> map) {
       if (map.containsKey(key)) {
         return map[key];
       }
@@ -108,16 +108,16 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
     Map<String, dynamic>? snapshotData = data();
 
-    dynamic _findComponent(int componentIndex, Map<String, dynamic>? data) {
+    dynamic findComponent(int componentIndex, Map<String, dynamic>? data) {
       bool isLast = componentIndex + 1 == components.length;
-      dynamic value = _findKeyValueInMap(components[componentIndex], data!);
+      dynamic value = findKeyValueInMap(components[componentIndex], data!);
 
       if (isLast) {
         return value;
       }
 
       if (value is Map) {
-        return _findComponent(
+        return findComponent(
           componentIndex + 1,
           Map<String, dynamic>.from(value),
         );
@@ -128,7 +128,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
       }
     }
 
-    return _findComponent(0, snapshotData);
+    return findComponent(0, snapshotData);
   }
 
   /// Gets a nested field by [String] or [FieldPath] from the snapshot.

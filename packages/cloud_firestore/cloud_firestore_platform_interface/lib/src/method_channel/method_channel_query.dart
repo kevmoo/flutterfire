@@ -23,13 +23,13 @@ import 'utils/exception.dart';
 class MethodChannelQuery extends QueryPlatform {
   /// Create a [MethodChannelQuery] from a [path] and optional [parameters]
   MethodChannelQuery(
-    FirebaseFirestorePlatform _firestore,
+    FirebaseFirestorePlatform firestore,
     String path,
     this.pigeonApp, {
     Map<String, dynamic>? parameters,
     this.isCollectionGroupQuery = false,
   }) : _pointer = Pointer(path),
-       super(_firestore, parameters);
+       super(firestore, parameters);
 
   /// Flags whether the current query is for a collection group.
   @override

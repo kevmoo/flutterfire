@@ -1305,9 +1305,9 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(2));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             expect(doc.data()['foo'], equals(rand));
-          });
+          }
         });
 
         test('returns with not equal checks', () async {
@@ -1326,9 +1326,9 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(1));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             expect(doc.data()['foo'], equals(rand + 1));
-          });
+          }
         });
 
         test('returns with greater than checks', () async {
@@ -1348,9 +1348,9 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(2));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             expect(doc.data()['foo'] > rand, isTrue);
-          });
+          }
         });
 
         test('returns with greater than or equal to checks', () async {
@@ -1370,9 +1370,9 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(3));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             expect(doc.data()['foo'] >= rand, isTrue);
-          });
+          }
         });
 
         test('returns with less than checks', () async {
@@ -1391,9 +1391,9 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(2));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             expect(doc.data()['foo'] < rand, isTrue);
-          });
+          }
         });
 
         test('returns with less than equal checks', () async {
@@ -1413,9 +1413,9 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(3));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             expect(doc.data()['foo'] <= rand, isTrue);
-          });
+          }
         });
 
         test('returns with array-contains filter', () async {
@@ -1440,9 +1440,9 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(2));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             expect(doc.data()['foo'], equals([1, '2', '$rand']));
-          });
+          }
         });
 
         test('returns with in filter', () async {
@@ -1461,10 +1461,10 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(3));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             String status = doc.data()['status'];
             expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
-          });
+          }
         });
 
         test('returns with in filter using Iterable', () async {
@@ -1487,10 +1487,10 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(3));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             String status = doc.data()['status'];
             expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
-          });
+          }
         });
 
         test('returns with in filter using Set', () async {
@@ -1509,10 +1509,10 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(3));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             String status = doc.data()['status'];
             expect(status == 'Ready to Ship' || status == 'Ordered', isTrue);
-          });
+          }
         });
 
         test('returns with not-in filter', () async {
@@ -1531,10 +1531,10 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(1));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             String status = doc.data()['status'];
             expect(status == 'Incomplete', isTrue);
-          });
+          }
         });
 
         test('returns with not-in filter with Iterable', () async {
@@ -1553,10 +1553,10 @@ void runSecondDatabaseTests() {
               .get();
 
           expect(snapshot.docs.length, equals(1));
-          snapshot.docs.forEach((doc) {
+          for (var doc in snapshot.docs) {
             String status = doc.data()['status'];
             expect(status == 'Incomplete', isTrue);
-          });
+          }
         });
 
         test('returns with array-contains-any filter', () async {

@@ -1,6 +1,8 @@
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -141,7 +143,6 @@ class _HomePageState extends State<HomePage> {
 
 class _ButtonAndText extends StatefulWidget {
   const _ButtonAndText({
-    super.key,
     required this.defaultText,
     required this.onPressed,
     required this.buttonText,

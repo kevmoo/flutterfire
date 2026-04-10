@@ -19,7 +19,7 @@ typedef FirebaseAnimatedListItemBuilder =
 /// An AnimatedList widget that is bound to a query
 class FirebaseAnimatedList extends StatefulWidget {
   /// Creates a scrolling container that animates items when they are inserted or removed.
-  FirebaseAnimatedList({
+  const FirebaseAnimatedList({
     super.key,
     required this.query,
     required this.itemBuilder,

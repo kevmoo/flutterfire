@@ -99,7 +99,7 @@ void main() {
           ),
         ).thenAnswer((_) async => mockResponse);
 
-        final deserializer = (String data) => 'Deserialized Data';
+        String deserializer(String data) => 'Deserialized Data';
 
         expect(
           () => transport.invokeOperation(
@@ -127,7 +127,7 @@ void main() {
           ),
         ).thenAnswer((_) async => mockResponse);
 
-        final deserializer = (String data) => 'Deserialized Data';
+        String deserializer(String data) => 'Deserialized Data';
 
         expect(
           () => transport.invokeOperation(
@@ -155,7 +155,7 @@ void main() {
           ),
         ).thenAnswer((_) async => mockResponse);
 
-        final deserializer = (String data) => 'Deserialized Data';
+        String deserializer(String data) => 'Deserialized Data';
 
         await transport.invokeQuery(
           'testQuery',
@@ -191,7 +191,7 @@ void main() {
           ),
         ).thenAnswer((_) async => mockResponse);
 
-        final deserializer = (String data) => 'Deserialized Mutation Data';
+        String deserializer(String data) => 'Deserialized Mutation Data';
 
         await transport.invokeMutation(
           'testMutation',
@@ -232,7 +232,7 @@ void main() {
           mockAppCheck.getToken(),
         ).thenAnswer((_) async => 'appCheckToken123');
 
-        final deserializer = (String data) => 'Deserialized Data';
+        String deserializer(String data) => 'Deserialized Data';
 
         await transport.invokeOperation(
           'testQuery',
@@ -268,7 +268,7 @@ void main() {
       when(mockUser.getIdToken()).thenAnswer((_) async => 'authToken123');
       when(mockAppCheck.getToken()).thenAnswer((_) async => 'appCheckToken123');
 
-      final deserializer = (String data) => 'Deserialized Data';
+      String deserializer(String data) => 'Deserialized Data';
 
       await transport.invokeOperation(
         'testQuery',
@@ -317,7 +317,7 @@ void main() {
           ),
         ).thenAnswer((_) async => mockResponse);
 
-        final deserializer = (String data) => 'Deserialized Data';
+        String deserializer(String data) => 'Deserialized Data';
 
         final result = await transport.invokeOperation(
           'testQuery',
@@ -350,7 +350,7 @@ void main() {
         when(mockUser.getIdToken()).thenThrow(Exception('Auth error'));
         when(mockAppCheck.getToken()).thenThrow(Exception('AppCheck error'));
 
-        final deserializer = (String data) => 'Deserialized Data';
+        String deserializer(String data) => 'Deserialized Data';
 
         await transport.invokeOperation(
           'testQuery',

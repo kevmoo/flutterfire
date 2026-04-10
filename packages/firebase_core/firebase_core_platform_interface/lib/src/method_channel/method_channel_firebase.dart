@@ -76,38 +76,38 @@ class MethodChannelFirebase extends FirebasePlatform {
     if (name == null || name == defaultFirebaseAppName) {
       MethodChannelFirebaseApp? defaultApp =
           appInstances[defaultFirebaseAppName];
-      FirebaseOptions? _options = options;
+      FirebaseOptions? options0 = options;
       // If no default app and no options are provided then
       // attempt to read options from native resources on Android,
       // e.g. this calls to `FirebaseOptions.fromResource(context)`.
       if (defaultTargetPlatform == TargetPlatform.android &&
           defaultApp == null &&
-          _options == null) {
+          options0 == null) {
         final options = await api.optionsFromResource();
-        _options = FirebaseOptions.fromPigeon(options);
+        options0 = FirebaseOptions.fromPigeon(options);
       }
 
       // If no options are present & no default app has been setup, the user is
       // trying to initialize default from Dart
-      if (defaultApp == null && _options != null) {
+      if (defaultApp == null && options0 != null) {
         _initializeFirebaseAppFromMap(
           await api.initializeApp(
             defaultFirebaseAppName,
             CoreFirebaseOptions(
-              apiKey: _options.apiKey,
-              appId: _options.appId,
-              messagingSenderId: _options.messagingSenderId,
-              projectId: _options.projectId,
-              authDomain: _options.authDomain,
-              databaseURL: _options.databaseURL,
-              storageBucket: _options.storageBucket,
-              measurementId: _options.measurementId,
-              trackingId: _options.trackingId,
-              deepLinkURLScheme: _options.deepLinkURLScheme,
-              androidClientId: _options.androidClientId,
-              iosClientId: _options.iosClientId,
-              iosBundleId: _options.iosBundleId,
-              appGroupId: _options.appGroupId,
+              apiKey: options0.apiKey,
+              appId: options0.appId,
+              messagingSenderId: options0.messagingSenderId,
+              projectId: options0.projectId,
+              authDomain: options0.authDomain,
+              databaseURL: options0.databaseURL,
+              storageBucket: options0.storageBucket,
+              measurementId: options0.measurementId,
+              trackingId: options0.trackingId,
+              deepLinkURLScheme: options0.deepLinkURLScheme,
+              androidClientId: options0.androidClientId,
+              iosClientId: options0.iosClientId,
+              iosBundleId: options0.iosBundleId,
+              appGroupId: options0.appGroupId,
             ),
           ),
         );
@@ -116,7 +116,7 @@ class MethodChannelFirebase extends FirebasePlatform {
 
       // If there is no native default app and the user didn't provide options to
       // create one, throw.
-      if (defaultApp == null && _options == null) {
+      if (defaultApp == null && options0 == null) {
         throw coreNotInitialized();
       }
 
@@ -124,12 +124,12 @@ class MethodChannelFirebase extends FirebasePlatform {
       // check to see if options are roughly identical (so we don't unnecessarily
       // throw on minor differences such as platform specific keys missing
       // e.g. hot reloads/restarts).
-      if (defaultApp != null && _options != null) {
-        if (_options.apiKey != defaultApp.options.apiKey ||
-            (_options.databaseURL != null &&
-                _options.databaseURL != defaultApp.options.databaseURL) ||
-            (_options.storageBucket != null &&
-                _options.storageBucket != defaultApp.options.storageBucket)) {
+      if (defaultApp != null && options0 != null) {
+        if (options0.apiKey != defaultApp.options.apiKey ||
+            (options0.databaseURL != null &&
+                options0.databaseURL != defaultApp.options.databaseURL) ||
+            (options0.storageBucket != null &&
+                options0.storageBucket != defaultApp.options.storageBucket)) {
           // Options are different; throw.
           throw duplicateApp(defaultFirebaseAppName);
         }

@@ -117,9 +117,9 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
     RecaptchaVerifierOnError? onError,
     RecaptchaVerifierOnExpired? onExpired,
   }) {
-    final _webAuth = auth as FirebaseAuthWeb;
+    final webAuth = auth as FirebaseAuthWeb;
     return RecaptchaVerifierFactoryWeb(
-      auth: _webAuth,
+      auth: webAuth,
       container: container,
       size: size,
       theme: theme,

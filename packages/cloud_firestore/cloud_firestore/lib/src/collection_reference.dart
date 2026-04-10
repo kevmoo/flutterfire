@@ -88,14 +88,14 @@ class _JsonCollectionReference extends _JsonQuery
 
   @override
   DocumentReference<Map<String, dynamic>>? get parent {
-    DocumentReferencePlatform? _documentReferencePlatform = _delegate.parent;
+    DocumentReferencePlatform? documentReferencePlatform = _delegate.parent;
 
     // Only subcollections have a parent
-    if (_documentReferencePlatform == null) {
+    if (documentReferencePlatform == null) {
       return null;
     }
 
-    return _JsonDocumentReference(firestore, _documentReferencePlatform);
+    return _JsonDocumentReference(firestore, documentReferencePlatform);
   }
 
   @override

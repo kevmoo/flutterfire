@@ -355,7 +355,7 @@ void main() {
         test('should create a user with an email and password', () async {
           var email = generateRandomEmail();
 
-          Function successCallback = (UserCredential newUserCredential) async {
+          Future<void> successCallback(UserCredential newUserCredential) async {
             expect(newUserCredential.user, isA<User>());
             final newUser = newUserCredential.user;
 
@@ -377,7 +377,7 @@ void main() {
             }
 
             await FirebaseAuth.instance.currentUser?.delete();
-          };
+          }
 
           await FirebaseAuth.instance
               .createUserWithEmailAndPassword(

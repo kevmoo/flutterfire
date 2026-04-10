@@ -9,17 +9,13 @@ import 'package:firebase_auth_platform_interface/src/method_channel/utils/phone_
 
 void main() {
   test('$PhoneAuthCallbacks', () {
-    final PhoneVerificationCompleted verificationCompleted =
-        (AuthCredential phoneAuthCredential) {};
+    void verificationCompleted(AuthCredential phoneAuthCredential) {}
 
-    final PhoneVerificationFailed verificationFailed =
-        (FirebaseAuthException authException) {};
+    void verificationFailed(FirebaseAuthException authException) {}
 
-    final PhoneCodeSent codeSent =
-        (String verificationId, [int? forceResendingToken]) async {};
+    void codeSent(String verificationId, [int? forceResendingToken]) async {}
 
-    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-        (String verificationId) {};
+    void codeAutoRetrievalTimeout(String verificationId) {}
 
     final callbacks = PhoneAuthCallbacks(
       verificationCompleted,

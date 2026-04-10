@@ -3,7 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of firebase_storage;
+part of '../firebase_storage.dart';
 
 /// The entrypoint for [FirebaseStorage].
 class FirebaseStorage extends FirebasePluginPlatform {
@@ -69,22 +69,22 @@ class FirebaseStorage extends FirebasePluginPlatform {
       }
     }
 
-    String _bucket = bucket ?? app.options.storageBucket!;
+    String bucket0 = bucket ?? app.options.storageBucket!;
 
     // Previous versions allow storage buckets starting with "gs://".
     // Since we need to create a key using the bucket, it must not include "gs://"
     // since native does not include it when requesting the bucket. This keeps
     // the code backwards compatible but also works with the refactor.
-    if (_bucket.startsWith('gs://')) {
-      _bucket = _bucket.replaceFirst('gs://', '');
+    if (bucket0.startsWith('gs://')) {
+      bucket0 = bucket0.replaceFirst('gs://', '');
     }
 
-    String key = '${app.name}|$_bucket';
+    String key = '${app.name}|$bucket0';
     if (_cachedInstances.containsKey(key)) {
       return _cachedInstances[key]!;
     }
 
-    FirebaseStorage newInstance = FirebaseStorage._(app: app, bucket: _bucket);
+    FirebaseStorage newInstance = FirebaseStorage._(app: app, bucket: bucket0);
     _cachedInstances[key] = newInstance;
 
     return newInstance;

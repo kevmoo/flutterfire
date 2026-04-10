@@ -813,14 +813,13 @@ void main() {
           ),
         ).thenAnswer((i) async {});
 
-        final PhoneVerificationCompleted verificationCompleted =
-            (PhoneAuthCredential phoneAuthCredential) {};
-        final PhoneVerificationFailed verificationFailed =
-            (FirebaseAuthException authException) {};
-        final PhoneCodeSent codeSent =
-            (String verificationId, [int? forceResendingToken]) async {};
-        final PhoneCodeAutoRetrievalTimeout autoRetrievalTimeout =
-            (String verificationId) {};
+        void verificationCompleted(PhoneAuthCredential phoneAuthCredential) {}
+        void verificationFailed(FirebaseAuthException authException) {}
+        void codeSent(
+          String verificationId, [
+          int? forceResendingToken,
+        ]) async {}
+        void autoRetrievalTimeout(String verificationId) {}
 
         await auth.verifyPhoneNumber(
           phoneNumber: kMockPhoneNumber,

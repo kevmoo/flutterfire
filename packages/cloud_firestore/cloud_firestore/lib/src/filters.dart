@@ -114,10 +114,12 @@ class Filter extends FilterPlatformInterface {
          return operatorsUsed == 1;
        }(), 'Exactly one operator must be specified'),
        assert(field is String || field is FieldPath || field is FieldPathType) {
-    final _field = (field is String ? FieldPath.fromString(field) : field);
+    final resolvedField = (field is String
+        ? FieldPath.fromString(field)
+        : field);
 
     _filterQuery = _FilterQuery(
-      _field,
+      resolvedField,
       _getOperator(
         isEqualTo,
         isNotEqualTo,

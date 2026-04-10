@@ -62,13 +62,13 @@ class MethodChannelReference extends ReferencePlatform {
 
   /// Convert a [PigeonFullMetaData] to [FullMetadata]
   static FullMetadata convertMetadata(PigeonFullMetaData pigeonMetadata) {
-    Map<String, dynamic> _metadata = <String, dynamic>{};
+    Map<String, dynamic> metadata = <String, dynamic>{};
     pigeonMetadata.metadata?.forEach((key, value) {
       if (key != null) {
-        _metadata[key] = value;
+        metadata[key] = value;
       }
     });
-    return FullMetadata(_metadata);
+    return FullMetadata(metadata);
   }
 
   @override

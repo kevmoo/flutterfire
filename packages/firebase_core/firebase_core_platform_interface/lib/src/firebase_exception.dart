@@ -27,7 +27,7 @@ class FirebaseException implements Exception {
   ///   print(e.toString());
   /// }
   /// ```
-  FirebaseException({
+  const FirebaseException({
     required this.plugin,
     this.message,
     String? code,

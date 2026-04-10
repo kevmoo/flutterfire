@@ -32,7 +32,7 @@ void setupTaskTests() {
         task = null;
       });
 
-      Future<void> _testPauseTask(String type) async {
+      Future<void> testPauseTask(String type) async {
         List<TaskSnapshot> snapshots = [];
         FirebaseException? streamError;
         expect(task!.snapshot.state, TaskState.running);
@@ -104,7 +104,7 @@ void setupTaskTests() {
               createBlob('some content to write to blob'),
             );
           }
-          await _testPauseTask('Download');
+          await testPauseTask('Download');
         },
         retry: 2,
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
@@ -121,7 +121,7 @@ void setupTaskTests() {
         'successfully pauses and resumes a upload task',
         () async {
           task = uploadRef.putString('This is an upload task!');
-          await _testPauseTask('Upload');
+          await testPauseTask('Upload');
         },
         retry: 2,
         // This task is flaky on mac, skip for now.
@@ -235,7 +235,7 @@ void setupTaskTests() {
     group('cancel()', () {
       late Task task;
 
-      Future<void> _testCancelTaskSnapshotEvents(Task task) async {
+      Future<void> testCancelTaskSnapshotEvents(Task task) async {
         List<TaskSnapshot> snapshots = [];
         expect(task.snapshot.state, TaskState.running);
         final Completer<FirebaseException> errorReceived =
@@ -278,7 +278,7 @@ void setupTaskTests() {
         );
       }
 
-      Future<void> _testCancelTaskLastEvent(Task task) async {
+      Future<void> testCancelTaskLastEvent(Task task) async {
         expect(task.snapshot.state, TaskState.running);
 
         bool canceled = await task.cancel();
@@ -296,7 +296,7 @@ void setupTaskTests() {
           await initialPut;
           task = downloadRef.writeToFile(file);
 
-          await _testCancelTaskSnapshotEvents(task);
+          await testCancelTaskSnapshotEvents(task);
         },
         // There's no DownloadTask on web.
         // Windows `task.cancel()` is returning "false", same code on example app works as intended
@@ -312,7 +312,7 @@ void setupTaskTests() {
 
           await initialPut;
           task = downloadRef.writeToFile(file);
-          await _testCancelTaskLastEvent(task);
+          await testCancelTaskLastEvent(task);
         },
         // There's no DownloadTask on web.
         // Windows `task.cancel()` is returning "false", same code on example app works as intended
@@ -324,7 +324,7 @@ void setupTaskTests() {
         'successfully cancels upload task using snapshotEvents',
         () async {
           task = uploadRef.putString('A' * 20000000);
-          await _testCancelTaskSnapshotEvents(task);
+          await testCancelTaskSnapshotEvents(task);
         },
         retry: 2,
         // Windows `task.cancel()` is returning "false", same code on example app works as intended
@@ -335,7 +335,7 @@ void setupTaskTests() {
         'successfully cancels upload task and provides the last `canceled` event',
         () async {
           task = uploadRef.putString('A' * 20000000);
-          await _testCancelTaskLastEvent(task);
+          await testCancelTaskLastEvent(task);
         },
         retry: 2,
         // Windows `task.cancel()` is returning "false", same code on example app works as intended

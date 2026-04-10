@@ -89,7 +89,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     // Use the debug flag if printDetails is not provided
     printDetails ??= kDebugMode;
 
-    final String _information = information.isEmpty
+    final String information0 = information.isEmpty
         ? ''
         : (StringBuffer()..writeAll(information, '\n')).toString();
 
@@ -109,7 +109,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
 
       // Print information provided by the Flutter framework about the exception.
       // ignore: avoid_print
-      if (_information.isNotEmpty) print('\n$_information');
+      if (information0.isNotEmpty) print('\n$information0');
 
       // Not using Trace.format here to stick to the default stack trace format
       // that Flutter developers are used to seeing.
@@ -134,7 +134,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     return _delegate.recordError(
       exception: exception.toString(),
       reason: reason?.toString(),
-      information: _information,
+      information: information0,
       stackTraceElements: stackTraceElements,
       buildId: buildId,
       loadingUnits: loadingUnits,

@@ -12,7 +12,7 @@ class FirebaseFunctionsException extends FirebaseException
     implements Exception {
   // ignore: public_member_api_docs
   @protected
-  FirebaseFunctionsException({
+  const FirebaseFunctionsException({
     required String super.message,
     required String super.code,
     super.stackTrace,

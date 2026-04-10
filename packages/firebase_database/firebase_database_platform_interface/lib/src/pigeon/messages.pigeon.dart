@@ -1212,7 +1212,7 @@ abstract class FirebaseDatabaseFlutterApi {
             arg_transactionKey != null,
             'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler was null, expected non-null int.',
           );
-          final Object? arg_snapshotValue = (args[1] as Object?);
+          final Object? arg_snapshotValue = args[1];
           try {
             final TransactionHandlerResult output = await api
                 .callTransactionHandler(arg_transactionKey!, arg_snapshotValue);

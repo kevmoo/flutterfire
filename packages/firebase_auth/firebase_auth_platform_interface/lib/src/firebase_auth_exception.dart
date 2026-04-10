@@ -12,7 +12,7 @@ import 'auth_credential.dart';
 class FirebaseAuthException extends FirebaseException implements Exception {
   // ignore: public_member_api_docs
   @protected
-  FirebaseAuthException({
+  const FirebaseAuthException({
     super.message,
     required String super.code,
     this.email,

@@ -34,7 +34,7 @@ enum FieldValueType {
 @immutable
 class MethodChannelFieldValue {
   /// Constructor.
-  MethodChannelFieldValue(this.type, this.value);
+  const MethodChannelFieldValue(this.type, this.value);
 
   /// The type of the field value.
   final FieldValueType type;

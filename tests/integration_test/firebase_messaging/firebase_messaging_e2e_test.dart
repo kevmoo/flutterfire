@@ -43,22 +43,22 @@ void main() {
       test('can listen multiple times', () async {
         // regression test for https://github.com/firebase/flutterfire/issues/6009
 
-        StreamSubscription<RemoteMessage> _onMessageSubscription;
-        StreamSubscription<RemoteMessage> _onMessageOpenedAppSubscription;
+        StreamSubscription<RemoteMessage> onMessageSubscription;
+        StreamSubscription<RemoteMessage> onMessageOpenedAppSubscription;
 
-        _onMessageSubscription = FirebaseMessaging.onMessage.listen((_) {});
-        _onMessageOpenedAppSubscription = FirebaseMessaging.onMessageOpenedApp
+        onMessageSubscription = FirebaseMessaging.onMessage.listen((_) {});
+        onMessageOpenedAppSubscription = FirebaseMessaging.onMessageOpenedApp
             .listen((_) {});
 
-        await _onMessageSubscription.cancel();
-        await _onMessageOpenedAppSubscription.cancel();
+        await onMessageSubscription.cancel();
+        await onMessageOpenedAppSubscription.cancel();
 
-        _onMessageSubscription = FirebaseMessaging.onMessage.listen((_) {});
-        _onMessageOpenedAppSubscription = FirebaseMessaging.onMessageOpenedApp
+        onMessageSubscription = FirebaseMessaging.onMessage.listen((_) {});
+        onMessageOpenedAppSubscription = FirebaseMessaging.onMessageOpenedApp
             .listen((_) {});
 
-        await _onMessageSubscription.cancel();
-        await _onMessageOpenedAppSubscription.cancel();
+        await onMessageSubscription.cancel();
+        await onMessageOpenedAppSubscription.cancel();
       });
     });
 

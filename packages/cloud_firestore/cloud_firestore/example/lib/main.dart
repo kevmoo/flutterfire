@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -74,6 +76,8 @@ extension on Query<Movie> {
 ///
 /// Returns a [MaterialApp].
 class FirestoreExampleApp extends StatelessWidget {
+  const FirestoreExampleApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -89,7 +93,7 @@ class FilmList extends StatefulWidget {
   const FilmList({super.key});
 
   @override
-  _FilmListState createState() => _FilmListState();
+  State<FilmList> createState() => _FilmListState();
 }
 
 class _FilmListState extends State<FilmList> {
@@ -158,39 +162,39 @@ class _FilmListState extends State<FilmList> {
                   return _resetLikes();
                 case 'aggregate':
                   // Count the number of movies
-                  final _count = await FirebaseFirestore.instance
+                  final countVar = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
                       .count()
                       .get();
 
-                  print('Count: ${_count.count}');
+                  print('Count: ${countVar.count}');
 
                   // Average the number of likes
-                  final _average = await FirebaseFirestore.instance
+                  final theAverage = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
                       .aggregate(average('likes'))
                       .get();
 
-                  print('Average: ${_average.getAverage('likes')}');
+                  print('Average: ${theAverage.getAverage('likes')}');
 
                   // Sum the number of likes
-                  final _sum = await FirebaseFirestore.instance
+                  final theSum = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
                       .aggregate(sum('likes'))
                       .get();
 
-                  print('Sum: ${_sum.getSum('likes')}');
+                  print('Sum: ${theSum.getSum('likes')}');
 
                   // In one query
-                  final _all = await FirebaseFirestore.instance
+                  final theAll = await FirebaseFirestore.instance
                       .collection('firestore-example-app')
                       .aggregate(average('likes'), sum('likes'), count())
                       .get();
 
                   print(
-                    'Average: ${_all.getAverage('likes')} '
-                    'Sum: ${_all.getSum('likes')} '
-                    'Count: ${_all.count}',
+                    'Average: ${theAll.getAverage('likes')} '
+                    'Sum: ${theAll.getSum('likes')} '
+                    'Count: ${theAll.count}',
                   );
 
                   return;
@@ -294,7 +298,7 @@ class _FilmListState extends State<FilmList> {
 
 /// A single movie row.
 class _MovieItem extends StatelessWidget {
-  _MovieItem(this.movie, this.reference);
+  const _MovieItem(this.movie, this.reference);
 
   final Movie movie;
   final DocumentReference<Movie> reference;
@@ -386,7 +390,7 @@ class _MovieItem extends StatelessWidget {
 class Likes extends StatefulWidget {
   /// Constructs a new [Likes] instance with a given [DocumentReference] and
   /// current like count.
-  Likes({super.key, required this.reference, required this.currentLikes});
+  const Likes({super.key, required this.reference, required this.currentLikes});
 
   /// The reference relating to the counter.
   final DocumentReference<Movie> reference;
@@ -395,7 +399,7 @@ class Likes extends StatefulWidget {
   final int currentLikes;
 
   @override
-  _LikesState createState() => _LikesState();
+  State<Likes> createState() => _LikesState();
 }
 
 class _LikesState extends State<Likes> {
@@ -471,7 +475,7 @@ class _LikesState extends State<Likes> {
 
 @immutable
 class Movie {
-  Movie({
+  const Movie({
     required this.genre,
     required this.likes,
     required this.poster,

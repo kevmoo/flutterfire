@@ -355,7 +355,7 @@ class MetaCard extends StatelessWidget {
   final Widget _children;
 
   // ignore: public_member_api_docs
-  MetaCard(this._title, this._children);
+  const MetaCard(this._title, this._children);
 
   @override
   Widget build(BuildContext context) {

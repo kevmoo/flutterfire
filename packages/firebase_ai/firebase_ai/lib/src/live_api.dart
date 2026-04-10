@@ -407,7 +407,7 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
       turnComplete = serverContentJson['turnComplete'] as bool;
     }
     final interrupted = serverContentJson['interrupted'] as bool?;
-    Transcription? _parseTranscription(String key) {
+    Transcription? parseTranscription(String key) {
       if (serverContentJson.containsKey(key)) {
         final transcriptionJson =
             serverContentJson[key] as Map<String, dynamic>;
@@ -423,8 +423,8 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
       modelTurn: modelTurn,
       turnComplete: turnComplete,
       interrupted: interrupted,
-      inputTranscription: _parseTranscription('inputTranscription'),
-      outputTranscription: _parseTranscription('outputTranscription'),
+      inputTranscription: parseTranscription('inputTranscription'),
+      outputTranscription: parseTranscription('outputTranscription'),
     );
   } else if (json.containsKey('toolCall')) {
     final toolContentJson = json['toolCall'] as Map<String, dynamic>;

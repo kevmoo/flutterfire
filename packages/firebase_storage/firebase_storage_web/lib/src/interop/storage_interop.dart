@@ -6,7 +6,7 @@
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, public_member_api_docs
 
 @JS('firebase_storage')
-library firebase.storage_interop;
+library;
 
 import 'dart:js_interop';
 

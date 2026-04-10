@@ -114,15 +114,11 @@ final class Tool {
 
   /// Convert to json object.
   Map<String, Object> toJson() => {
-    if (_functionDeclarations case final _functionDeclarations?)
-      'functionDeclarations': _functionDeclarations
-          .map((f) => f.toJson())
-          .toList(),
-    if (_googleSearch case final _googleSearch?)
-      'googleSearch': _googleSearch.toJson(),
-    if (_codeExecution case final _codeExecution?)
-      'codeExecution': _codeExecution.toJson(),
-    if (_urlContext case final _urlContext?) 'urlContext': _urlContext.toJson(),
+    if (_functionDeclarations case final fd?)
+      'functionDeclarations': fd.map((f) => f.toJson()).toList(),
+    if (_googleSearch case final gs?) 'googleSearch': gs.toJson(),
+    if (_codeExecution case final ce?) 'codeExecution': ce.toJson(),
+    if (_urlContext case final uc?) 'urlContext': uc.toJson(),
   };
 }
 

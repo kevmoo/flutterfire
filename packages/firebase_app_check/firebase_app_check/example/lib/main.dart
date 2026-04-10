@@ -52,6 +52,8 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   final String title = 'Firebase App Check';
 
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -62,12 +64,12 @@ class MyApp extends StatelessWidget {
 }
 
 class FirebaseAppCheckExample extends StatefulWidget {
-  FirebaseAppCheckExample({super.key, required this.title});
+  const FirebaseAppCheckExample({super.key, required this.title});
 
   final String title;
 
   @override
-  _FirebaseAppCheck createState() => _FirebaseAppCheck();
+  State<FirebaseAppCheckExample> createState() => _FirebaseAppCheck();
 }
 
 class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {

@@ -103,7 +103,7 @@ void main() {
 
     test('should handle invokeQuery with proper deserializer', () async {
       const queryName = 'testQuery';
-      final deserializer = (json) => json;
+      deserializer(json) => json;
       final result = await transport.invokeQuery(
         queryName,
         deserializer,
@@ -117,7 +117,7 @@ void main() {
 
     test('should handle invokeMutation with proper deserializer', () async {
       const queryName = 'testMutation';
-      final deserializer = (json) => json;
+      deserializer(json) => json;
       final result = await transport.invokeMutation(
         queryName,
         deserializer,

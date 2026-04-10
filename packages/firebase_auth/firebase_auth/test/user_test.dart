@@ -419,8 +419,8 @@ class MockFirebaseAuth extends Mock
 class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
-  MockUserPlatform(FirebaseAuthPlatform auth, PigeonUserDetails _user) {
-    TestUserPlatform(auth, TestMultiFactorPlatform(auth), _user);
+  MockUserPlatform(FirebaseAuthPlatform auth, PigeonUserDetails user) {
+    TestUserPlatform(auth, TestMultiFactorPlatform(auth), user);
   }
 
   @override

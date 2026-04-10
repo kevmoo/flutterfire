@@ -12,7 +12,7 @@ class FirebaseAuthMultiFactorExceptionPlatform extends FirebaseAuthException
     implements Exception {
   // ignore: public_member_api_docs
   @protected
-  FirebaseAuthMultiFactorExceptionPlatform({
+  const FirebaseAuthMultiFactorExceptionPlatform({
     super.message,
     required super.code,
     super.email,

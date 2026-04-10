@@ -377,12 +377,12 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// in `_initUser` and add it manually to the `_changeController`.
   Future<void> onWaitInitState() async {
     final completer = Completer();
-    final nextWrapper = (auth_interop.UserJsImpl? user) {
+    void nextWrapper(auth_interop.UserJsImpl? user) {
       _initUser = User.getInstance(user);
       completer.complete();
-    };
+    }
 
-    final errorWrapper = (JSAny e) => _changeController!.addError(e);
+    void errorWrapper(JSAny e) => _changeController!.addError(e);
 
     final unsubscribe = jsObject.onAuthStateChanged(
       nextWrapper.toJS,
@@ -442,11 +442,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     unsubscribeWindowsListener(authStateKey);
 
     if (_changeController == null) {
-      final nextWrapper = (auth_interop.UserJsImpl? user) {
+      void nextWrapper(auth_interop.UserJsImpl? user) {
         _changeController!.add(User.getInstance(user));
-      };
+      }
 
-      final errorWrapper = (JSAny e) => _changeController!.addError(e);
+      void errorWrapper(JSAny e) => _changeController!.addError(e);
 
       void startListen() {
         assert(_onAuthUnsubscribe == null);
@@ -491,11 +491,11 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     final idTokenKey = _idTokenStateWindowsKey();
     unsubscribeWindowsListener(idTokenKey);
     if (_idTokenChangedController == null) {
-      final nextWrapper = (auth_interop.UserJsImpl? user) {
+      void nextWrapper(auth_interop.UserJsImpl? user) {
         _idTokenChangedController!.add(User.getInstance(user));
-      };
+      }
 
-      final errorWrapper = (JSAny e) => _idTokenChangedController!.addError(e);
+      void errorWrapper(JSAny e) => _idTokenChangedController!.addError(e);
 
       void startListen() {
         assert(_onIdTokenChangedUnsubscribe == null);

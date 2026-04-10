@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_storage;
+part of '../firebase_storage.dart';
 
 /// Represents a reference to a Google Cloud Storage object. Developers can
 /// upload, download, and delete objects, as well as get/set object metadata.
@@ -172,32 +172,32 @@ class Reference {
     PutStringFormat format = PutStringFormat.raw,
     SettableMetadata? metadata,
   }) {
-    String _data = data;
-    PutStringFormat _format = format;
-    SettableMetadata? _metadata = metadata;
+    String data0 = data;
+    PutStringFormat format0 = format;
+    SettableMetadata? metadata0 = metadata;
 
     // Convert any raw string values into a Base64 format
     if (format == PutStringFormat.raw) {
-      _data = base64.encode(utf8.encode(_data));
-      _format = PutStringFormat.base64;
+      data0 = base64.encode(utf8.encode(data0));
+      format0 = PutStringFormat.base64;
     }
 
     // Convert a data_url into a Base64 format
     if (format == PutStringFormat.dataUrl) {
-      _format = PutStringFormat.base64;
+      format0 = PutStringFormat.base64;
       UriData uri = UriData.fromUri(Uri.parse(data));
       assert(uri.isBase64);
-      _data = uri.contentText;
+      data0 = uri.contentText;
 
-      if (_metadata == null && uri.mimeType.isNotEmpty) {
-        _metadata = SettableMetadata(contentType: uri.mimeType);
+      if (metadata0 == null && uri.mimeType.isNotEmpty) {
+        metadata0 = SettableMetadata(contentType: uri.mimeType);
       }
 
       // If the data_url contains a mime-type & the user has not provided it,
       // set it
-      if ((_metadata!.contentType == null || _metadata.contentType!.isEmpty) &&
+      if ((metadata0!.contentType == null || metadata0.contentType!.isEmpty) &&
           uri.mimeType.isNotEmpty) {
-        _metadata = SettableMetadata(
+        metadata0 = SettableMetadata(
           cacheControl: metadata!.cacheControl,
           contentDisposition: metadata.contentDisposition,
           contentEncoding: metadata.contentEncoding,
@@ -208,7 +208,7 @@ class Reference {
     }
     return UploadTask._(
       storage,
-      _delegate.putString(_data, _format, _metadata),
+      _delegate.putString(data0, format0, metadata0),
     );
   }
 

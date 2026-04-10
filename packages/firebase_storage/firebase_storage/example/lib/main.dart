@@ -52,7 +52,7 @@ enum UploadType {
 ///
 /// Returns a [MaterialApp].
 class StorageExampleApp extends StatelessWidget {
-  StorageExampleApp({super.key});
+  const StorageExampleApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class StorageExampleApp extends StatelessWidget {
 /// A StatefulWidget which keeps track of the current uploaded files.
 class TaskManager extends StatefulWidget {
   // ignore: public_member_api_docs
-  TaskManager({super.key});
+  const TaskManager({super.key});
 
   @override
   State<StatefulWidget> createState() {

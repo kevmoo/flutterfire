@@ -4,6 +4,8 @@
 // found in the LICENSE file.
 
 @TestOn('browser')
+library;
+
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_test/flutter_test.dart';

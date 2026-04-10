@@ -156,19 +156,19 @@ class TotpMultiFactorGeneratorWeb extends TotpMultiFactorGeneratorPlatform {
   /// which can be used to confirm ownership of a phone second factor.
   @override
   Future<TotpSecretPlatform> generateSecret(MultiFactorSession session) async {
-    final _webMultiFactorSession = session as MultiFactorSessionWeb;
-    final _webSecret =
+    final webMultiFactorSession = session as MultiFactorSessionWeb;
+    final webSecret =
         await multi_factor_interop.TotpMultiFactorGenerator.generateSecret(
-          _webMultiFactorSession.webSession,
+          webMultiFactorSession.webSession,
         );
 
     return TotpSecretWeb(
-      _webSecret,
-      _webSecret.codeInterval,
-      _webSecret.codeLength,
-      _webSecret.enrollmentCompletionDeadline,
-      _webSecret.hashingAlgorithm,
-      _webSecret.secretKey,
+      webSecret,
+      webSecret.codeInterval,
+      webSecret.codeLength,
+      webSecret.enrollmentCompletionDeadline,
+      webSecret.hashingAlgorithm,
+      webSecret.secretKey,
     );
   }
 
@@ -179,10 +179,10 @@ class TotpMultiFactorGeneratorWeb extends TotpMultiFactorGeneratorPlatform {
     TotpSecretPlatform secret,
     String oneTimePassword,
   ) async {
-    final _webSecret = secret as TotpSecretWeb;
+    final webSecret = secret as TotpSecretWeb;
     final totpAssertion =
         multi_factor_interop.TotpMultiFactorGenerator.assertionForEnrollment(
-          _webSecret.webSecret,
+          webSecret.webSecret,
           oneTimePassword,
         );
     return MultiFactorAssertionWeb(totpAssertion);
