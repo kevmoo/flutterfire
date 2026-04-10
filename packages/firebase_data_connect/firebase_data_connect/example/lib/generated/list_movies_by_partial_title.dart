@@ -33,11 +33,12 @@ class ListMoviesByPartialTitleVariablesBuilder {
   }
 }
 
+@immutable
 class ListMoviesByPartialTitleMovies {
-  String id;
-  String title;
-  String genre;
-  double? rating;
+  final String id;
+  final String title;
+  final String genre;
+  final double? rating;
   ListMoviesByPartialTitleMovies.fromJson(dynamic json)
     : id = nativeFromJson<String>(json['id']),
       title = nativeFromJson<String>(json['title']),
@@ -45,6 +46,30 @@ class ListMoviesByPartialTitleMovies {
       rating = json['rating'] == null
           ? null
           : nativeFromJson<double>(json['rating']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ListMoviesByPartialTitleMovies otherTyped =
+        other as ListMoviesByPartialTitleMovies;
+    return id == otherTyped.id &&
+        title == otherTyped.title &&
+        genre == otherTyped.genre &&
+        rating == otherTyped.rating;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id.hashCode,
+    title.hashCode,
+    genre.hashCode,
+    rating.hashCode,
+  ]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -65,12 +90,29 @@ class ListMoviesByPartialTitleMovies {
   });
 }
 
+@immutable
 class ListMoviesByPartialTitleData {
-  List<ListMoviesByPartialTitleMovies> movies;
+  final List<ListMoviesByPartialTitleMovies> movies;
   ListMoviesByPartialTitleData.fromJson(dynamic json)
     : movies = (json['movies'] as List<dynamic>)
           .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
           .toList();
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ListMoviesByPartialTitleData otherTyped =
+        other as ListMoviesByPartialTitleData;
+    return movies == otherTyped.movies;
+  }
+
+  @override
+  int get hashCode => movies.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -81,13 +123,30 @@ class ListMoviesByPartialTitleData {
   ListMoviesByPartialTitleData({required this.movies});
 }
 
+@immutable
 class ListMoviesByPartialTitleVariables {
-  String input;
+  final String input;
   @Deprecated(
     'fromJson is deprecated for Variable classes as they are no longer required for deserialization.',
   )
   ListMoviesByPartialTitleVariables.fromJson(Map<String, dynamic> json)
     : input = nativeFromJson<String>(json['input']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ListMoviesByPartialTitleVariables otherTyped =
+        other as ListMoviesByPartialTitleVariables;
+    return input == otherTyped.input;
+  }
+
+  @override
+  int get hashCode => input.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

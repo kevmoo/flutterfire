@@ -20,14 +20,31 @@ class ListTimestampsVariablesBuilder {
   }
 }
 
+@immutable
 class ListTimestampsTimestampHolders {
-  Timestamp timestamp;
-  DateTime? date;
+  final Timestamp timestamp;
+  final DateTime? date;
   ListTimestampsTimestampHolders.fromJson(dynamic json)
     : timestamp = Timestamp.fromJson(json['timestamp']),
       date = json['date'] == null
           ? null
           : nativeFromJson<DateTime>(json['date']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ListTimestampsTimestampHolders otherTyped =
+        other as ListTimestampsTimestampHolders;
+    return timestamp == otherTyped.timestamp && date == otherTyped.date;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([timestamp.hashCode, date.hashCode]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -38,15 +55,31 @@ class ListTimestampsTimestampHolders {
     return json;
   }
 
-  ListTimestampsTimestampHolders({required this.timestamp, this.date});
+  const ListTimestampsTimestampHolders({required this.timestamp, this.date});
 }
 
+@immutable
 class ListTimestampsData {
-  List<ListTimestampsTimestampHolders> timestampHolders;
+  final List<ListTimestampsTimestampHolders> timestampHolders;
   ListTimestampsData.fromJson(dynamic json)
     : timestampHolders = (json['timestampHolders'] as List<dynamic>)
           .map((e) => ListTimestampsTimestampHolders.fromJson(e))
           .toList();
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ListTimestampsData otherTyped = other as ListTimestampsData;
+    return timestampHolders == otherTyped.timestampHolders;
+  }
+
+  @override
+  int get hashCode => timestampHolders.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -54,5 +87,5 @@ class ListTimestampsData {
     return json;
   }
 
-  ListTimestampsData({required this.timestampHolders});
+  const ListTimestampsData({required this.timestampHolders});
 }

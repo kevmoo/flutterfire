@@ -1,7 +1,7 @@
 part of 'movies.dart';
 
 class ThingVariablesBuilder {
-  final Optional<AnyValue> _title = Optional.optional(
+  Optional<AnyValue> _title = Optional.optional(
     AnyValue.fromJson,
     defaultSerializer,
   );
@@ -32,9 +32,25 @@ class ThingVariablesBuilder {
   }
 }
 
+@immutable
 class ThingAbc {
-  String id;
+  final String id;
   ThingAbc.fromJson(dynamic json) : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ThingAbc otherTyped = other as ThingAbc;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -45,9 +61,25 @@ class ThingAbc {
   ThingAbc({required this.id});
 }
 
+@immutable
 class ThingDef {
-  String id;
+  final String id;
   ThingDef.fromJson(dynamic json) : id = nativeFromJson<String>(json['id']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ThingDef otherTyped = other as ThingDef;
+    return id == otherTyped.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -58,12 +90,28 @@ class ThingDef {
   ThingDef({required this.id});
 }
 
+@immutable
 class ThingData {
-  ThingAbc abc;
-  ThingDef def;
+  final ThingAbc abc;
+  final ThingDef def;
   ThingData.fromJson(dynamic json)
     : abc = ThingAbc.fromJson(json['abc']),
       def = ThingDef.fromJson(json['def']);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ThingData otherTyped = other as ThingData;
+    return abc == otherTyped.abc && def == otherTyped.def;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([abc.hashCode, def.hashCode]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -75,8 +123,9 @@ class ThingData {
   ThingData({required this.abc, required this.def});
 }
 
+@immutable
 class ThingVariables {
-  late Optional<AnyValue> title;
+  late final Optional<AnyValue> title;
   @Deprecated(
     'fromJson is deprecated for Variable classes as they are no longer required for deserialization.',
   )
@@ -86,6 +135,21 @@ class ThingVariables {
         ? null
         : AnyValue.fromJson(json['title']);
   }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+
+    final ThingVariables otherTyped = other as ThingVariables;
+    return title == otherTyped.title;
+  }
+
+  @override
+  int get hashCode => title.hashCode;
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
