@@ -108,6 +108,10 @@ melos:
       usePubspecOverrides: true
 
   scripts:
+    build:build_runner:
+      run: melos exec --depends-on=build_runner -- "dart run build_runner build --delete-conflicting-outputs"
+      description: Run `build_runner build` in all packages that depend on it.
+
     lint:all:
       run: melos run analyze-ci && melos run format-ci
       description: Run all static analysis checks.
