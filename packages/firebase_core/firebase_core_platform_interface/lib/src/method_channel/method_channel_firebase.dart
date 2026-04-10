@@ -38,7 +38,7 @@ class MethodChannelFirebase extends FirebasePlatform {
     MethodChannelFirebaseApp methodChannelFirebaseApp =
         MethodChannelFirebaseApp(
           response.name,
-          FirebaseOptions.fromPigeon(response.options),
+          FirebaseOptionsExtension.fromPigeon(response.options),
           isAutomaticDataCollectionEnabled:
               response.isAutomaticDataCollectionEnabled,
         );
@@ -84,7 +84,7 @@ class MethodChannelFirebase extends FirebasePlatform {
           defaultApp == null &&
           options0 == null) {
         final options = await api.optionsFromResource();
-        options0 = FirebaseOptions.fromPigeon(options);
+        options0 = FirebaseOptionsExtension.fromPigeon(options);
       }
 
       // If no options are present & no default app has been setup, the user is

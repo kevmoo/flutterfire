@@ -1,39 +1,66 @@
-// ignore_for_file: require_trailing_commas
-// Copyright 2020 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Copyright 2024, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-// ignore_for_file: deprecated_member_use_from_same_package
-part of '../firebase_core_platform_interface.dart';
+library firebase_core_dart;
+
+import 'package:collection/collection.dart';
+import 'package:meta/meta.dart';
+
+/// A generic class which provides exceptions in a Firebase-friendly format
+/// to users.
+@immutable
+class FirebaseException implements Exception {
+  /// A generic class which provides exceptions in a Firebase-friendly format
+  /// to users.
+  const FirebaseException({
+    required this.plugin,
+    this.message,
+    String? code,
+    this.stackTrace,
+  }) : code = code ?? 'unknown';
+
+  /// The plugin the exception is for.
+  final String plugin;
+
+  /// The long form message of the exception.
+  final String? message;
+
+  /// The optional code to accommodate the message.
+  final String code;
+
+  /// The stack trace which provides information to the user about the call
+  /// sequence that triggered an exception
+  final StackTrace? stackTrace;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! FirebaseException) return false;
+    return other.plugin == plugin &&
+        other.code == code &&
+        other.message == message;
+  }
+
+  @override
+  int get hashCode => Object.hash(plugin, code, message);
+
+  @override
+  String toString() {
+    String output = '[$plugin/$code] $message';
+
+    if (stackTrace != null) {
+      output += '\n\n$stackTrace';
+    }
+
+    return output;
+  }
+}
 
 /// The options used to configure a Firebase app.
-///
-/// ```dart
-/// await Firebase.initializeApp(
-///   name: 'SecondaryApp',
-///   options: const FirebaseOptions(
-///     apiKey: '...',
-///     appId: '...',
-///     messagingSenderId: '...',
-///     projectId: '...',
-///   )
-/// );
-/// ```
 @immutable
 class FirebaseOptions {
   /// The options used to configure a Firebase app.
-  ///
-  /// ```dart
-  /// await Firebase.initializeApp(
-  ///   name: 'SecondaryApp',
-  ///   options: const FirebaseOptions(
-  ///     apiKey: '...',
-  ///     appId: '...',
-  ///     messagingSenderId: '...',
-  ///     projectId: '...',
-  ///   )
-  /// );
-  /// ```
   const FirebaseOptions({
     required this.apiKey,
     required this.appId,
@@ -43,7 +70,6 @@ class FirebaseOptions {
     this.databaseURL,
     this.storageBucket,
     this.measurementId,
-    // ios specific
     this.trackingId,
     this.deepLinkURLScheme,
     this.androidClientId,
@@ -51,27 +77,6 @@ class FirebaseOptions {
     this.iosBundleId,
     this.appGroupId,
   });
-
-  /// Named constructor to create [FirebaseOptions] from a the response of Pigeon channel.
-  ///
-  /// This constructor is used when platforms cannot directly return a
-  /// [FirebaseOptions] instance, for example when data is sent back from a
-  /// [MethodChannel].
-  FirebaseOptions.fromPigeon(CoreFirebaseOptions options)
-    : apiKey = options.apiKey,
-      appId = options.appId,
-      messagingSenderId = options.messagingSenderId,
-      projectId = options.projectId,
-      authDomain = options.authDomain,
-      databaseURL = options.databaseURL,
-      storageBucket = options.storageBucket,
-      measurementId = options.measurementId,
-      trackingId = options.trackingId,
-      deepLinkURLScheme = options.deepLinkURLScheme,
-      androidClientId = options.androidClientId,
-      iosClientId = options.iosClientId,
-      iosBundleId = options.iosBundleId,
-      appGroupId = options.appGroupId;
 
   /// Returns a copy of this FirebaseOptions with the given fields replaced with
   /// the new values.
@@ -127,8 +132,6 @@ class FirebaseOptions {
   final String? authDomain;
 
   /// The database root URL, for example "https://my-awesome-app.firebaseio.com."
-  ///
-  /// This property should be set for apps that use Firebase Database.
   final String? databaseURL;
 
   /// The Google Cloud Storage bucket name, for example
@@ -140,8 +143,6 @@ class FirebaseOptions {
 
   /// The tracking ID for Google Analytics, for example "UA-12345678-1", used to
   /// configure Google Analytics.
-  ///
-  /// This property is used on iOS only.
   final String? trackingId;
 
   /// The URL scheme used by iOS secondary apps for Dynamic Links.
@@ -149,29 +150,17 @@ class FirebaseOptions {
 
   /// The Android OAuth client ID from the Firebase Console, for example
   /// "12345.apps.googleusercontent.com."
-  ///
-  /// This value is used on Android only.
   final String? androidClientId;
 
   /// The iOS client ID from the Firebase Console, for example
   /// "12345.apps.googleusercontent.com."
-  ///
-  /// This value is used by iOS only.
   final String? iosClientId;
 
-  /// The iOS bundle ID for the application. Defaults to `[[NSBundle mainBundle] bundleID]`
-  /// when not set manually or in a plist.
-  ///
-  /// This property is used on iOS only.
+  /// The iOS bundle ID for the application.
   final String? iosBundleId;
 
   /// The iOS App Group identifier to share data between the application and the
   /// application extensions.
-  ///
-  /// Note that if using this then the App Group must be configured in the
-  /// application and on the Apple Developer Portal.
-  ///
-  /// This property is used on iOS only.
   final String? appGroupId;
 
   /// The current instance as a [Map].
@@ -194,7 +183,6 @@ class FirebaseOptions {
     };
   }
 
-  // Required from `fromMap` comparison
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

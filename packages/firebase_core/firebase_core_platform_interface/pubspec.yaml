@@ -1,5 +1,6 @@
 name: firebase_core_platform_interface
 description: A common platform interface for the firebase_core plugin.
+publish_to: none
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_platform_interface
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_platform_interface
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
@@ -13,6 +14,8 @@ environment:
 
 dependencies:
   collection: ^1.19.1
+  firebase_core_dart:
+    path: ../firebase_core_dart
   flutter:
     sdk: flutter
   # Needed to export the mocks

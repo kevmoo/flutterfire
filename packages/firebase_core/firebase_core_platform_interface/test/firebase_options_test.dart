@@ -49,7 +49,7 @@ void main() {
     });
 
     test('should construct an instance from a Map', () {
-      FirebaseOptions options1 = FirebaseOptions.fromPigeon(
+      FirebaseOptions options1 = FirebaseOptionsExtension.fromPigeon(
         CoreFirebaseOptions(
           apiKey: 'apiKey',
           appId: 'appId',
