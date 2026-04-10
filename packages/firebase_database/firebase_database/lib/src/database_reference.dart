@@ -28,13 +28,13 @@ class DatabaseReference extends Query {
   /// refers to the root of your Firebase Database, it has no parent, and
   /// therefore parent() will return null.
   DatabaseReference? get parent {
-    final _platformParent = _delegate.parent;
+    final platformParent = _delegate.parent;
 
-    if (_platformParent == null) {
+    if (platformParent == null) {
       return null;
     }
 
-    return DatabaseReference._(_platformParent);
+    return DatabaseReference._(platformParent);
   }
 
   /// Gets a [DatabaseReference] for the root location.

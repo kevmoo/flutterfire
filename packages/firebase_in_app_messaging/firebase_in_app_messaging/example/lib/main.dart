@@ -21,6 +21,8 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseInAppMessaging fiam = FirebaseInAppMessaging.instance;
+
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -45,6 +47,8 @@ class MyApp extends StatelessWidget {
 }
 
 class ProgrammaticTriggersExample extends StatelessWidget {
+  const ProgrammaticTriggersExample({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -82,6 +86,8 @@ class ProgrammaticTriggersExample extends StatelessWidget {
 }
 
 class AnalyticsEventExample extends StatelessWidget {
+  const AnalyticsEventExample({super.key});
+
   Future<void> _sendAnalyticsEvent() async {
     await MyApp.analytics.logEvent(
       name: 'awesome_event',

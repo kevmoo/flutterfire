@@ -1,0 +1,6 @@
+import: ../../../../../analysis_options.yaml
+
+analyzer:
+  errors:
+    non_constant_identifier_names: ignore
+    unnecessary_library_name: ignore

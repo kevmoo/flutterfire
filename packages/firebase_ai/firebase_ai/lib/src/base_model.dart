@@ -73,14 +73,14 @@ enum TemplateTask {
   templatePredict,
 }
 
-abstract interface class _ModelUri {
+abstract interface class $ModelUri {
   String get baseAuthority;
   String get apiVersion;
   Uri taskUri(Task task);
   ({String prefix, String name}) get model;
 }
 
-final class _VertexUri implements _ModelUri {
+final class _VertexUri implements $ModelUri {
   _VertexUri({
     required String model,
     required String location,
@@ -131,7 +131,7 @@ final class _VertexUri implements _ModelUri {
   }
 }
 
-final class _GoogleAIUri implements _ModelUri {
+final class _GoogleAIUri implements $ModelUri {
   _GoogleAIUri({required String model, required FirebaseApp app})
     : model = _normalizeModelName(model),
       _baseUri = _googleAIBaseUri(app: app);
@@ -177,14 +177,14 @@ final class _GoogleAIUri implements _ModelUri {
   );
 }
 
-abstract interface class _TemplateUri {
+abstract interface class $TemplateUri {
   String get baseAuthority;
   String get apiVersion;
   Uri templateTaskUri(TemplateTask task, String templateId);
   String templateName(String templateId);
 }
 
-final class _TemplateVertexUri implements _TemplateUri {
+final class _TemplateVertexUri implements $TemplateUri {
   _TemplateVertexUri({required String location, required FirebaseApp app})
     : _templateUri = _vertexTemplateUri(app, location),
       _templateName = _vertexTemplateName(app, location);
@@ -229,7 +229,7 @@ final class _TemplateVertexUri implements _TemplateUri {
       '$_templateName/templates/$templateId';
 }
 
-final class _TemplateGoogleAIUri implements _TemplateUri {
+final class _TemplateGoogleAIUri implements $TemplateUri {
   _TemplateGoogleAIUri({required FirebaseApp app})
     : _templateUri = _googleAITemplateUri(app: app),
       _templateName = _googleAITemplateName(app: app);
@@ -278,12 +278,12 @@ final class _TemplateGoogleAIUri implements _TemplateUri {
 abstract class BaseModel {
   BaseModel._({
     required SerializationStrategy serializationStrategy,
-    required _ModelUri modelUri,
+    required $ModelUri modelUri,
   }) : _serializationStrategy = serializationStrategy,
        _modelUri = modelUri;
 
   final SerializationStrategy _serializationStrategy;
-  final _ModelUri _modelUri;
+  final $ModelUri _modelUri;
 
   /// The normalized model name.
   ({String prefix, String name}) get model => _modelUri.model;
@@ -372,10 +372,10 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
     required super.serializationStrategy,
     required super.modelUri,
     required super.client,
-    required _TemplateUri templateUri,
+    required $TemplateUri templateUri,
   }) : _templateUri = templateUri;
 
-  final _TemplateUri _templateUri;
+  final $TemplateUri _templateUri;
 
   /// Makes a unary request to a template-based API.
   ///

@@ -46,6 +46,8 @@ extension on Query<Movie> {
 ///
 /// Returns a [MaterialApp].
 class FirestoreExampleApp extends StatelessWidget {
+  const FirestoreExampleApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

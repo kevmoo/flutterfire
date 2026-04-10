@@ -86,11 +86,11 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
       analytics.logScreenView(screenName: screenName).catchError((
         Object error,
       ) {
-        final _onError = this._onError;
-        if (_onError == null) {
+        final onError = _onError;
+        if (onError == null) {
           debugPrint('$FirebaseAnalyticsObserver: $error');
         } else {
-          _onError(error as PlatformException);
+          onError(error as PlatformException);
         }
       }, test: (Object error) => error is PlatformException);
     }

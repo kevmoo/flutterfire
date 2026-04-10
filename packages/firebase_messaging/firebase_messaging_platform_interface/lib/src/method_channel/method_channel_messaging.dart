@@ -25,12 +25,12 @@ void _firebaseMessagingCallbackDispatcher() {
   // Initialize state necessary for MethodChannels.
   WidgetsFlutterBinding.ensureInitialized();
 
-  const MethodChannel _channel = MethodChannel(
+  const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_messaging_background',
   );
 
   // This is where we handle background events from the native portion of the plugin.
-  _channel.setMethodCallHandler((MethodCall call) async {
+  channel.setMethodCallHandler((MethodCall call) async {
     if (call.method == 'MessagingBackground#onMessage') {
       final CallbackHandle handle = CallbackHandle.fromRawHandle(
         call.arguments['userCallbackHandle'],
