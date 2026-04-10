@@ -57,7 +57,7 @@ class DatabaseReferenceWeb extends QueryWeb
   @override
   Future<void> setWithPriority(Object? value, Object? priority) async {
     try {
-      await _delegate.setWithPriority(value, priority);
+      await _delegate.setWithPriority(value.jsify(), priority.jsify());
     } catch (e, s) {
       throw convertFirebaseDatabaseException(e, s);
     }
@@ -75,7 +75,7 @@ class DatabaseReferenceWeb extends QueryWeb
   @override
   Future<void> setPriority(priority) async {
     try {
-      await _delegate.setPriority(priority);
+      await _delegate.setPriority(priority.jsify());
     } catch (e, s) {
       throw convertFirebaseDatabaseException(e, s);
     }

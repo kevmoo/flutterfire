@@ -125,8 +125,8 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   ///
   /// This method returns [ThenableReference], [DatabaseReference]
   /// with a [Future] property.
-  ThenableReference push([value]) => ThenableReference.fromJsObject(
-      database_interop.push(jsObject, value?.jsify()));
+  ThenableReference push([JSAny? value]) =>
+      ThenableReference.fromJsObject(database_interop.push(jsObject, value));
 
   /// Removes data from actual database location.
   Future remove() => database_interop.remove(jsObject).toDart;
@@ -148,7 +148,7 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   /// Sets a priority for data at actual database location.
   ///
   /// The [priority] must be a [String], [num] or `null`, or the error is thrown.
-  Future setPriority(priority) =>
+  Future setPriority(JSAny? priority) =>
       database_interop.setPriority(jsObject, priority).toDart;
 
   /// Sets data [newVal] at actual database location with provided priority
@@ -159,7 +159,7 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   /// The [newVal] must be a Dart basic type or the error is thrown.
   /// The [newPriority] must be a [String], [num] or `null`, or the error
   /// is thrown.
-  Future setWithPriority(Object? newVal, newPriority) => database_interop
+  Future setWithPriority(JSAny? newVal, JSAny? newPriority) => database_interop
       .setWithPriority(jsObject, newVal?.jsify(), newPriority)
       .toDart;
 
