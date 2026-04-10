@@ -11,7 +11,7 @@ import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart
 
 class MethodChannelMultiFactor extends MultiFactorPlatform {
   /// Constructs a new [MethodChannelMultiFactor] instance.
-  MethodChannelMultiFactor(FirebaseAuthPlatform auth) : super(auth);
+  MethodChannelMultiFactor(super.auth);
 
   final _api = MultiFactorUserHostApi();
 
@@ -113,13 +113,12 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
 
 class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
   MethodChannelMultiFactorResolver(
-    List<MultiFactorInfo> hints,
-    MultiFactorSession session,
+    super.hints,
+    super.session,
     String resolverId,
     MethodChannelFirebaseAuth auth,
   ) : _resolverId = resolverId,
-      _auth = auth,
-      super(hints, session);
+      _auth = auth;
 
   final String _resolverId;
 
@@ -194,7 +193,7 @@ class MultiFactorAssertion extends MultiFactorAssertionPlatform {
 }
 
 class PhoneMultiFactorAssertion extends MultiFactorAssertion {
-  PhoneMultiFactorAssertion(PhoneAuthCredential credential) : super(credential);
+  PhoneMultiFactorAssertion(PhoneAuthCredential super.credential);
 }
 
 /// Helper class used to generate PhoneMultiFactorAssertions.

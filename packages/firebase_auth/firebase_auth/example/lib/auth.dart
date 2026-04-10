@@ -59,7 +59,7 @@ extension on AuthMode {
 /// Entrypoint example for various sign-in flows with Firebase.
 class AuthGate extends StatefulWidget {
   // ignore: public_member_api_docs
-  const AuthGate({Key? key}) : super(key: key);
+  const AuthGate({super.key});
   static String? appleAuthorizationCode;
   @override
   State<StatefulWidget> createState() => _AuthGateState();

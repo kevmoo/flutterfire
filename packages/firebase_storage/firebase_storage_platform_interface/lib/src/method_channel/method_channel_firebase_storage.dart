@@ -19,8 +19,8 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// [bucket].
   MethodChannelFirebaseStorage({
     required FirebaseApp app,
-    required String bucket,
-  }) : super(appInstance: app, bucket: bucket);
+    required super.bucket,
+  }) : super(appInstance: app);
 
   /// Internal stub class initializer.
   ///

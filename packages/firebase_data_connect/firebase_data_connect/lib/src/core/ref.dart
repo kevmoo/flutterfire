@@ -367,20 +367,13 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
 
 class MutationRef<Data, Variables> extends OperationRef<Data, Variables> {
   MutationRef(
-    FirebaseDataConnect dataConnect,
-    String operationName,
-    DataConnectTransport transport,
-    Deserializer<Data> deserializer,
-    Serializer<Variables> serializer,
-    Variables? variables,
-  ) : super(
-        dataConnect,
-        operationName,
-        transport,
-        deserializer,
-        serializer,
-        variables,
-      );
+    super.dataConnect,
+    super.operationName,
+    super.transport,
+    super.deserializer,
+    super.serializer,
+    super.variables,
+  );
 
   @override
   Future<OperationResult<Data, Variables>> execute({

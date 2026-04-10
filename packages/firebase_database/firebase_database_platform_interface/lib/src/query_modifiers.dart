@@ -176,8 +176,7 @@ class LimitModifier implements QueryModifier {
 
 /// A modifier representing a start cursor query.
 class StartCursorModifier extends _CursorModifier {
-  StartCursorModifier._(String name, Object? value, String? key)
-    : super(name, value, key);
+  StartCursorModifier._(super.name, super.value, super.key);
 
   /// Creates a new `startAt` modifier with an optional key.
   StartCursorModifier.startAt(Object? value, String? key)
@@ -190,8 +189,7 @@ class StartCursorModifier extends _CursorModifier {
 
 /// A modifier representing a end cursor query.
 class EndCursorModifier extends _CursorModifier {
-  EndCursorModifier._(String name, Object? value, String? key)
-    : super(name, value, key);
+  EndCursorModifier._(super.name, super.value, super.key);
 
   /// Creates a new `endAt` modifier with an optional key.
   EndCursorModifier.endAt(Object? value, String? key)

@@ -112,7 +112,7 @@ class MockFirebaseInAppMessaging extends Mock
 
 class TestFirebaseInAppMessagingPlatform
     extends FirebaseInAppMessagingPlatform {
-  TestFirebaseInAppMessagingPlatform(FirebaseApp? app) : super(app);
+  TestFirebaseInAppMessagingPlatform(super.app);
 
   @override
   FirebaseInAppMessagingPlatform delegateFor({FirebaseApp? app}) {

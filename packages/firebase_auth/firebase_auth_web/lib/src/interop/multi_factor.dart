@@ -43,8 +43,7 @@ class MultiFactorUser
     return _expando[jsObject] ??= MultiFactorUser._fromJsObject(jsObject);
   }
 
-  MultiFactorUser._fromJsObject(auth_interop.MultiFactorUserJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  MultiFactorUser._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Returns a list of the user's enrolled second factors.
   List<MultiFactorInfo> get enrolledFactors =>
@@ -83,7 +82,7 @@ class MultiFactorUser
 /// https://firebase.google.com/docs/reference/js/auth.multifactorinfo
 class MultiFactorInfo<T extends auth_interop.MultiFactorInfoJsImpl>
     extends JsObjectWrapper<T> {
-  MultiFactorInfo.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  MultiFactorInfo.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// The user friendly name of the current second factor.
   String? get displayName => jsObject.displayName?.toDart;
@@ -100,9 +99,7 @@ class MultiFactorInfo<T extends auth_interop.MultiFactorInfoJsImpl>
 
 class PhoneMultiFactorInfo
     extends MultiFactorInfo<auth_interop.PhoneMultiFactorInfoJsImpl> {
-  PhoneMultiFactorInfo.fromJsObject(
-    auth_interop.PhoneMultiFactorInfoJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  PhoneMultiFactorInfo.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// The user friendly name of the current second factor.
   String get phoneNumber => jsObject.phoneNumber.toDart;
@@ -110,22 +107,19 @@ class PhoneMultiFactorInfo
 
 class TotpMultiFactorInfo
     extends MultiFactorInfo<auth_interop.TotpMultiFactorInfoJsImpl> {
-  TotpMultiFactorInfo.fromJsObject(
-    auth_interop.TotpMultiFactorInfoJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  TotpMultiFactorInfo.fromJsObject(super.jsObject) : super.fromJsObject();
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorsession.md#multifactorsession_interface
 class MultiFactorSession
     extends JsObjectWrapper<auth_interop.MultiFactorSessionJsImpl> {
-  MultiFactorSession.fromJsObject(auth.MultiFactorSessionJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  MultiFactorSession.fromJsObject(super.jsObject) : super.fromJsObject();
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorsession.md#multifactorsession_interface
 class MultiFactorAssertion<T extends auth_interop.MultiFactorAssertionJsImpl>
     extends JsObjectWrapper<T> {
-  MultiFactorAssertion.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  MultiFactorAssertion.fromJsObject(super.jsObject) : super.fromJsObject();
 
   String get factorId => jsObject.factorId.toDart;
 }
@@ -133,16 +127,13 @@ class MultiFactorAssertion<T extends auth_interop.MultiFactorAssertionJsImpl>
 /// https://firebase.google.com/docs/reference/js/auth.multifactorsession.md#multifactorsession_interface
 class PhoneMultiFactorAssertion
     extends MultiFactorAssertion<auth_interop.PhoneMultiFactorAssertionJsImpl> {
-  PhoneMultiFactorAssertion.fromJsObject(
-    auth.PhoneMultiFactorAssertionJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  PhoneMultiFactorAssertion.fromJsObject(super.jsObject) : super.fromJsObject();
 }
 
 /// https://firebase.google.com/docs/reference/js/auth#getmultifactorresolver
 class MultiFactorResolver
     extends JsObjectWrapper<auth_interop.MultiFactorResolverJsImpl> {
-  MultiFactorResolver.fromJsObject(auth.MultiFactorResolverJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  MultiFactorResolver.fromJsObject(super.jsObject) : super.fromJsObject();
 
   List<MultiFactorInfo> get hints => jsObject.hints.toDart
       .map<MultiFactorInfo>(fromJsMultiFactorInfo)
@@ -176,9 +167,7 @@ MultiFactorInfo fromJsMultiFactorInfo(auth.MultiFactorInfoJsImpl e) {
 /// https://firebase.google.com/docs/reference/js/auth.multifactorsession.md#multifactorsession_interface
 class PhoneMultiFactorGenerator
     extends JsObjectWrapper<auth_interop.PhoneMultiFactorGeneratorJsImpl> {
-  PhoneMultiFactorGenerator.fromJsObject(
-    auth.PhoneMultiFactorGeneratorJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  PhoneMultiFactorGenerator.fromJsObject(super.jsObject) : super.fromJsObject();
 
   static PhoneMultiFactorAssertion assertion(
     auth.PhoneAuthCredentialJsImpl credential,
@@ -192,14 +181,11 @@ class PhoneMultiFactorGenerator
 /// https://firebase.google.com/docs/reference/js/auth.totpmultifactorassertion
 class TotpMultiFactorAssertion
     extends MultiFactorAssertion<auth_interop.TotpMultiFactorAssertionJsImpl> {
-  TotpMultiFactorAssertion.fromJsObject(
-    auth.TotpMultiFactorAssertionJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  TotpMultiFactorAssertion.fromJsObject(super.jsObject) : super.fromJsObject();
 }
 
 class TotpSecret extends JsObjectWrapper<auth_interop.TotpSecretJsImpl> {
-  TotpSecret.fromJsObject(auth_interop.TotpSecretJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  TotpSecret.fromJsObject(super.jsObject) : super.fromJsObject();
 
   int get codeInterval => jsObject.codeIntervalSeconds.toDartInt;
   int get codeLength => jsObject.codeLength.toDartInt;
@@ -215,9 +201,7 @@ class TotpSecret extends JsObjectWrapper<auth_interop.TotpSecretJsImpl> {
 
 class TotpMultiFactorGenerator
     extends JsObjectWrapper<auth_interop.TotpMultiFactorGeneratorJsImpl> {
-  TotpMultiFactorGenerator.fromJsObject(
-    auth.TotpMultiFactorGeneratorJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  TotpMultiFactorGenerator.fromJsObject(super.jsObject) : super.fromJsObject();
 
   static TotpMultiFactorAssertion assertionForSignIn(
     String enrollmentId,

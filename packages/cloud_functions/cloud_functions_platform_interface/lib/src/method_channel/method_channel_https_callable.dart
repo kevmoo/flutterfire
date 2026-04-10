@@ -15,14 +15,13 @@ import 'utils/exception.dart';
 class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   /// Creates a new [MethodChannelHttpsCallable] instance.
   MethodChannelHttpsCallable(
-    FirebaseFunctionsPlatform functions,
-    String? origin,
-    String? name,
-    HttpsCallableOptions options,
-    Uri? uri,
+    super.functions,
+    super.origin,
+    super.name,
+    super.options,
+    super.uri,
   ) : _baseEventChannelId =
-          name ?? uri?.pathSegments.join('_').replaceAll('.', '_') ?? '',
-      super(functions, origin, name, options, uri);
+          name ?? uri?.pathSegments.join('_').replaceAll('.', '_') ?? '';
 
   static int _streamIdCounter = 0;
   final String _baseEventChannelId;

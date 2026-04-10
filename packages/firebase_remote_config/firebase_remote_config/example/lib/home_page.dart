@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -141,11 +141,11 @@ class _HomePageState extends State<HomePage> {
 
 class _ButtonAndText extends StatefulWidget {
   const _ButtonAndText({
-    Key? key,
+    super.key,
     required this.defaultText,
     required this.onPressed,
     required this.buttonText,
-  }) : super(key: key);
+  });
 
   final String defaultText;
   final String buttonText;

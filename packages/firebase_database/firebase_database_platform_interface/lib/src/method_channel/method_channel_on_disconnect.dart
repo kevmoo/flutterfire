@@ -15,10 +15,7 @@ final _api = FirebaseDatabaseHostApi();
 /// Represents a query over the data at a particular location.
 class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   /// Create a [MethodChannelQuery] from [DatabaseReferencePlatform]
-  MethodChannelOnDisconnect({
-    required DatabasePlatform database,
-    required DatabaseReferencePlatform ref,
-  }) : super(database: database, ref: ref);
+  MethodChannelOnDisconnect({required super.database, required super.ref});
 
   /// Gets the Pigeon app object from the database
   DatabasePigeonFirebaseApp get _pigeonApp {

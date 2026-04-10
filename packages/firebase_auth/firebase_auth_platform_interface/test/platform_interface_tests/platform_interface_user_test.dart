@@ -309,9 +309,5 @@ void main() {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(
-    FirebaseAuthPlatform auth,
-    MultiFactorPlatform multiFactor,
-    PigeonUserDetails data,
-  ) : super(auth, multiFactor, data);
+  TestUserPlatform(super.auth, super.multiFactor, super.data);
 }

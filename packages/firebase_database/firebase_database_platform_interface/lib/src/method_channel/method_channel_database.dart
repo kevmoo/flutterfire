@@ -77,8 +77,7 @@ class MethodChannelDatabase extends DatabasePlatform {
     );
   }
 
-  MethodChannelDatabase({FirebaseApp? app, String? databaseURL})
-    : super(app: app, databaseURL: databaseURL) {
+  MethodChannelDatabase({super.app, super.databaseURL}) {
     if (_initialized) return;
 
     // Set up the Pigeon FlutterApi for transaction handler callbacks

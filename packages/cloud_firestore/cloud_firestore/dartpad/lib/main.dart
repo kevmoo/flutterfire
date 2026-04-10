@@ -58,7 +58,7 @@ class FirestoreExampleApp extends StatelessWidget {
 
 /// Holds all example app films
 class FilmList extends StatefulWidget {
-  const FilmList({Key? key}) : super(key: key);
+  const FilmList({super.key});
 
   @override
   _FilmListState createState() => _FilmListState();
@@ -268,8 +268,7 @@ class _MovieItem extends StatelessWidget {
 class Likes extends StatefulWidget {
   /// Constructs a new [Likes] instance with a given [DocumentReference] and
   /// current like count.
-  Likes({Key? key, required this.reference, required this.currentLikes})
-    : super(key: key);
+  Likes({super.key, required this.reference, required this.currentLikes});
 
   /// The reference relating to the counter.
   final DocumentReference<Movie> reference;

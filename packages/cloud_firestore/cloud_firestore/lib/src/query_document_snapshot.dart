@@ -39,10 +39,11 @@ class _WithConverterQueryDocumentSnapshot<T extends Object?>
     extends _WithConverterDocumentSnapshot<T>
     implements QueryDocumentSnapshot<T> {
   _WithConverterQueryDocumentSnapshot(
-    QueryDocumentSnapshot<Map<String, dynamic>> originalQueryDocumentSnapshot,
-    FromFirestore<T> fromFirestore,
-    ToFirestore<T> toFirestore,
-  ) : super(originalQueryDocumentSnapshot, fromFirestore, toFirestore);
+    QueryDocumentSnapshot<Map<String, dynamic>>
+    super.originalQueryDocumentSnapshot,
+    super.fromFirestore,
+    super.toFirestore,
+  );
 
   @override
   bool get exists => true;

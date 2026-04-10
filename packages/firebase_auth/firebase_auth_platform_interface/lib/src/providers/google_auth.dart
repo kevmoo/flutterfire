@@ -92,13 +92,8 @@ class GoogleAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [GoogleAuthProvider.credential].
 class GoogleAuthCredential extends OAuthCredential {
-  GoogleAuthCredential._({String? accessToken, String? idToken})
-    : super(
-        providerId: _kProviderId,
-        signInMethod: _kProviderId,
-        accessToken: accessToken,
-        idToken: idToken,
-      );
+  GoogleAuthCredential._({super.accessToken, super.idToken})
+    : super(providerId: _kProviderId, signInMethod: _kProviderId);
 
   factory GoogleAuthCredential._credential({
     String? idToken,

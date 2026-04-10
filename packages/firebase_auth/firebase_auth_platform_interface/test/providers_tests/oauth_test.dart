@@ -85,5 +85,5 @@ void main() {
 }
 
 class TestOAuthProvider extends OAuthProvider {
-  TestOAuthProvider(String providerId) : super(providerId);
+  TestOAuthProvider(super.providerId);
 }

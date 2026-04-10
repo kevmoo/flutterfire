@@ -232,16 +232,13 @@ final class UnknownPart extends Part {
 /// A [Part] with the text content.
 final class TextPart extends Part {
   // ignore: public_member_api_docs
-  const TextPart(this.text, {bool? isThought})
-    : super(isThought: isThought, thoughtSignature: null);
+  const TextPart(this.text, {super.isThought}) : super(thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
-  const TextPart.forTest(this.text, {bool? isThought, String? thoughtSignature})
-    : super(isThought: isThought, thoughtSignature: thoughtSignature);
+  const TextPart.forTest(this.text, {super.isThought, super.thoughtSignature});
 
-  const TextPart._(this.text, {bool? isThought, String? thoughtSignature})
-    : super(isThought: isThought, thoughtSignature: thoughtSignature);
+  const TextPart._(this.text, {super.isThought, super.thoughtSignature});
 
   /// The text content of the [Part]
   final String text;
@@ -259,8 +256,8 @@ final class InlineDataPart extends Part {
     this.mimeType,
     this.bytes, {
     this.willContinue,
-    bool? isThought,
-  }) : super(isThought: isThought, thoughtSignature: null);
+    super.isThought,
+  }) : super(thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
@@ -268,17 +265,17 @@ final class InlineDataPart extends Part {
     this.mimeType,
     this.bytes, {
     this.willContinue,
-    bool? isThought,
-    String? thoughtSignature,
-  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
+    super.isThought,
+    super.thoughtSignature,
+  });
 
   const InlineDataPart._(
     this.mimeType,
     this.bytes, {
     this.willContinue,
-    bool? isThought,
-    String? thoughtSignature,
-  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
+    super.isThought,
+    super.thoughtSignature,
+  });
 
   /// File type of the [InlineDataPart].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -315,8 +312,8 @@ final class InlineDataPart extends Part {
 /// arguments and their values.
 final class FunctionCall extends Part {
   // ignore: public_member_api_docs
-  const FunctionCall(this.name, this.args, {this.id, bool? isThought})
-    : super(isThought: isThought, thoughtSignature: null);
+  const FunctionCall(this.name, this.args, {this.id, super.isThought})
+    : super(thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
@@ -324,17 +321,17 @@ final class FunctionCall extends Part {
     this.name,
     this.args, {
     this.id,
-    bool? isThought,
-    String? thoughtSignature,
-  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
+    super.isThought,
+    super.thoughtSignature,
+  });
 
   const FunctionCall._(
     this.name,
     this.args, {
     this.id,
-    bool? isThought,
-    String? thoughtSignature,
-  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
+    super.isThought,
+    super.thoughtSignature,
+  });
 
   /// The name of the function to call.
   final String name;
@@ -361,8 +358,8 @@ final class FunctionCall extends Part {
 /// The response class for [FunctionCall]
 final class FunctionResponse extends Part {
   // ignore: public_member_api_docs
-  const FunctionResponse(this.name, this.response, {this.id, bool? isThought})
-    : super(isThought: isThought, thoughtSignature: null);
+  const FunctionResponse(this.name, this.response, {this.id, super.isThought})
+    : super(thoughtSignature: null);
 
   /// The name of the function that was called.
   final String name;
@@ -395,24 +392,24 @@ final class FunctionResponse extends Part {
 /// A [Part] with Firebase Storage uri as prompt content
 final class FileData extends Part {
   // ignore: public_member_api_docs
-  const FileData(this.mimeType, this.fileUri, {bool? isThought})
-    : super(isThought: isThought, thoughtSignature: null);
+  const FileData(this.mimeType, this.fileUri, {super.isThought})
+    : super(thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
   const FileData.forTest(
     this.mimeType,
     this.fileUri, {
-    bool? isThought,
-    String? thoughtSignature,
-  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
+    super.isThought,
+    super.thoughtSignature,
+  });
 
   const FileData._(
     this.mimeType,
     this.fileUri, {
-    bool? isThought,
-    String? thoughtSignature,
-  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
+    super.isThought,
+    super.thoughtSignature,
+  });
 
   /// File type of the [FileData].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -437,15 +434,15 @@ final class ExecutableCodePart extends Part {
   ExecutableCodePart({
     required this.language,
     required this.code,
-    bool? isThought,
-  }) : super(isThought: isThought, thoughtSignature: null);
+    super.isThought,
+  }) : super(thoughtSignature: null);
 
   ExecutableCodePart._({
     required this.language,
     required this.code,
-    bool? isThought,
-    String? thoughtSignature,
-  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
+    super.isThought,
+    super.thoughtSignature,
+  });
 
   /// The programming language of the code.
   final CodeLanguage language;
@@ -469,15 +466,15 @@ final class CodeExecutionResultPart extends Part {
   CodeExecutionResultPart({
     required this.outcome,
     required this.output,
-    bool? isThought,
-  }) : super(isThought: isThought, thoughtSignature: null);
+    super.isThought,
+  }) : super(thoughtSignature: null);
 
   CodeExecutionResultPart._({
     required this.outcome,
     required this.output,
-    bool? isThought,
-    String? thoughtSignature,
-  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
+    super.isThought,
+    super.thoughtSignature,
+  });
 
   /// The result of the execution.
   final Outcome outcome;

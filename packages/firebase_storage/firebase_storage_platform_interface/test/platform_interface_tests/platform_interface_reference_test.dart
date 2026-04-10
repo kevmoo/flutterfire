@@ -163,8 +163,7 @@ void main() {
 }
 
 class TestReferencePlatform extends ReferencePlatform {
-  TestReferencePlatform(FirebaseStoragePlatform storage, String path)
-    : super(storage, path);
+  TestReferencePlatform(super.storage, super.path);
 }
 
 class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {

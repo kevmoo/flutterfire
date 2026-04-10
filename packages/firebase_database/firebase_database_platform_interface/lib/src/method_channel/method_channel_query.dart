@@ -19,10 +19,7 @@ final _api = FirebaseDatabaseHostApi();
 /// Represents a query over the data at a particular location.
 class MethodChannelQuery extends QueryPlatform {
   /// Create a [MethodChannelQuery] from [pathComponents]
-  MethodChannelQuery({
-    required DatabasePlatform database,
-    required this.pathComponents,
-  }) : super(database: database);
+  MethodChannelQuery({required super.database, required this.pathComponents});
 
   static Map<String, Stream<DatabaseEventPlatform>> observers = {};
 

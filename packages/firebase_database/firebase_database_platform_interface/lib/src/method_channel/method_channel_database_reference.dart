@@ -28,9 +28,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     implements DatabaseReferencePlatform {
   /// Create a [MethodChannelDatabaseReference] from [pathComponents]
   MethodChannelDatabaseReference({
-    required DatabasePlatform database,
-    required List<String> pathComponents,
-  }) : super(database: database, pathComponents: pathComponents);
+    required super.database,
+    required super.pathComponents,
+  });
 
   /// Gets the Pigeon app object from the database
   DatabasePigeonFirebaseApp get _pigeonApp {

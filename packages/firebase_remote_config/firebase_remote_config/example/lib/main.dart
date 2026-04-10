@@ -15,7 +15,7 @@ void main() async {
 }
 
 class RemoteConfigApp extends StatelessWidget {
-  const RemoteConfigApp({Key? key}) : super(key: key);
+  const RemoteConfigApp({super.key});
 
   @override
   Widget build(BuildContext context) {

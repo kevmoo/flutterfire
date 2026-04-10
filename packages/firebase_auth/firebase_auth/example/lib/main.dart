@@ -52,7 +52,7 @@ Future<void> main() async {
 ///
 /// Returns a [MaterialApp].
 class AuthExampleApp extends StatelessWidget {
-  const AuthExampleApp({Key? key}) : super(key: key);
+  const AuthExampleApp({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -18,8 +18,7 @@ import 'utils/exception.dart';
 /// communicate with Firebase plugins.
 class MethodChannelReference extends ReferencePlatform {
   /// Creates a [ReferencePlatform] that is implemented using [MethodChannel].
-  MethodChannelReference(FirebaseStoragePlatform storage, String path)
-    : super(storage, path);
+  MethodChannelReference(super.storage, super.path);
 
   /// FirebaseApp pigeon instance
   PigeonStorageFirebaseApp get pigeonFirebaseApp {

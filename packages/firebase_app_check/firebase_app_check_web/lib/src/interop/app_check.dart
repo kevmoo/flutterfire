@@ -67,8 +67,7 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
     return _expando[jsObject] ??= AppCheck._fromJsObject(jsObject);
   }
 
-  AppCheck._fromJsObject(app_check_interop.AppCheckJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  AppCheck._fromJsObject(super.jsObject) : super.fromJsObject();
 
   void setTokenAutoRefreshEnabled(bool isTokenAutoRefreshEnabled) =>
       app_check_interop.setTokenAutoRefreshEnabled(

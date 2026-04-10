@@ -30,8 +30,7 @@ class RemoteConfig
     remote_config_interop.RemoteConfigJsImpl jsObject,
   ) => _expando[jsObject] ??= RemoteConfig._fromJsObject(jsObject);
 
-  RemoteConfig._fromJsObject(remote_config_interop.RemoteConfigJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  RemoteConfig._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Defines configuration for the Remote Config SDK.
   RemoteConfigSettings get settings =>
@@ -203,9 +202,7 @@ ValueSource getSource(String source) {
 /// Defines configuration options for the Remote Config SDK.
 class RemoteConfigSettings
     extends JsObjectWrapper<remote_config_interop.SettingsJsImpl> {
-  RemoteConfigSettings._fromJsObject(
-    remote_config_interop.SettingsJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  RemoteConfigSettings._fromJsObject(super.jsObject) : super.fromJsObject();
 
   ///  Defines the maximum age in milliseconds of an entry in the config cache before
   ///  it is considered stale. Defaults to twelve hours.
@@ -246,9 +243,8 @@ enum RemoteConfigLogLevel { debug, error, silent }
 
 class RemoteConfigUpdatePayload
     extends JsObjectWrapper<remote_config_interop.ConfigUpdateJsImpl> {
-  RemoteConfigUpdatePayload._fromJsObject(
-    remote_config_interop.ConfigUpdateJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  RemoteConfigUpdatePayload._fromJsObject(super.jsObject)
+    : super.fromJsObject();
 
   Set<String> get updatedKeys {
     final updatedKeysSet = <String>{};

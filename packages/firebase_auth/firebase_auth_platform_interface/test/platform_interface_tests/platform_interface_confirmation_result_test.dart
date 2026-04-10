@@ -48,5 +48,5 @@ void main() {
 }
 
 class TestConfirmationResultPlatform extends ConfirmationResultPlatform {
-  TestConfirmationResultPlatform(String verificationId) : super(verificationId);
+  TestConfirmationResultPlatform(super.verificationId);
 }

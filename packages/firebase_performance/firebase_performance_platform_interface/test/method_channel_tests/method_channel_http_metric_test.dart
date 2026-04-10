@@ -203,6 +203,5 @@ class TestFirebasePerformancePlatform extends FirebasePerformancePlatform {
 }
 
 class TestMethodChannelHttpMetric extends MethodChannelHttpMetric {
-  TestMethodChannelHttpMetric(String url, HttpMethod method)
-    : super(url, method);
+  TestMethodChannelHttpMetric(super.url, super.method);
 }

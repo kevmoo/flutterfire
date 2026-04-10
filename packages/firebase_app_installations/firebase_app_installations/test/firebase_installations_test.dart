@@ -98,7 +98,7 @@ class MockFirebaseInstallations extends Mock
 
 class TestFirebaseAppInstallationsPlatform
     extends FirebaseAppInstallationsPlatform {
-  TestFirebaseAppInstallationsPlatform(FirebaseApp? app) : super(app);
+  TestFirebaseAppInstallationsPlatform(super.app);
 
   @override
   TestFirebaseAppInstallationsPlatform delegateFor({FirebaseApp? app}) {

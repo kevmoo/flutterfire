@@ -30,12 +30,12 @@ void resetFirebaseCoreMocks() {
 
 class MockHttpsCallablePlatform extends HttpsCallablePlatform {
   MockHttpsCallablePlatform(
-    FirebaseFunctionsPlatform functions,
-    String? origin,
-    String? name,
-    HttpsCallableOptions options,
-    Uri? uri,
-  ) : super(functions, origin, name, options, uri);
+    super.functions,
+    super.origin,
+    super.name,
+    super.options,
+    super.uri,
+  );
 
   @override
   Future<dynamic> call([dynamic parameters]) async {

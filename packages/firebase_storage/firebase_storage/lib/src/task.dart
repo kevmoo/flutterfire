@@ -90,12 +90,10 @@ abstract class Task implements Future<TaskSnapshot> {
 
 /// A class which indicates an on-going upload task.
 class UploadTask extends Task {
-  UploadTask._(FirebaseStorage storage, TaskPlatform delegate)
-    : super._(storage, delegate);
+  UploadTask._(super.storage, super.delegate) : super._();
 }
 
 /// A class which indicates an on-going download task.
 class DownloadTask extends Task {
-  DownloadTask._(FirebaseStorage storage, TaskPlatform delegate)
-    : super._(storage, delegate);
+  DownloadTask._(super.storage, super.delegate) : super._();
 }

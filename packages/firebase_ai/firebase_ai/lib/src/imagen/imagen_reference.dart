@@ -239,13 +239,12 @@ final class ImagenControlReference extends ImagenReferenceImage {
   // ignore: public_member_api_docs
   ImagenControlReference({
     required ImagenControlType controlType,
-    ImagenInlineImage? image,
+    super.image,
     bool? enableComputation,
     int? superpixelRegionSize,
     int? superpixelRuler,
     super.referenceId,
   }) : super._(
-         image: image,
          referenceConfig: ImagenControlConfig(
            controlType: controlType,
            enableComputation: enableComputation,

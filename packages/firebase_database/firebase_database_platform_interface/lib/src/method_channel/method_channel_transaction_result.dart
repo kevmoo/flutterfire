@@ -7,8 +7,7 @@ import 'package:firebase_database_platform_interface/firebase_database_platform_
 import 'method_channel_data_snapshot.dart';
 
 class MethodChannelTransactionResult extends TransactionResultPlatform {
-  MethodChannelTransactionResult(bool committed, this._ref, this._snapshot)
-    : super(committed);
+  MethodChannelTransactionResult(super.committed, this._ref, this._snapshot);
 
   DatabaseReferencePlatform _ref;
 

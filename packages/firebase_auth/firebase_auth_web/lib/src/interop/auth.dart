@@ -114,8 +114,8 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
     return _expando[jsObject] ??= User._fromJsObject(jsObject);
   }
 
-  User._fromJsObject(auth_interop.UserJsImpl jsObject)
-    : super._fromJsObject(jsObject);
+  User._fromJsObject(auth_interop.UserJsImpl super.jsObject)
+    : super._fromJsObject();
 
   /// Deletes and signs out the user.
   Future<void> delete() => jsObject.delete().toDart;
@@ -297,8 +297,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
 ///
 /// See https://firebase.google.com/docs/reference/js/firebase.auth.IDTokenResult.html
 class IdTokenResult extends JsObjectWrapper<auth_interop.IdTokenResultImpl> {
-  IdTokenResult._fromJsObject(auth_interop.IdTokenResultImpl jsObject)
-    : super.fromJsObject(jsObject);
+  IdTokenResult._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// The authentication time.
   ///
@@ -529,8 +528,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     return _expando[jsObject] ??= Auth._fromJsObject(jsObject);
   }
 
-  Auth._fromJsObject(auth_interop.AuthJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  Auth._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Applies a verification [oobCode] sent to the user by e-mail or by other
   /// out-of-band mechanism.
@@ -819,7 +817,7 @@ abstract class AuthProvider<T extends auth_interop.AuthProviderJsImpl>
   String get providerId => jsObject.providerId.toDart;
 
   /// Creates a new AuthProvider from a [jsObject].
-  AuthProvider.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  AuthProvider.fromJsObject(super.jsObject) : super.fromJsObject();
 }
 
 /// E-mail and password auth provider implementation.
@@ -835,8 +833,7 @@ class EmailAuthProvider
       EmailAuthProvider.fromJsObject(auth_interop.EmailAuthProviderJsImpl());
 
   /// Creates a new EmailAuthProvider from a [jsObject].
-  EmailAuthProvider.fromJsObject(auth_interop.EmailAuthProviderJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  EmailAuthProvider.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Creates a credential for e-mail.
   static auth_interop.OAuthCredential credential(
@@ -872,9 +869,7 @@ class FacebookAuthProvider
   );
 
   /// Creates a new FacebookAuthProvider from a [jsObject].
-  FacebookAuthProvider.fromJsObject(
-    auth_interop.FacebookAuthProviderJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  FacebookAuthProvider.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Adds additional OAuth 2.0 scopes that you want to request from the
   /// authentication provider.
@@ -914,9 +909,7 @@ class GithubAuthProvider
       GithubAuthProvider.fromJsObject(auth_interop.GithubAuthProviderJsImpl());
 
   /// Creates a new GithubAuthProvider from a [jsObject].
-  GithubAuthProvider.fromJsObject(
-    auth_interop.GithubAuthProviderJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  GithubAuthProvider.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Adds additional OAuth 2.0 scopes that you want to request from the
   /// authentication provider.
@@ -956,9 +949,7 @@ class GoogleAuthProvider
       GoogleAuthProvider.fromJsObject(auth_interop.GoogleAuthProviderJsImpl());
 
   /// Creates a new GoogleAuthProvider from a [jsObject].
-  GoogleAuthProvider.fromJsObject(
-    auth_interop.GoogleAuthProviderJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  GoogleAuthProvider.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Adds additional OAuth 2.0 scopes that you want to request from the
   /// authentication provider.
@@ -1002,8 +993,7 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
   );
 
   /// Creates a new OAuthProvider from a [jsObject].
-  OAuthProvider.fromJsObject(auth_interop.OAuthProviderJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  OAuthProvider.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Adds additional OAuth 2.0 scopes that you want to request from the
   /// authentication provider.
@@ -1048,9 +1038,7 @@ class TwitterAuthProvider
   );
 
   /// Creates a new TwitterAuthProvider from a [jsObject].
-  TwitterAuthProvider.fromJsObject(
-    auth_interop.TwitterAuthProviderJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  TwitterAuthProvider.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Sets the OAuth custom parameters to pass in a Twitter OAuth request
   /// for popup and redirect sign-in operations.
@@ -1085,8 +1073,7 @@ class SAMLAuthProvider
   );
 
   /// Creates a new SAMLAuthProvider from a [jsObject].
-  SAMLAuthProvider.fromJsObject(auth_interop.SAMLAuthProviderJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  SAMLAuthProvider.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Used to extract the underlying OAuthCredential from a UserCredential.
   static auth_interop.OAuthCredential? credentialFromResult(
@@ -1111,8 +1098,7 @@ class PhoneAuthProvider
   );
 
   /// Creates a new PhoneAuthProvider from a [jsObject].
-  PhoneAuthProvider.fromJsObject(auth_interop.PhoneAuthProviderJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  PhoneAuthProvider.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Starts a phone number authentication flow by sending a verification code
   /// to the given [phoneNumber] in E.164 format (e.g. +16505550101).
@@ -1151,7 +1137,7 @@ abstract class ApplicationVerifier<
   String get type => jsObject.type.toDart;
 
   /// Creates a new ApplicationVerifier from a [jsObject].
-  ApplicationVerifier.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  ApplicationVerifier.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Executes the verification process.
   /// Returns a Future containing string for a token that can be used to
@@ -1208,8 +1194,7 @@ class RecaptchaVerifier
   }
 
   /// Creates a new RecaptchaVerifier from a [jsObject].
-  RecaptchaVerifier.fromJsObject(auth_interop.RecaptchaVerifierJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  RecaptchaVerifier.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Clears the reCAPTCHA widget from the page and destroys the current instance.
   void clear() => jsObject.clear();
@@ -1231,9 +1216,7 @@ class ConfirmationResult
   String get verificationId => jsObject.verificationId.toDart;
 
   /// Creates a new ConfirmationResult from a [jsObject].
-  ConfirmationResult.fromJsObject(
-    auth_interop.ConfirmationResultJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  ConfirmationResult.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Finishes a phone number sign-in, link, or reauthentication, given
   /// the code that was sent to the user's mobile device.
@@ -1262,8 +1245,7 @@ class UserCredential
   );
 
   /// Creates a new UserCredential from a [jsObject].
-  UserCredential.fromJsObject(auth_interop.UserCredentialJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  UserCredential.fromJsObject(super.jsObject) : super.fromJsObject();
 }
 
 /// A structure containing additional user information from
@@ -1287,7 +1269,5 @@ class AdditionalUserInfo
   bool get isNewUser => jsObject.isNewUser.toDart;
 
   /// Creates a new AdditionalUserInfo from a [jsObject].
-  AdditionalUserInfo.fromJsObject(
-    auth_interop.AdditionalUserInfoJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  AdditionalUserInfo.fromJsObject(super.jsObject) : super.fromJsObject();
 }

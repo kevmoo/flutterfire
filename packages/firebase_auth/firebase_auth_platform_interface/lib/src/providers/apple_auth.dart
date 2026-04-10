@@ -100,18 +100,11 @@ class AppleAuthProvider extends AuthProvider {
 /// [AppleAuthProvider.credential].
 class AppleAuthCredential extends OAuthCredential {
   AppleAuthCredential._({
-    String? accessToken,
-    String? rawNonce,
-    String? idToken,
-    AppleFullPersonName? appleFullPersonName,
-  }) : super(
-         providerId: _kProviderId,
-         signInMethod: _kProviderId,
-         accessToken: accessToken,
-         appleFullPersonName: appleFullPersonName,
-         rawNonce: rawNonce,
-         idToken: idToken,
-       );
+    super.accessToken,
+    super.rawNonce,
+    super.idToken,
+    super.appleFullPersonName,
+  }) : super(providerId: _kProviderId, signInMethod: _kProviderId);
 
   factory AppleAuthCredential._credential(String accessToken) {
     return AppleAuthCredential._(accessToken: accessToken);

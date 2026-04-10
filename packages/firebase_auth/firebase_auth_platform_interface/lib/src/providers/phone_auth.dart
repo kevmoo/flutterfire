@@ -45,8 +45,8 @@ class PhoneAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [PhoneAuthProvider.credential].
 class PhoneAuthCredential extends AuthCredential {
-  PhoneAuthCredential._({this.verificationId, this.smsCode, int? token})
-    : super(providerId: _kProviderId, signInMethod: _kProviderId, token: token);
+  PhoneAuthCredential._({this.verificationId, this.smsCode, super.token})
+    : super(providerId: _kProviderId, signInMethod: _kProviderId);
 
   factory PhoneAuthCredential._credential(
     String verificationId,

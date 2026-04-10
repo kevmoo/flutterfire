@@ -75,9 +75,9 @@ abstract class CollectionReference<T extends Object?> implements Query<T> {
 class _JsonCollectionReference extends _JsonQuery
     implements CollectionReference<Map<String, dynamic>> {
   _JsonCollectionReference(
-    FirebaseFirestore firestore,
-    CollectionReferencePlatform _delegate,
-  ) : super(firestore, _delegate);
+    super.firestore,
+    CollectionReferencePlatform super._delegate,
+  );
 
   @override
   CollectionReferencePlatform get _delegate =>
@@ -155,10 +155,10 @@ class _WithConverterCollectionReference<T extends Object?>
     extends _WithConverterQuery<T>
     implements CollectionReference<T> {
   _WithConverterCollectionReference(
-    CollectionReference<Map<String, dynamic>> collectionReference,
-    FromFirestore<T> fromFirestore,
-    ToFirestore<T> toFirestore,
-  ) : super(collectionReference, fromFirestore, toFirestore);
+    CollectionReference<Map<String, dynamic>> super.collectionReference,
+    super.fromFirestore,
+    super.toFirestore,
+  );
 
   CollectionReference<Map<String, dynamic>>
   get _originalCollectionReferenceQuery {

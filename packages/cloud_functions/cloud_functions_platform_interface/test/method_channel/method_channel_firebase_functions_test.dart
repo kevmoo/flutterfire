@@ -73,6 +73,5 @@ void main() {
 
 class TestMethodChannelFirebaseFunctions
     extends MethodChannelFirebaseFunctions {
-  TestMethodChannelFirebaseFunctions({FirebaseApp? app, required String region})
-    : super(app: app, region: region);
+  TestMethodChannelFirebaseFunctions({super.app, required super.region});
 }

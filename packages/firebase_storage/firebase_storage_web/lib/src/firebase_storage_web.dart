@@ -24,17 +24,17 @@ typedef ReferenceBuilder =
 /// The Web implementation of the FirebaseStoragePlatform.
 class FirebaseStorageWeb extends FirebaseStoragePlatform {
   /// Construct the plugin.
-  FirebaseStorageWeb({FirebaseApp? app, required String bucket})
+  FirebaseStorageWeb({FirebaseApp? app, required super.bucket})
     : _bucket = bucket,
-      super(appInstance: app, bucket: bucket);
+      super(appInstance: app);
 
   /// Create a FirebaseStorageWeb injecting a [fb.Storage] object.
   @visibleForTesting
   FirebaseStorageWeb.forMock(
     this._webStorage, {
-    required String bucket,
+    required super.bucket,
     FirebaseApp? app,
-  }) : super(appInstance: app, bucket: bucket);
+  }) : super(appInstance: app);
 
   // Empty constructor. This is only used by the registerWith method.
   // superclass also needs to be initialized and 'bucket' param is required.

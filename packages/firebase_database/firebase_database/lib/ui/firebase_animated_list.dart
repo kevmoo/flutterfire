@@ -20,7 +20,7 @@ typedef FirebaseAnimatedListItemBuilder =
 class FirebaseAnimatedList extends StatefulWidget {
   /// Creates a scrolling container that animates items when they are inserted or removed.
   FirebaseAnimatedList({
-    Key? key,
+    super.key,
     required this.query,
     required this.itemBuilder,
     this.sort,
@@ -33,7 +33,7 @@ class FirebaseAnimatedList extends StatefulWidget {
     this.shrinkWrap = false,
     this.padding,
     this.duration = const Duration(milliseconds: 300),
-  }) : super(key: key);
+  });
 
   /// A Firebase query to use to populate the animated list
   final Query query;

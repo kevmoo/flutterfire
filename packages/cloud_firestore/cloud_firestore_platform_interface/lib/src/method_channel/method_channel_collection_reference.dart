@@ -24,12 +24,8 @@ class MethodChannelCollectionReference extends MethodChannelQuery
         // ignore: avoid_implementing_value_types
         CollectionReferencePlatform {
   /// Create a [MethodChannelCollectionReference] instance.
-  MethodChannelCollectionReference(
-    FirebaseFirestorePlatform firestore,
-    String path,
-    FirestorePigeonFirebaseApp pigeonApp,
-  ) : _pointer = Pointer(path),
-      super(firestore, path, pigeonApp);
+  MethodChannelCollectionReference(super.firestore, super.path, super.pigeonApp)
+    : _pointer = Pointer(path);
 
   final Pointer _pointer;
 

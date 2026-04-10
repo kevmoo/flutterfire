@@ -41,8 +41,7 @@ Storage getStorageInstance([App? app, String? bucket]) {
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.Storage>
 class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
-  Storage._fromJsObject(storage_interop.StorageJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  Storage._fromJsObject(super.jsObject) : super.fromJsObject();
 
   static final _expando = Expando<Storage>();
 
@@ -96,8 +95,7 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.Reference>
 class StorageReference
     extends JsObjectWrapper<storage_interop.ReferenceJsImpl> {
-  StorageReference._fromJsObject(storage_interop.ReferenceJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  StorageReference._fromJsObject(super.jsObject) : super.fromJsObject();
 
   static final _expando = Expando<StorageReference>();
 
@@ -298,8 +296,7 @@ class UploadMetadata
   }
 
   /// Creates a new UploadMetadata from a [jsObject].
-  UploadMetadata.fromJsObject(storage_interop.UploadMetadataJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  UploadMetadata.fromJsObject(super.jsObject) : super.fromJsObject();
 }
 
 // TODO(kevmoo) - figure out if a settable md5Hash makes any sense
@@ -308,7 +305,7 @@ abstract class _UploadMetadataBase<
   T extends storage_interop.UploadMetadataJsImpl
 >
     extends _SettableMetadataBase<T> {
-  _UploadMetadataBase.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  _UploadMetadataBase.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// The Base64-encoded MD5 hash for the object being uploaded.
   String? get md5Hash => jsObject.md5Hash?.toDart;
@@ -323,8 +320,7 @@ abstract class _UploadMetadataBase<
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.UploadTask>.
 class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
-  UploadTask._fromJsObject(storage_interop.UploadTaskJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  UploadTask._fromJsObject(super.jsObject) : super.fromJsObject();
 
   static final _expando = Expando<UploadTask>();
 
@@ -436,9 +432,7 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.UploadTaskSnapshot>.
 class UploadTaskSnapshot
     extends JsObjectWrapper<storage_interop.UploadTaskSnapshotJsImpl> {
-  UploadTaskSnapshot._fromJsObject(
-    storage_interop.UploadTaskSnapshotJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  UploadTaskSnapshot._fromJsObject(super.jsObject) : super.fromJsObject();
 
   static final _expando = Expando<UploadTaskSnapshot>();
 
@@ -525,15 +519,14 @@ class SettableMetadata
   }
 
   /// Creates a new SettableMetadata from a [jsObject].
-  SettableMetadata.fromJsObject(storage_interop.SettableMetadataJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  SettableMetadata.fromJsObject(super.jsObject) : super.fromJsObject();
 }
 
 abstract class _SettableMetadataBase<
   T extends storage_interop.SettableMetadataJsImpl
 >
     extends JsObjectWrapper<T> {
-  _SettableMetadataBase.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  _SettableMetadataBase.fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Served as the 'Cache-Control' header on object download.
   String? get cacheControl => jsObject.cacheControl?.toDart;
@@ -595,8 +588,7 @@ class ListOptions extends JsObjectWrapper<storage_interop.ListOptionsJsImpl> {
     );
   }
 
-  ListOptions._fromJsObject(storage_interop.ListOptionsJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  ListOptions._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// If set, limits the total number of prefixes and items to return.
   /// The default and maximum maxResults is 1000.
@@ -614,8 +606,7 @@ class ListOptions extends JsObjectWrapper<storage_interop.ListOptionsJsImpl> {
 
 /// Result returned by [StorageReference.list].
 class ListResult extends JsObjectWrapper<storage_interop.ListResultJsImpl> {
-  ListResult._fromJsObject(storage_interop.ListResultJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  ListResult._fromJsObject(super.jsObject) : super.fromJsObject();
 
   static final _expando = Expando<ListResult>();
 

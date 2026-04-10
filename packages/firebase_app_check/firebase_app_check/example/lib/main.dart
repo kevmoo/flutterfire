@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
 }
 
 class FirebaseAppCheckExample extends StatefulWidget {
-  FirebaseAppCheckExample({Key? key, required this.title}) : super(key: key);
+  FirebaseAppCheckExample({super.key, required this.title});
 
   final String title;
 

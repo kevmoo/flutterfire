@@ -16,12 +16,11 @@ part of '../../firebase_core_platform_interface.dart';
 class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   // ignore: public_member_api_docs
   MethodChannelFirebaseApp(
-    String name,
-    FirebaseOptions options, {
+    super.name,
+    super.options, {
     bool? isAutomaticDataCollectionEnabled,
   }) : _isAutomaticDataCollectionEnabled =
-           isAutomaticDataCollectionEnabled ?? false,
-       super(name, options);
+           isAutomaticDataCollectionEnabled ?? false;
 
   /// Keeps track of whether this app has been deleted by the user.
   bool _isDeleted = false;

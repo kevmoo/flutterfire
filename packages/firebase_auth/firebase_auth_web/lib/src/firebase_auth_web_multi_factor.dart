@@ -14,8 +14,7 @@ import 'utils/web_utils.dart';
 
 /// Web delegate implementation of [UserPlatform].
 class MultiFactorWeb extends MultiFactorPlatform {
-  MultiFactorWeb(FirebaseAuthPlatform auth, this._webMultiFactorUser)
-    : super(auth);
+  MultiFactorWeb(super.auth, this._webMultiFactorUser);
 
   final multi_factor_interop.MultiFactorUser _webMultiFactorUser;
 
@@ -69,12 +68,12 @@ class MultiFactorAssertionWeb extends MultiFactorAssertionPlatform {
 
 class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
   MultiFactorResolverWeb(
-    List<MultiFactorInfo> hints,
-    MultiFactorSession session,
+    super.hints,
+    super.session,
     this._auth,
     this._webMultiFactorResolver,
     this._webAuth,
-  ) : super(hints, session);
+  );
 
   final multi_factor_interop.MultiFactorResolver _webMultiFactorResolver;
   final auth_interop.Auth? _webAuth;
@@ -94,7 +93,7 @@ class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
 }
 
 class MultiFactorSessionWeb extends MultiFactorSession {
-  MultiFactorSessionWeb(String id, this.webSession) : super(id);
+  MultiFactorSessionWeb(super.id, this.webSession);
 
   final multi_factor_interop.MultiFactorSession webSession;
 }

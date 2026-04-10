@@ -50,5 +50,5 @@ void main() {
 
 class TestFirebaseInAppMessagingPlatform
     extends FirebaseInAppMessagingPlatform {
-  TestFirebaseInAppMessagingPlatform(FirebaseApp app) : super(app);
+  TestFirebaseInAppMessagingPlatform(FirebaseApp super.app);
 }

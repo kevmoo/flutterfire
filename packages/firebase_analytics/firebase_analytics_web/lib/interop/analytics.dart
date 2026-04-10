@@ -29,8 +29,7 @@ Analytics getAnalyticsInstance([
 }
 
 class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
-  Analytics._fromJsObject(analytics_interop.AnalyticsJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  Analytics._fromJsObject(super.jsObject) : super.fromJsObject();
   static final _expando = Expando<Analytics>();
 
   /// Creates a new Analytics instance from a [jsObject].

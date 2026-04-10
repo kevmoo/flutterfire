@@ -134,12 +134,12 @@ void main() {
 // Test class extending DataConnectTransport for testing purposes
 class TestDataConnectTransport extends DataConnectTransport {
   TestDataConnectTransport(
-    TransportOptions transportOptions,
-    DataConnectOptions options,
-    String appId,
-    CallerSDKType sdkType, {
+    super.transportOptions,
+    super.options,
+    super.appId,
+    super.sdkType, {
     FirebaseAppCheck? appCheck,
-  }) : super(transportOptions, options, appId, sdkType) {
+  }) {
     this.appCheck = appCheck;
   }
 

@@ -78,8 +78,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     return _expando[jsObject] ??= Firestore._fromJsObject(jsObject);
   }
 
-  Firestore._fromJsObject(firestore_interop.FirestoreJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  Firestore._fromJsObject(super.jsObject) : super.fromJsObject();
 
   WriteBatch? batch() =>
       WriteBatch.getInstance(firestore_interop.writeBatch(jsObject));
@@ -251,8 +250,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 
 class LoadBundleTask
     extends JsObjectWrapper<firestore_interop.LoadBundleTaskJsImpl> {
-  LoadBundleTask._fromJsObject(firestore_interop.LoadBundleTaskJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  LoadBundleTask._fromJsObject(super.jsObject) : super.fromJsObject();
 
   static final _expando = Expando<LoadBundleTask>();
 
@@ -309,9 +307,8 @@ class LoadBundleTask
 
 class LoadBundleTaskProgress
     extends JsObjectWrapper<firestore_interop.LoadBundleTaskProgressJsImpl> {
-  LoadBundleTaskProgress._fromJsObject(
-    firestore_interop.LoadBundleTaskProgressJsImpl jsObject,
-  ) : taskState = convertToTaskState(jsObject.taskState.toDart.toLowerCase()),
+  LoadBundleTaskProgress._fromJsObject(super.jsObject)
+    : taskState = convertToTaskState(jsObject.taskState.toDart.toLowerCase()),
       // Cannot be done with Dart 3.2 constraints
       // ignore: invalid_runtime_check_with_js_interop_types
       bytesLoaded = jsObject.bytesLoaded is JSNumber
@@ -324,7 +321,7 @@ class LoadBundleTaskProgress
           ? (jsObject.totalBytes as JSNumber).toDartInt
           : int.parse((jsObject.totalBytes as JSString).toDart),
       totalDocuments = jsObject.totalDocuments.toDartInt,
-      super.fromJsObject(jsObject);
+      super.fromJsObject();
 
   static final _expando = Expando<LoadBundleTaskProgress>();
 
@@ -352,8 +349,7 @@ class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl> {
     return _expando[jsObject] ??= WriteBatch._fromJsObject(jsObject);
   }
 
-  WriteBatch._fromJsObject(firestore_interop.WriteBatchJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  WriteBatch._fromJsObject(super.jsObject) : super.fromJsObject();
 
   Future<void> commit() => jsObject.commit().toDart;
 
@@ -410,9 +406,7 @@ class DocumentReference
     return _expando[jsObject] ??= DocumentReference._fromJsObject(jsObject);
   }
 
-  DocumentReference._fromJsObject(
-    firestore_interop.DocumentReferenceJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  DocumentReference._fromJsObject(super.jsObject) : super.fromJsObject();
 
   CollectionReference? collection(String collectionPath) {
     return CollectionReference.getInstance(
@@ -541,7 +535,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   Firestore get firestore => Firestore.getInstance(jsObject.firestore);
 
   /// Creates a new Query from a [jsObject].
-  Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+  Query.fromJsObject(super.jsObject) : super.fromJsObject();
 
   Query endAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
       Query.fromJsObject(
@@ -836,8 +830,7 @@ class DocumentChange
     return _expando[jsObject] ??= DocumentChange._fromJsObject(jsObject);
   }
 
-  DocumentChange._fromJsObject(firestore_interop.DocumentChangeJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  DocumentChange._fromJsObject(super.jsObject) : super.fromJsObject();
 }
 
 class DocumentSnapshot
@@ -859,9 +852,7 @@ class DocumentSnapshot
     return _expando[jsObject] ??= DocumentSnapshot._fromJsObject(jsObject);
   }
 
-  DocumentSnapshot._fromJsObject(
-    firestore_interop.DocumentSnapshotJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  DocumentSnapshot._fromJsObject(super.jsObject) : super.fromJsObject();
 
   Map<String, dynamic>? data([firestore_interop.SnapshotOptions? options]) {
     final parsedData = dartify(jsObject.data(options));
@@ -931,8 +922,7 @@ class QuerySnapshot
     return _expando[jsObject] ??= QuerySnapshot._fromJsObject(jsObject);
   }
 
-  QuerySnapshot._fromJsObject(firestore_interop.QuerySnapshotJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  QuerySnapshot._fromJsObject(super.jsObject) : super.fromJsObject();
 
   void forEach(void Function(DocumentSnapshot?) callback) {
     final callbackWrap = ((JSObject s) => callback(
@@ -956,8 +946,7 @@ class Transaction extends JsObjectWrapper<firestore_interop.TransactionJsImpl> {
     return _expando[jsObject] ??= Transaction._fromJsObject(jsObject);
   }
 
-  Transaction._fromJsObject(firestore_interop.TransactionJsImpl jsObject)
-    : super.fromJsObject(jsObject);
+  Transaction._fromJsObject(super.jsObject) : super.fromJsObject();
 
   Transaction delete(DocumentReference documentRef) =>
       Transaction.getInstance(jsObject.delete(documentRef.jsObject));
@@ -1020,7 +1009,7 @@ abstract class _FieldValueArray implements FieldValue {
 }
 
 class _FieldValueArrayUnion extends _FieldValueArray {
-  _FieldValueArrayUnion(List? elements) : super(elements);
+  _FieldValueArrayUnion(super.elements);
 
   @override
   firestore_interop.FieldValue? _jsify() {
@@ -1036,7 +1025,7 @@ class _FieldValueArrayUnion extends _FieldValueArray {
 }
 
 class _FieldValueArrayRemove extends _FieldValueArray {
-  _FieldValueArrayRemove(List? elements) : super(elements);
+  _FieldValueArrayRemove(super.elements);
 
   @override
   firestore_interop.FieldValue? _jsify() {
@@ -1152,10 +1141,9 @@ class AggregateQuerySnapshot
     );
   }
 
-  AggregateQuerySnapshot._fromJsObject(
-    firestore_interop.AggregateQuerySnapshotJsImpl jsObject,
-  ) : _data = Map.from(dartify(jsObject.data())),
-      super.fromJsObject(jsObject);
+  AggregateQuerySnapshot._fromJsObject(super.jsObject)
+    : _data = Map.from(dartify(jsObject.data())),
+      super.fromJsObject();
 
   int? get count => (_data['count'] as num?)?.toInt();
 

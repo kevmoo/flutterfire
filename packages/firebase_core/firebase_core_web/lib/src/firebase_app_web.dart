@@ -14,7 +14,7 @@ part of '../firebase_core_web.dart';
 /// Firebase.app('SecondaryApp`);
 /// ```
 class FirebaseAppWeb extends FirebaseAppPlatform {
-  FirebaseAppWeb._(String name, FirebaseOptions options) : super(name, options);
+  FirebaseAppWeb._(super.name, super.options);
 
   // TODO(rrousselGit): Either FirebaseAppPlatform shouldn't overrides ==/hashCode or FirebaseAppWeb should be immutable
   /// Returns whether automatic data collection enabled or disabled.
