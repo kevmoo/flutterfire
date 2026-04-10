@@ -22,63 +22,69 @@ part of '../base_model.dart';
   '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
 )
 final class TemplateImagenModel extends BaseTemplateApiClientModel {
-  TemplateImagenModel._testModel(
-      {required FirebaseApp app,
-      required String location,
-      required bool useVertexBackend,
-      http.Client? httpClient})
-      : super(
-          serializationStrategy: VertexSerialization(),
-          modelUri: useVertexBackend
-              ? _VertexUri(app: app, model: '', location: location)
-              : _GoogleAIUri(app: app, model: ''),
-          client: HttpApiClient(
-              apiKey: app.options.apiKey,
-              httpClient: httpClient,
-              requestHeaders: BaseModel.firebaseTokens(null, null, app, false)),
-          templateUri: useVertexBackend
-              ? _TemplateVertexUri(app: app, location: location)
-              : _TemplateGoogleAIUri(app: app),
-        );
+  TemplateImagenModel._testModel({
+    required FirebaseApp app,
+    required String location,
+    required bool useVertexBackend,
+    http.Client? httpClient,
+  }) : super(
+         serializationStrategy: VertexSerialization(),
+         modelUri: useVertexBackend
+             ? _VertexUri(app: app, model: '', location: location)
+             : _GoogleAIUri(app: app, model: ''),
+         client: HttpApiClient(
+           apiKey: app.options.apiKey,
+           httpClient: httpClient,
+           requestHeaders: BaseModel.firebaseTokens(null, null, app, false),
+         ),
+         templateUri: useVertexBackend
+             ? _TemplateVertexUri(app: app, location: location)
+             : _TemplateGoogleAIUri(app: app),
+       );
 
-  TemplateImagenModel._(
-      {required FirebaseApp app,
-      required String location,
-      required bool useVertexBackend,
-      bool? useLimitedUseAppCheckTokens,
-      FirebaseAppCheck? appCheck,
-      FirebaseAuth? auth})
-      : super(
-          serializationStrategy: useVertexBackend
-              ? VertexSerialization()
-              : DeveloperSerialization(),
-          modelUri: useVertexBackend
-              ? _VertexUri(app: app, model: '', location: location)
-              : _GoogleAIUri(app: app, model: ''),
-          client: HttpApiClient(
-              apiKey: app.options.apiKey,
-              requestHeaders: BaseModel.firebaseTokens(
-                  appCheck, auth, app, useLimitedUseAppCheckTokens)),
-          templateUri: useVertexBackend
-              ? _TemplateVertexUri(app: app, location: location)
-              : _TemplateGoogleAIUri(app: app),
-        );
+  TemplateImagenModel._({
+    required FirebaseApp app,
+    required String location,
+    required bool useVertexBackend,
+    bool? useLimitedUseAppCheckTokens,
+    FirebaseAppCheck? appCheck,
+    FirebaseAuth? auth,
+  }) : super(
+         serializationStrategy: useVertexBackend
+             ? VertexSerialization()
+             : DeveloperSerialization(),
+         modelUri: useVertexBackend
+             ? _VertexUri(app: app, model: '', location: location)
+             : _GoogleAIUri(app: app, model: ''),
+         client: HttpApiClient(
+           apiKey: app.options.apiKey,
+           requestHeaders: BaseModel.firebaseTokens(
+             appCheck,
+             auth,
+             app,
+             useLimitedUseAppCheckTokens,
+           ),
+         ),
+         templateUri: useVertexBackend
+             ? _TemplateVertexUri(app: app, location: location)
+             : _TemplateGoogleAIUri(app: app),
+       );
 
   /// Generates images from a template with the given [templateId] and [inputs].
   @experimental
   Future<ImagenGenerationResponse<ImagenInlineImage>> generateImages(
-          String templateId,
-          {required Map<String, Object?> inputs}) =>
-      makeTemplateRequest(
-        TemplateTask.templatePredict,
-        templateId,
-        inputs,
-        null, // history
-        null, // tools
-        null, // toolConfig
-        (jsonObject) =>
-            parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
-      );
+    String templateId, {
+    required Map<String, Object?> inputs,
+  }) => makeTemplateRequest(
+    TemplateTask.templatePredict,
+    templateId,
+    inputs,
+    null, // history
+    null, // tools
+    null, // toolConfig
+    (jsonObject) =>
+        parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+  );
 }
 
 /// Returns a [TemplateImagenModel] using its private constructor.
@@ -91,15 +97,14 @@ TemplateImagenModel createTemplateImagenModel({
   bool? useLimitedUseAppCheckTokens,
   FirebaseAppCheck? appCheck,
   FirebaseAuth? auth,
-}) =>
-    TemplateImagenModel._(
-      app: app,
-      appCheck: appCheck,
-      auth: auth,
-      location: location,
-      useVertexBackend: useVertexBackend,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-    );
+}) => TemplateImagenModel._(
+  app: app,
+  appCheck: appCheck,
+  auth: auth,
+  location: location,
+  useVertexBackend: useVertexBackend,
+  useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+);
 
 /// Returns a [TemplateImagenModel] using its private constructor.
 @experimental
@@ -109,10 +114,9 @@ TemplateImagenModel createTestTemplateImagenModel({
   required String location,
   required bool useVertexBackend,
   required http.Client client,
-}) =>
-    TemplateImagenModel._testModel(
-      app: app,
-      location: location,
-      useVertexBackend: useVertexBackend,
-      httpClient: client,
-    );
+}) => TemplateImagenModel._testModel(
+  app: app,
+  location: location,
+  useVertexBackend: useVertexBackend,
+  httpClient: client,
+);

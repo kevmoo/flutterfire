@@ -104,19 +104,11 @@ abstract class FirebaseCoreHostApi {
 @HostApi(dartHostTestHandler: 'TestFirebaseAppHostApi')
 abstract class FirebaseAppHostApi {
   @async
-  void setAutomaticDataCollectionEnabled(
-    String appName,
-    bool enabled,
-  );
+  void setAutomaticDataCollectionEnabled(String appName, bool enabled);
 
   @async
-  void setAutomaticResourceManagementEnabled(
-    String appName,
-    bool enabled,
-  );
+  void setAutomaticResourceManagementEnabled(String appName, bool enabled);
 
   @async
-  void delete(
-    String appName,
-  );
+  void delete(String appName);
 }

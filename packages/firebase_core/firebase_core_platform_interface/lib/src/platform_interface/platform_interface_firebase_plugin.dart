@@ -12,7 +12,7 @@ part of '../../firebase_core_platform_interface.dart';
 abstract class FirebasePluginPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
   FirebasePluginPlatform(this._appName, this._methodChannelName)
-      : super(token: _token);
+    : super(token: _token);
 
   /// The global data store for all constants, for each plugin and [FirebaseAppPlatform] instance.
   ///

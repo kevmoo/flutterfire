@@ -17,34 +17,35 @@ import 'utils/provider_to_string.dart';
 class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// Create an instance of [MethodChannelFirebaseAppCheck].
   MethodChannelFirebaseAppCheck({required FirebaseApp app})
-      : super(appInstance: app) {
+    : super(appInstance: app) {
     _tokenChangesListeners[app.name] = StreamController<String?>.broadcast();
 
-    _pigeonApi.registerTokenListener(app.name).then((channelName) {
-      final events = EventChannel(channelName);
-      events
-          .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen(
-        (arguments) {
-          // ignore: close_sinks
-          StreamController<String?> controller =
-              _tokenChangesListeners[app.name]!;
-          Map<dynamic, dynamic> result = arguments;
-          controller.add(result['token'] as String?);
-        },
-      );
-      // ignore: avoid_catches_without_on_clauses
-    }).catchError((_) {
-      // Silently ignore errors during token listener registration.
-      // This can happen in test environments where the host API is not set up.
-    });
+    _pigeonApi
+        .registerTokenListener(app.name)
+        .then((channelName) {
+          final events = EventChannel(channelName);
+          events
+              .receiveGuardedBroadcastStream(onError: convertPlatformException)
+              .listen((arguments) {
+                // ignore: close_sinks
+                StreamController<String?> controller =
+                    _tokenChangesListeners[app.name]!;
+                Map<dynamic, dynamic> result = arguments;
+                controller.add(result['token'] as String?);
+              });
+          // ignore: avoid_catches_without_on_clauses
+        })
+        .catchError((_) {
+          // Silently ignore errors during token listener registration.
+          // This can happen in test environments where the host API is not set up.
+        });
   }
 
   static final Map<String, StreamController<String?>> _tokenChangesListeners =
       {};
 
   static Map<String, MethodChannelFirebaseAppCheck>
-      _methodChannelFirebaseAppCheckInstances =
+  _methodChannelFirebaseAppCheckInstances =
       <String, MethodChannelFirebaseAppCheck>{};
 
   /// The Pigeon API used for platform communication.

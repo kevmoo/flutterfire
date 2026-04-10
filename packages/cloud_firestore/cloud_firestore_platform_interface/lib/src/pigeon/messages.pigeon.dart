@@ -86,23 +86,11 @@ enum PersistenceCacheIndexManagerRequest {
   deleteAllIndexes,
 }
 
-enum PigeonTransactionResult {
-  success,
-  failure,
-}
+enum PigeonTransactionResult { success, failure }
 
-enum PigeonTransactionType {
-  get,
-  update,
-  set,
-  deleteType,
-}
+enum PigeonTransactionType { get, update, set, deleteType }
 
-enum AggregateType {
-  count,
-  sum,
-  average,
-}
+enum AggregateType { count, sum, average }
 
 class PigeonFirebaseSettings {
   PigeonFirebaseSettings({
@@ -159,11 +147,7 @@ class FirestorePigeonFirebaseApp {
   String databaseURL;
 
   Object encode() {
-    return <Object?>[
-      appName,
-      settings.encode(),
-      databaseURL,
-    ];
+    return <Object?>[appName, settings.encode(), databaseURL];
   }
 
   static FirestorePigeonFirebaseApp decode(Object result) {
@@ -187,10 +171,7 @@ class PigeonSnapshotMetadata {
   bool isFromCache;
 
   Object encode() {
-    return <Object?>[
-      hasPendingWrites,
-      isFromCache,
-    ];
+    return <Object?>[hasPendingWrites, isFromCache];
   }
 
   static PigeonSnapshotMetadata decode(Object result) {
@@ -216,11 +197,7 @@ class PigeonDocumentSnapshot {
   PigeonSnapshotMetadata metadata;
 
   Object encode() {
-    return <Object?>[
-      path,
-      data,
-      metadata.encode(),
-    ];
+    return <Object?>[path, data, metadata.encode()];
   }
 
   static PigeonDocumentSnapshot decode(Object result) {
@@ -250,12 +227,7 @@ class PigeonDocumentChange {
   int newIndex;
 
   Object encode() {
-    return <Object?>[
-      type.index,
-      document.encode(),
-      oldIndex,
-      newIndex,
-    ];
+    return <Object?>[type.index, document.encode(), oldIndex, newIndex];
   }
 
   static PigeonDocumentChange decode(Object result) {
@@ -283,19 +255,15 @@ class PigeonQuerySnapshot {
   PigeonSnapshotMetadata metadata;
 
   Object encode() {
-    return <Object?>[
-      documents,
-      documentChanges,
-      metadata.encode(),
-    ];
+    return <Object?>[documents, documentChanges, metadata.encode()];
   }
 
   static PigeonQuerySnapshot decode(Object result) {
     result as List<Object?>;
     return PigeonQuerySnapshot(
       documents: (result[0] as List<Object?>?)!.cast<PigeonDocumentSnapshot?>(),
-      documentChanges:
-          (result[1] as List<Object?>?)!.cast<PigeonDocumentChange?>(),
+      documentChanges: (result[1] as List<Object?>?)!
+          .cast<PigeonDocumentChange?>(),
       metadata: PigeonSnapshotMetadata.decode(result[2]! as List<Object?>),
     );
   }
@@ -312,10 +280,7 @@ class PigeonGetOptions {
   ServerTimestampBehavior serverTimestampBehavior;
 
   Object encode() {
-    return <Object?>[
-      source.index,
-      serverTimestampBehavior.index,
-    ];
+    return <Object?>[source.index, serverTimestampBehavior.index];
   }
 
   static PigeonGetOptions decode(Object result) {
@@ -329,20 +294,14 @@ class PigeonGetOptions {
 }
 
 class PigeonDocumentOption {
-  PigeonDocumentOption({
-    this.merge,
-    this.mergeFields,
-  });
+  PigeonDocumentOption({this.merge, this.mergeFields});
 
   bool? merge;
 
   List<List<String?>?>? mergeFields;
 
   Object encode() {
-    return <Object?>[
-      merge,
-      mergeFields,
-    ];
+    return <Object?>[merge, mergeFields];
   }
 
   static PigeonDocumentOption decode(Object result) {
@@ -371,12 +330,7 @@ class PigeonTransactionCommand {
   PigeonDocumentOption? option;
 
   Object encode() {
-    return <Object?>[
-      type.index,
-      path,
-      data,
-      option?.encode(),
-    ];
+    return <Object?>[type.index, path, data, option?.encode()];
   }
 
   static PigeonTransactionCommand decode(Object result) {
@@ -499,20 +453,14 @@ class PigeonQueryParameters {
 }
 
 class AggregateQuery {
-  AggregateQuery({
-    required this.type,
-    this.field,
-  });
+  AggregateQuery({required this.type, this.field});
 
   AggregateType type;
 
   String? field;
 
   Object encode() {
-    return <Object?>[
-      type.index,
-      field,
-    ];
+    return <Object?>[type.index, field];
   }
 
   static AggregateQuery decode(Object result) {
@@ -525,11 +473,7 @@ class AggregateQuery {
 }
 
 class AggregateQueryResponse {
-  AggregateQueryResponse({
-    required this.type,
-    this.field,
-    this.value,
-  });
+  AggregateQueryResponse({required this.type, this.field, this.value});
 
   AggregateType type;
 
@@ -538,11 +482,7 @@ class AggregateQueryResponse {
   double? value;
 
   Object encode() {
-    return <Object?>[
-      type.index,
-      field,
-      value,
-    ];
+    return <Object?>[type.index, field, value];
   }
 
   static AggregateQueryResponse decode(Object result) {
@@ -643,7 +583,7 @@ class FirebaseFirestoreHostApi {
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
   FirebaseFirestoreHostApi({BinaryMessenger? binaryMessenger})
-      : _binaryMessenger = binaryMessenger;
+    : _binaryMessenger = binaryMessenger;
   final BinaryMessenger? _binaryMessenger;
 
   static const MessageCodec<Object?> codec = _FirebaseFirestoreHostApiCodec();
@@ -690,8 +630,9 @@ class FirebaseFirestoreHostApi {
       codec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? replyList = await channel
-        .send(<Object?>[arg_app, arg_name, arg_options]) as List<Object?>?;
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_name, arg_options])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -842,8 +783,9 @@ class FirebaseFirestoreHostApi {
       codec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? replyList = await channel
-        .send(<Object?>[arg_app, arg_indexConfiguration]) as List<Object?>?;
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_indexConfiguration])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -959,9 +901,13 @@ class FirebaseFirestoreHostApi {
       codec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? replyList = await channel.send(
-      <Object?>[arg_transactionId, arg_resultType.index, arg_commands],
-    ) as List<Object?>?;
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[
+              arg_transactionId,
+              arg_resultType.index,
+              arg_commands,
+            ])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1137,13 +1083,15 @@ class FirebaseFirestoreHostApi {
       codec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? replyList = await channel.send(<Object?>[
-      arg_app,
-      arg_path,
-      arg_isCollectionGroup,
-      arg_parameters,
-      arg_options,
-    ]) as List<Object?>?;
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[
+              arg_app,
+              arg_path,
+              arg_isCollectionGroup,
+              arg_parameters,
+              arg_options,
+            ])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1178,14 +1126,16 @@ class FirebaseFirestoreHostApi {
       codec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? replyList = await channel.send(<Object?>[
-      arg_app,
-      arg_path,
-      arg_parameters,
-      arg_source.index,
-      arg_queries,
-      arg_isCollectionGroup,
-    ]) as List<Object?>?;
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[
+              arg_app,
+              arg_path,
+              arg_parameters,
+              arg_source.index,
+              arg_queries,
+              arg_isCollectionGroup,
+            ])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1248,15 +1198,17 @@ class FirebaseFirestoreHostApi {
       codec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? replyList = await channel.send(<Object?>[
-      arg_app,
-      arg_path,
-      arg_isCollectionGroup,
-      arg_parameters,
-      arg_options,
-      arg_includeMetadataChanges,
-      arg_source.index,
-    ]) as List<Object?>?;
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[
+              arg_app,
+              arg_path,
+              arg_isCollectionGroup,
+              arg_parameters,
+              arg_options,
+              arg_includeMetadataChanges,
+              arg_source.index,
+            ])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1289,12 +1241,14 @@ class FirebaseFirestoreHostApi {
       codec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? replyList = await channel.send(<Object?>[
-      arg_app,
-      arg_parameters,
-      arg_includeMetadataChanges,
-      arg_source.index,
-    ]) as List<Object?>?;
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[
+              arg_app,
+              arg_parameters,
+              arg_includeMetadataChanges,
+              arg_source.index,
+            ])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -1325,8 +1279,9 @@ class FirebaseFirestoreHostApi {
       codec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? replyList = await channel
-        .send(<Object?>[arg_app, arg_request.index]) as List<Object?>?;
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_app, arg_request.index])
+            as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',

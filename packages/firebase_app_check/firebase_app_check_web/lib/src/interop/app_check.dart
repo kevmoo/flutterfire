@@ -38,8 +38,9 @@ AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
   } else if (provider is ReCaptchaV3Provider) {
     jsProvider = app_check_interop.ReCaptchaV3Provider(provider.siteKey.toJS);
   } else if (provider is ReCaptchaEnterpriseProvider) {
-    jsProvider =
-        app_check_interop.ReCaptchaEnterpriseProvider(provider.siteKey.toJS);
+    jsProvider = app_check_interop.ReCaptchaEnterpriseProvider(
+      provider.siteKey.toJS,
+    );
   } else {
     throw ArgumentError(
       'A `WebProvider` is required for `activate()` to initialise App Check on the web platform',
@@ -67,7 +68,7 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
   }
 
   AppCheck._fromJsObject(app_check_interop.AppCheckJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+    : super.fromJsObject(jsObject);
 
   void setTokenAutoRefreshEnabled(bool isTokenAutoRefreshEnabled) =>
       app_check_interop.setTokenAutoRefreshEnabled(
@@ -77,8 +78,7 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
 
   Future<app_check_interop.AppCheckTokenResultJsImpl> getToken(
     bool? forceRefresh,
-  ) =>
-      app_check_interop.getToken(jsObject, forceRefresh?.toJS).toDart;
+  ) => app_check_interop.getToken(jsObject, forceRefresh?.toJS).toDart;
 
   Future<app_check_interop.AppCheckTokenResultJsImpl> getLimitedUseToken() =>
       app_check_interop.getLimitedUseToken(jsObject).toDart;
@@ -86,11 +86,11 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
   JSFunction? _idTokenChangedUnsubscribe;
 
   StreamController<app_check_interop.AppCheckTokenResultJsImpl>?
-      get idTokenChangedController => _idTokenChangedController;
+  get idTokenChangedController => _idTokenChangedController;
 
   StreamController<app_check_interop.AppCheckTokenResultJsImpl>?
-      // ignore: close_sinks
-      _idTokenChangedController;
+  // ignore: close_sinks
+  _idTokenChangedController;
 
   // purely for debug mode and tracking listeners to clean up on "hot restart"
   final Map<String, int> _tokenListeners = {};
@@ -115,11 +115,12 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
     if (_idTokenChangedController == null) {
       final nextWrapper =
           ((app_check_interop.AppCheckTokenResultJsImpl result) {
-        _idTokenChangedController!.add(result);
-      }).toJS;
+            _idTokenChangedController!.add(result);
+          }).toJS;
 
-      final errorWrapper =
-          ((JSError e) => _idTokenChangedController!.addError(e)).toJS;
+      final errorWrapper = ((JSError e) => _idTokenChangedController!.addError(
+        e,
+      )).toJS;
 
       void startListen() {
         _idTokenChangedUnsubscribe = app_check_interop.onTokenChanged(
@@ -137,12 +138,10 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
         removeWindowsListener(appCheckWindowsKey);
       }
 
-      _idTokenChangedController = StreamController<
-          app_check_interop.AppCheckTokenResultJsImpl>.broadcast(
-        onListen: startListen,
-        onCancel: stopListen,
-        sync: true,
-      );
+      _idTokenChangedController =
+          StreamController<
+            app_check_interop.AppCheckTokenResultJsImpl
+          >.broadcast(onListen: startListen, onCancel: stopListen, sync: true);
     }
 
     return _idTokenChangedController!.stream;

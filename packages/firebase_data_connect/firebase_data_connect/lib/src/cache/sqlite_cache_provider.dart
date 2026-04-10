@@ -47,7 +47,8 @@ class SQLite3CacheProvider implements CacheProvider {
         int major = curVersion ~/ 1000000;
         if (major != 1) {
           developer.log(
-              'Unsupported schema major version $major detected. Expected 1');
+            'Unsupported schema major version $major detected. Expected 1',
+          );
           return false;
         }
       }
@@ -169,7 +170,7 @@ class SQLite3CacheProvider implements CacheProvider {
         [
           queryId,
           DateTime.now().millisecondsSinceEpoch / 1000.0,
-          resultTree.toRawJson()
+          resultTree.toRawJson(),
         ],
       );
       _db.execute('COMMIT');

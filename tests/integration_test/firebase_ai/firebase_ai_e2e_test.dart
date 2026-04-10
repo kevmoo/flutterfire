@@ -57,7 +57,8 @@ void main() {
 
       testWidgets(
         'returns correct iOS/macOS headers',
-        skip: kIsWeb ||
+        skip:
+            kIsWeb ||
             (defaultTargetPlatform != TargetPlatform.iOS &&
                 defaultTargetPlatform != TargetPlatform.macOS),
         (WidgetTester tester) async {
@@ -75,20 +76,16 @@ void main() {
         },
       );
 
-      testWidgets(
-        'returns empty headers on web',
-        skip: !kIsWeb,
-        (WidgetTester tester) async {
-          // On web, no native plugin is registered, so the channel call
-          // should throw a MissingPluginException.
-          expect(
-            () => _channel.invokeMapMethod<String, String>(
-              'getPlatformHeaders',
-            ),
-            throwsA(isA<MissingPluginException>()),
-          );
-        },
-      );
+      testWidgets('returns empty headers on web', skip: !kIsWeb, (
+        WidgetTester tester,
+      ) async {
+        // On web, no native plugin is registered, so the channel call
+        // should throw a MissingPluginException.
+        expect(
+          () => _channel.invokeMapMethod<String, String>('getPlatformHeaders'),
+          throwsA(isA<MissingPluginException>()),
+        );
+      });
     });
   });
 }

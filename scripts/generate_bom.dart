@@ -63,8 +63,9 @@ void main(List<String> arguments) async {
 
   // Read current versions JSON file
   File currentVersionsJson = File(versionsJsonFile);
-  Map<String, dynamic> currentVersions =
-      jsonDecode(currentVersionsJson.readAsStringSync());
+  Map<String, dynamic> currentVersions = jsonDecode(
+    currentVersionsJson.readAsStringSync(),
+  );
 
   // Create JSON data
   Map<String, Map<String, Object>> jsonData = <String, Map<String, Object>>{
@@ -85,10 +86,7 @@ void main(List<String> arguments) async {
   // Write JSON to file
   File versionsJson = File(versionsJsonFile);
   versionsJson.writeAsStringSync(
-    jsonEncoder.convert({
-      ...jsonData,
-      ...currentVersions,
-    }),
+    jsonEncoder.convert({...jsonData, ...currentVersions}),
     flush: true,
   );
 
@@ -109,21 +107,23 @@ void main(List<String> arguments) async {
   await addLinkInChangelog(version, date);
 
   // Commit the files and create an annotated tag and a commit
-  Process.runSync(
-    'git',
-    ['add', versionsFile, versionsJsonFile, changelogFile],
-  );
-  Process.runSync(
-    'git',
-    ['tag', '-a', 'BoM-v$version', '-m', 'BoM Version $version'],
-  );
+  Process.runSync('git', [
+    'add',
+    versionsFile,
+    versionsJsonFile,
+    changelogFile,
+  ]);
+  Process.runSync('git', [
+    'tag',
+    '-a',
+    'BoM-v$version',
+    '-m',
+    'BoM Version $version',
+  ]);
   Process.runSync('git', ['commit', '-m', 'chore: BoM Version $version']);
 }
 
-Future<String> getSdkVersion(
-  String versionFile,
-  String pattern,
-) async {
+Future<String> getSdkVersion(String versionFile, String pattern) async {
   RegExp regex = RegExp(pattern);
   String fileContents = await File(versionFile).readAsString();
   Match? match = regex.firstMatch(fileContents);
@@ -220,8 +220,9 @@ Future<void> addLinkInChangelog(String version, String date) async {
   String newLine =
       '## $date - [BoM $version](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-${version.replaceAll('.', '')}-$date)';
 
-  String escapedOriginalLine =
-      originalLine.replaceAll(r'$', r'\$').replaceAll('#', r'\#');
+  String escapedOriginalLine = originalLine
+      .replaceAll(r'$', r'\$')
+      .replaceAll('#', r'\#');
   String escapedNewLine = newLine
       .replaceAll(r'$', r'\$')
       .replaceAll('(', r'\(')

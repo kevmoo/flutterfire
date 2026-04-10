@@ -32,20 +32,20 @@ import 'cache/cache.dart';
 class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Constructor for initializing Data Connect
   @visibleForTesting
-  FirebaseDataConnect(
-      {required this.app,
-      required this.connectorConfig,
-      this.auth,
-      this.appCheck,
-      CallerSDKType? sdkType,
-      this.cacheSettings})
-      : options = DataConnectOptions(
-          app.options.projectId,
-          connectorConfig.location,
-          connectorConfig.connector,
-          connectorConfig.serviceId,
-        ),
-        super(app.name, 'plugins.flutter.io/firebase_data_connect') {
+  FirebaseDataConnect({
+    required this.app,
+    required this.connectorConfig,
+    this.auth,
+    this.appCheck,
+    CallerSDKType? sdkType,
+    this.cacheSettings,
+  }) : options = DataConnectOptions(
+         app.options.projectId,
+         connectorConfig.location,
+         connectorConfig.connector,
+         connectorConfig.serviceId,
+       ),
+       super(app.name, 'plugins.flutter.io/firebase_data_connect') {
     _queryManager = QueryManager(this);
     if (sdkType != null) {
       _sdkType = sdkType;
@@ -91,8 +91,11 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   /// Checks whether the transport has been properly initialized.
   @visibleForTesting
   void checkTransport() {
-    transportOptions ??=
-        TransportOptions('firebasedataconnect.googleapis.com', null, true);
+    transportOptions ??= TransportOptions(
+      'firebasedataconnect.googleapis.com',
+      null,
+      true,
+    );
     transport = getTransport(
       transportOptions!,
       options,
@@ -119,8 +122,11 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   ) {
     checkTransport();
     checkAndInitializeCache();
-    String queryId =
-        QueryManager.createQueryId(operationName, vars, varsSerializer);
+    String queryId = QueryManager.createQueryId(
+      operationName,
+      vars,
+      varsSerializer,
+    );
 
     QueryRef<Data, Variables>? ref =
         _queryManager.trackedQueries[queryId] as QueryRef<Data, Variables>?;
@@ -183,13 +189,14 @@ class FirebaseDataConnect extends FirebasePluginPlatform {
   ///
   /// If [app] is not provided, the default Firebase app will be used.
   /// If pass in [appCheck], request session will get protected from abusing.
-  static FirebaseDataConnect instanceFor(
-      {FirebaseApp? app,
-      FirebaseAuth? auth,
-      FirebaseAppCheck? appCheck,
-      CallerSDKType? sdkType,
-      required ConnectorConfig connectorConfig,
-      CacheSettings? cacheSettings}) {
+  static FirebaseDataConnect instanceFor({
+    FirebaseApp? app,
+    FirebaseAuth? auth,
+    FirebaseAppCheck? appCheck,
+    CallerSDKType? sdkType,
+    required ConnectorConfig connectorConfig,
+    CacheSettings? cacheSettings,
+  }) {
     app ??= Firebase.app();
     auth ??= FirebaseAuth.instanceFor(app: app);
     appCheck ??= FirebaseAppCheck.instanceFor(app: app);

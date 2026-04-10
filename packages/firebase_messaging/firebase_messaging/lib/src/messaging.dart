@@ -18,14 +18,16 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   FirebaseMessagingPlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseMessagingPlatform.instanceFor(
-        app: app, pluginConstants: pluginConstants);
+      app: app,
+      pluginConstants: pluginConstants,
+    );
   }
 
   /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
   FirebaseApp app;
 
   FirebaseMessaging._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_messaging');
+    : super(app.name, 'plugins.flutter.io/firebase_messaging');
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseMessaging get instance {
@@ -114,12 +116,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// Returns the default FCM token for this device.
   ///
   /// On web, a [vapidKey] is required.
-  Future<String?> getToken({
-    String? vapidKey,
-  }) {
-    return _delegate.getToken(
-      vapidKey: vapidKey,
-    );
+  Future<String?> getToken({String? vapidKey}) {
+    return _delegate.getToken(vapidKey: vapidKey);
   }
 
   /// Fires when a new FCM token is generated.

@@ -61,9 +61,7 @@ class _MultimodalPageState extends State<MultimodalPage> {
         '${dir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.wav';
 
     await record.start(
-      const RecordConfig(
-        encoder: AudioEncoder.wav,
-      ),
+      const RecordConfig(encoder: AudioEncoder.wav),
       path: filePath,
     );
   }
@@ -128,8 +126,9 @@ class _MultimodalPageState extends State<MultimodalPage> {
         _loading = true;
       });
 
-      ByteData videoBytes =
-          await rootBundle.load('assets/videos/landscape.mp4');
+      ByteData videoBytes = await rootBundle.load(
+        'assets/videos/landscape.mp4',
+      );
 
       const promptText = 'Can you tell me what is in the video?';
 
@@ -137,8 +136,10 @@ class _MultimodalPageState extends State<MultimodalPage> {
         _messages.add(MessageData(text: promptText, fromUser: true));
       });
 
-      final videoPart =
-          InlineDataPart('video/mp4', videoBytes.buffer.asUint8List());
+      final videoPart = InlineDataPart(
+        'video/mp4',
+        videoBytes.buffer.asUint8List(),
+      );
 
       final response = await widget.model.generateContent([
         Content.multi([const TextPart(promptText), videoPart]),
@@ -164,8 +165,9 @@ class _MultimodalPageState extends State<MultimodalPage> {
         _loading = true;
       });
 
-      ByteData docBytes =
-          await rootBundle.load('assets/documents/gemini_summary.pdf');
+      ByteData docBytes = await rootBundle.load(
+        'assets/documents/gemini_summary.pdf',
+      );
 
       const promptText =
           'Write me a summary in one sentence what this document is about.';
@@ -174,8 +176,10 @@ class _MultimodalPageState extends State<MultimodalPage> {
         _messages.add(MessageData(text: promptText, fromUser: true));
       });
 
-      final pdfPart =
-          InlineDataPart('application/pdf', docBytes.buffer.asUint8List());
+      final pdfPart = InlineDataPart(
+        'application/pdf',
+        docBytes.buffer.asUint8List(),
+      );
 
       final response = await widget.model.generateContent([
         Content.multi([const TextPart(promptText), pdfPart]),
@@ -210,9 +214,7 @@ class _MultimodalPageState extends State<MultimodalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -235,10 +237,7 @@ class _MultimodalPageState extends State<MultimodalPage> {
                 child: CircularProgressIndicator(),
               ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 15,
-                horizontal: 10,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -283,10 +282,7 @@ class _MultimodalPageState extends State<MultimodalPage> {
                         ),
                         iconSize: 32,
                       ),
-                      const Text(
-                        'Test Video',
-                        style: TextStyle(fontSize: 12),
-                      ),
+                      const Text('Test Video', style: TextStyle(fontSize: 12)),
                     ],
                   ),
                   Column(
@@ -300,10 +296,7 @@ class _MultimodalPageState extends State<MultimodalPage> {
                         ),
                         iconSize: 32,
                       ),
-                      const Text(
-                        'Test Doc',
-                        style: TextStyle(fontSize: 12),
-                      ),
+                      const Text('Test Doc', style: TextStyle(fontSize: 12)),
                     ],
                   ),
                 ],

@@ -51,7 +51,9 @@ enum ImagenSafetyFilterLevel {
       'block_only_high' => ImagenSafetyFilterLevel.blockOnlyHigh,
       'block_none' => ImagenSafetyFilterLevel.blockNone,
       _ => throw FormatException(
-          'Unhandled ImagenSafetyFilterLevel format', jsonObject),
+        'Unhandled ImagenSafetyFilterLevel format',
+        jsonObject,
+      ),
     };
   }
 
@@ -91,7 +93,9 @@ enum ImagenPersonFilterLevel {
       'allow_adult' => ImagenPersonFilterLevel.allowAdult,
       'allow_all' => ImagenPersonFilterLevel.allowAll,
       _ => throw FormatException(
-          'Unhandled ImagenPersonFilterLevel format', jsonObject),
+        'Unhandled ImagenPersonFilterLevel format',
+        jsonObject,
+      ),
     };
   }
 
@@ -119,11 +123,10 @@ final class ImagenSafetySettings {
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
-        if (safetyFilterLevel != null)
-          'safetySetting': safetyFilterLevel!.toJson(),
-        if (personFilterLevel != null)
-          'personGeneration': personFilterLevel!.toJson(),
-      };
+    if (safetyFilterLevel != null) 'safetySetting': safetyFilterLevel!.toJson(),
+    if (personFilterLevel != null)
+      'personGeneration': personFilterLevel!.toJson(),
+  };
 }
 
 /// The aspect ratio for the image.
@@ -165,8 +168,10 @@ enum ImagenAspectRatio {
       '16:9' => ImagenAspectRatio.landscape16x9,
       '3:4' => ImagenAspectRatio.portrait3x4,
       '4:3' => ImagenAspectRatio.landscape4x3,
-      _ =>
-        throw FormatException('Unhandled ImagenAspectRatio format', jsonObject),
+      _ => throw FormatException(
+        'Unhandled ImagenAspectRatio format',
+        jsonObject,
+      ),
     };
   }
 
@@ -182,12 +187,13 @@ enum ImagenAspectRatio {
 )
 final class ImagenGenerationConfig {
   // ignore: public_member_api_docs
-  ImagenGenerationConfig(
-      {this.numberOfImages,
-      this.negativePrompt,
-      this.aspectRatio,
-      this.imageFormat,
-      this.addWatermark});
+  ImagenGenerationConfig({
+    this.numberOfImages,
+    this.negativePrompt,
+    this.aspectRatio,
+    this.imageFormat,
+    this.addWatermark,
+  });
 
   /// The number of images to generate.
   ///
@@ -211,12 +217,12 @@ final class ImagenGenerationConfig {
 
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
-        if (negativePrompt != null) 'negativePrompt': negativePrompt,
-        'sampleCount': numberOfImages ?? 1,
-        if (aspectRatio != null) 'aspectRatio': aspectRatio!.toJson(),
-        if (addWatermark != null) 'addWatermark': addWatermark,
-        if (imageFormat != null) 'outputOptions': imageFormat!.toJson(),
-      };
+    if (negativePrompt != null) 'negativePrompt': negativePrompt,
+    'sampleCount': numberOfImages ?? 1,
+    if (aspectRatio != null) 'aspectRatio': aspectRatio!.toJson(),
+    if (addWatermark != null) 'addWatermark': addWatermark,
+    if (imageFormat != null) 'outputOptions': imageFormat!.toJson(),
+  };
 }
 
 /// Represents the image format and compression quality.
@@ -236,7 +242,9 @@ final class ImagenFormat {
   ImagenFormat.jpeg({this.compressionQuality}) : mimeType = 'image/jpeg' {
     if (compressionQuality != null &&
         (compressionQuality! < 0 || compressionQuality! > 100)) {
-      log('ImagenFormat (jpeg): compressionQuality ($compressionQuality) is out of range [0, 100].');
+      log(
+        'ImagenFormat (jpeg): compressionQuality ($compressionQuality) is out of range [0, 100].',
+      );
     }
   }
 
@@ -249,8 +257,7 @@ final class ImagenFormat {
 
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
-        'mimeType': mimeType,
-        if (compressionQuality != null)
-          'compressionQuality': compressionQuality,
-      };
+    'mimeType': mimeType,
+    if (compressionQuality != null) 'compressionQuality': compressionQuality,
+  };
 }

@@ -17,7 +17,7 @@ import '../platform_interface/platform_interface_crashlytics.dart';
 class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   /// Create an instance of [MethodChannelFirebaseCrashlytics].
   MethodChannelFirebaseCrashlytics({required FirebaseApp app})
-      : super(appInstance: app);
+    : super(appInstance: app);
 
   /// The [MethodChannel] used to communicate with the native plugin
   static MethodChannel channel = const MethodChannel(
@@ -43,13 +43,15 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   Future<bool> checkForUnsentReports() async {
     if (isCrashlyticsCollectionEnabled) {
       throw StateError(
-          "Crashlytics#setCrashlyticsCollectionEnabled has been set to 'true', all reports are automatically sent.");
+        "Crashlytics#setCrashlyticsCollectionEnabled has been set to 'true', all reports are automatically sent.",
+      );
     }
 
     try {
-      Map<String, dynamic>? data =
-          await channel.invokeMapMethod<String, dynamic>(
-              'Crashlytics#checkForUnsentReports');
+      Map<String, dynamic>? data = await channel
+          .invokeMapMethod<String, dynamic>(
+            'Crashlytics#checkForUnsentReports',
+          );
 
       return data!['unsentReports'];
     } on PlatformException catch (e, s) {
@@ -78,9 +80,10 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<bool> didCrashOnPreviousExecution() async {
     try {
-      Map<String, dynamic>? data =
-          await channel.invokeMapMethod<String, dynamic>(
-              'Crashlytics#didCrashOnPreviousExecution');
+      Map<String, dynamic>? data = await channel
+          .invokeMapMethod<String, dynamic>(
+            'Crashlytics#didCrashOnPreviousExecution',
+          );
 
       return data!['didCrashOnPreviousExecution'];
     } on PlatformException catch (e, s) {
@@ -101,14 +104,14 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     try {
       await channel
           .invokeMethod<void>('Crashlytics#recordError', <String, dynamic>{
-        'exception': exception,
-        'information': information,
-        'reason': reason,
-        'fatal': fatal,
-        'buildId': buildId ?? '',
-        'loadingUnits': loadingUnits,
-        'stackTraceElements': stackTraceElements ?? [],
-      });
+            'exception': exception,
+            'information': information,
+            'reason': reason,
+            'fatal': fatal,
+            'buildId': buildId ?? '',
+            'loadingUnits': loadingUnits,
+            'stackTraceElements': stackTraceElements ?? [],
+          });
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -139,9 +142,9 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     try {
       Map<String, dynamic>? data = await channel
           .invokeMapMethod<String, dynamic>(
-              'Crashlytics#setCrashlyticsCollectionEnabled', <String, dynamic>{
-        'enabled': enabled,
-      });
+            'Crashlytics#setCrashlyticsCollectionEnabled',
+            <String, dynamic>{'enabled': enabled},
+          );
 
       _isCrashlyticsCollectionEnabled = data!['isCrashlyticsCollectionEnabled'];
     } on PlatformException catch (e, s) {
@@ -153,9 +156,9 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   Future<void> setUserIdentifier(String identifier) async {
     try {
       await channel.invokeMethod<void>(
-          'Crashlytics#setUserIdentifier', <String, dynamic>{
-        'identifier': identifier,
-      });
+        'Crashlytics#setUserIdentifier',
+        <String, dynamic>{'identifier': identifier},
+      );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -164,11 +167,10 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> setCustomKey(String key, String value) async {
     try {
-      await channel
-          .invokeMethod<void>('Crashlytics#setCustomKey', <String, dynamic>{
-        'key': key,
-        'value': value,
-      });
+      await channel.invokeMethod<void>(
+        'Crashlytics#setCustomKey',
+        <String, dynamic>{'key': key, 'value': value},
+      );
     } on PlatformException catch (e, s) {
       convertPlatformException(e, s);
     }

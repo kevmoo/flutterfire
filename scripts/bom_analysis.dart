@@ -25,11 +25,7 @@ void main(List<String> arguments) async {
 Future<melos.MelosWorkspace> getMelosWorkspace() async {
   final packageFilters = melos.PackageFilters(
     includePrivatePackages: false,
-    ignore: [
-      Glob('*web*'),
-      Glob('*platform*'),
-      Glob('*internals*'),
-    ],
+    ignore: [Glob('*web*'), Glob('*platform*'), Glob('*internals*')],
   );
   final workspace = await melos.MelosWorkspace.fromConfig(
     await melos.MelosWorkspaceConfig.fromWorkspaceRoot(Directory.current),
@@ -42,8 +38,9 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
 
 Future<String?> getBoMNextVersion({bool shouldLog = false}) async {
   File currentVersionsJson = File(versionsJsonFile);
-  Map<String, dynamic> currentVersions =
-      jsonDecode(currentVersionsJson.readAsStringSync());
+  Map<String, dynamic> currentVersions = jsonDecode(
+    currentVersionsJson.readAsStringSync(),
+  );
   // We always append the latest version to the top of the file
   // and it's preserved during parsing
   final currentVersionNumber = currentVersions.keys.first;
@@ -51,8 +48,8 @@ Future<String?> getBoMNextVersion({bool shouldLog = false}) async {
   final currentBoMVersion = melos.Version.parse(currentVersionNumber);
   final previousBoMPackageNameAndVersions =
       currentVersions[currentVersionNumber]['packages']
-              as Map<String, dynamic>? ??
-          {};
+          as Map<String, dynamic>? ??
+      {};
 
   final currentPackageNameAndVersionsMap = await getPackagesUsingMelos();
   final changes = <String, int>{};
@@ -77,8 +74,9 @@ Future<String?> getBoMNextVersion({bool shouldLog = false}) async {
         changes['patch'] = (changes['patch'] ?? 0) + 1;
         changedPackages[entry.key] = [previousVersion, current.toString()];
       } else if (current.build.isNotEmpty) {
-        final previousBuild =
-            previous.build.isEmpty ? 0 : previous.build.first as int;
+        final previousBuild = previous.build.isEmpty
+            ? 0
+            : previous.build.first as int;
         final currentBuild = current.build.first as int;
         if (currentBuild > previousBuild) {
           changes['patch'] = (changes['patch'] ?? 0) + 1;

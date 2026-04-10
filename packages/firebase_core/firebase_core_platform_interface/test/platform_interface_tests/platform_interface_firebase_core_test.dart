@@ -68,5 +68,4 @@ class FirebaseCoreMockPlatform extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin
-    implements
-        FirebasePlatform {}
+    implements FirebasePlatform {}

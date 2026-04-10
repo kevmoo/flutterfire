@@ -92,7 +92,8 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
       setState(() {
         _messages.add(
           MessageData(
-            text: (textResponse ?? '') +
+            text:
+                (textResponse ?? '') +
                 (imageBytes != null
                     ? '\nGenerated Image:'
                     : 'No picture generated'),
@@ -118,9 +119,7 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -135,9 +134,7 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(

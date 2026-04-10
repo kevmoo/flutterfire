@@ -63,9 +63,10 @@ void main() {
 
     test('Instance creation with custom', () {
       final vertexAI = FirebaseAI.vertexAI(
-          app: customApp,
-          appCheck: customAppCheck,
-          location: 'custom-location');
+        app: customApp,
+        appCheck: customAppCheck,
+        location: 'custom-location',
+      );
       expect(vertexAI.app, equals(customApp));
       expect(vertexAI.appCheck, equals(customAppCheck));
       expect(vertexAI.location, equals('custom-location'));

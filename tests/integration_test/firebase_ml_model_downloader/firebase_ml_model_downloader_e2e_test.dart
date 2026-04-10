@@ -59,8 +59,9 @@ void main() {
           'should return successfully',
           () async {
             await expectLater(
-              FirebaseModelDownloader.instance
-                  .deleteDownloadedModel(testModelName),
+              FirebaseModelDownloader.instance.deleteDownloadedModel(
+                testModelName,
+              ),
               completes,
             );
           },

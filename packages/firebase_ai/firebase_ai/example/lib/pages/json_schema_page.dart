@@ -39,9 +39,7 @@ class _JsonSchemaPageState extends State<JsonSchemaPage> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(
-          milliseconds: 750,
-        ),
+        duration: const Duration(milliseconds: 750),
         curve: Curves.easeOutCirc,
       ),
     );
@@ -50,9 +48,7 @@ class _JsonSchemaPageState extends State<JsonSchemaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -72,10 +68,7 @@ class _JsonSchemaPageState extends State<JsonSchemaPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 25,
-                horizontal: 15,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
               child: Row(
                 children: [
                   Expanded(
@@ -138,7 +131,7 @@ class _JsonSchemaPageState extends State<JsonSchemaPage> {
                     },
                   },
                   'required': ['type', 'children'],
-                }
+                },
               ],
             },
           },
@@ -154,8 +147,9 @@ class _JsonSchemaPageState extends State<JsonSchemaPage> {
         ),
       );
 
-      var text = const JsonEncoder.withIndent('  ')
-          .convert(json.decode(response.text ?? '') as Object?);
+      var text = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(json.decode(response.text ?? '') as Object?);
       _messages.add(MessageData(text: '```json$text```', fromUser: false));
 
       setState(() {
@@ -182,9 +176,7 @@ class _JsonSchemaPageState extends State<JsonSchemaPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () {

@@ -25,9 +25,7 @@ const kWindowsDebugToken = String.fromEnvironment(
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Activate app check after initialization, but before
   // usage of any Firebase services.
@@ -64,10 +62,7 @@ class MyApp extends StatelessWidget {
 }
 
 class FirebaseAppCheckExample extends StatefulWidget {
-  FirebaseAppCheckExample({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
+  FirebaseAppCheckExample({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -110,7 +105,8 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
         providerWeb: ReCaptchaV3Provider(kWebRecaptchaSiteKey),
         providerWindows: windows ?? const WindowsDebugProvider(),
       );
-      final providerName = windows?.runtimeType.toString() ??
+      final providerName =
+          windows?.runtimeType.toString() ??
           apple?.runtimeType.toString() ??
           android?.runtimeType.toString() ??
           'default';
@@ -123,9 +119,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -141,8 +135,9 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                 android: const AndroidDebugProvider(),
                 apple: const AppleDebugProvider(),
                 windows: WindowsDebugProvider(
-                  debugToken:
-                      kWindowsDebugToken.isNotEmpty ? kWindowsDebugToken : null,
+                  debugToken: kWindowsDebugToken.isNotEmpty
+                      ? kWindowsDebugToken
+                      : null,
                 ),
               ),
               child: const Text('activate(Debug)'),
@@ -156,9 +151,8 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
             ),
             if (!kIsWeb)
               ElevatedButton(
-                onPressed: () => _activate(
-                  apple: const AppleAppAttestProvider(),
-                ),
+                onPressed: () =>
+                    _activate(apple: const AppleAppAttestProvider()),
                 child: const Text('activate(AppAttest)'),
               ),
             if (!kIsWeb)
@@ -166,9 +160,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
                 onPressed: () => _activate(
                   apple: const AppleAppAttestWithDeviceCheckFallbackProvider(),
                 ),
-                child: const Text(
-                  'activate(AppAttest + DeviceCheck fallback)',
-                ),
+                child: const Text('activate(AppAttest + DeviceCheck fallback)'),
               ),
             const SizedBox(height: 16),
             const Text(
@@ -191,9 +183,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
               onPressed: () async {
                 try {
                   final token = await appCheck.getLimitedUseToken();
-                  setMessage(
-                    'Limited use token: ${token.substring(0, 20)}...',
-                  );
+                  setMessage('Limited use token: ${token.substring(0, 20)}...');
                 } catch (e) {
                   setMessage('getLimitedUseToken error: $e');
                 }

@@ -61,9 +61,9 @@ void main() {
     'dataConnect': [
       {
         'path': ['items'],
-        'entityIds': ['123', '345']
-      }
-    ]
+        'entityIds': ['123', '345'],
+      },
+    ],
   };
 
   // query that updates the price for cacheId 123 to 11
@@ -87,9 +87,9 @@ void main() {
     'dataConnect': [
       {
         'path': ['item'],
-        'entityId': '123'
-      }
-    ]
+        'entityId': '123',
+      },
+    ],
   };
 
   group('Cache Provider Tests', () {
@@ -126,10 +126,13 @@ void main() {
       transport.setHttp(mockHttpClient);
 
       dataConnect = FirebaseDataConnect(
-          app: mockApp,
-          connectorConfig: mockConnectorConfig,
-          cacheSettings: CacheSettings(
-              storage: CacheStorage.memory, maxAge: maxAgeSeconds));
+        app: mockApp,
+        connectorConfig: mockConnectorConfig,
+        cacheSettings: CacheSettings(
+          storage: CacheStorage.memory,
+          maxAge: maxAgeSeconds,
+        ),
+      );
       dataConnect.transport = transport;
       dataConnect.checkTransport();
       dataConnect.checkAndInitializeCache();
@@ -144,11 +147,15 @@ void main() {
 
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update('itemsSimple',
-          ServerResponse(jsonData, extensions: simpleQueryExtensions));
+      await cache.update(
+        'itemsSimple',
+        ServerResponse(jsonData, extensions: simpleQueryExtensions),
+      );
 
-      Map<String, dynamic>? cachedData =
-          await cache.resultTree('itemsSimple', true);
+      Map<String, dynamic>? cachedData = await cache.resultTree(
+        'itemsSimple',
+        true,
+      );
 
       expect(jsonData['data'], cachedData);
     }); // test set get
@@ -182,24 +189,32 @@ void main() {
 
       Map<String, dynamic> jsonDataOne =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update(queryOneId,
-          ServerResponse(jsonDataOne, extensions: simpleQueryExtensions));
+      await cache.update(
+        queryOneId,
+        ServerResponse(jsonDataOne, extensions: simpleQueryExtensions),
+      );
 
       Map<String, dynamic> jsonDataTwo =
           jsonDecode(simpleQueryTwoResponse) as Map<String, dynamic>;
-      await cache.update(queryTwoId,
-          ServerResponse(jsonDataTwo, extensions: simpleQueryTwoExtensions));
+      await cache.update(
+        queryTwoId,
+        ServerResponse(jsonDataTwo, extensions: simpleQueryTwoExtensions),
+      );
 
       Map<String, dynamic> jsonDataOneUpdate =
           jsonDecode(simpleQueryResponseUpdate) as Map<String, dynamic>;
-      await cache.update(queryOneId,
-          ServerResponse(jsonDataOneUpdate, extensions: simpleQueryExtensions));
+      await cache.update(
+        queryOneId,
+        ServerResponse(jsonDataOneUpdate, extensions: simpleQueryExtensions),
+      );
       // shared object should be updated.
       // now reload query two from cache and check object value.
       // it should be updated
 
-      Map<String, dynamic>? jsonDataTwoUpdated =
-          await cache.resultTree(queryTwoId, true);
+      Map<String, dynamic>? jsonDataTwoUpdated = await cache.resultTree(
+        queryTwoId,
+        true,
+      );
       if (jsonDataTwoUpdated == null) {
         fail('No query two found in cache');
       }
@@ -244,8 +259,10 @@ void main() {
 
       Map<String, dynamic> jsonData =
           jsonDecode(simpleQueryResponse) as Map<String, dynamic>;
-      await cache.update('itemsSimple',
-          ServerResponse(jsonData, extensions: simpleQueryExtensions));
+      await cache.update(
+        'itemsSimple',
+        ServerResponse(jsonData, extensions: simpleQueryExtensions),
+      );
 
       QueryRef ref = QueryRef(
         dataConnect,
@@ -273,10 +290,12 @@ void main() {
 
       // now lets add delay beyond maxAge and result source should be server
       await Future.delayed(
-          Duration(milliseconds: maxAgeSeconds.inMilliseconds + 100), () async {
-        QueryResult resultDelayed = await ref.execute();
-        expect(resultDelayed.source, DataSource.server);
-      });
+        Duration(milliseconds: maxAgeSeconds.inMilliseconds + 100),
+        () async {
+          QueryResult resultDelayed = await ref.execute();
+          expect(resultDelayed.source, DataSource.server);
+        },
+      );
     });
 
     test('Test AnyValue Caching', () async {
@@ -298,19 +317,23 @@ void main() {
         'dataConnect': [
           {
             'path': ['anyValueItem'],
-            'entityId': 'AnyValueItemSingle_ID'
-          }
-        ]
+            'entityId': 'AnyValueItemSingle_ID',
+          },
+        ],
       };
 
       Map<String, dynamic> jsonData =
           jsonDecode(anyValueSingleData) as Map<String, dynamic>;
 
-      await cache.update('queryAnyValue',
-          ServerResponse(jsonData, extensions: anyValueSingleExt));
+      await cache.update(
+        'queryAnyValue',
+        ServerResponse(jsonData, extensions: anyValueSingleExt),
+      );
 
-      Map<String, dynamic>? cachedData =
-          await cache.resultTree('queryAnyValue', true);
+      Map<String, dynamic>? cachedData = await cache.resultTree(
+        'queryAnyValue',
+        true,
+      );
 
       expect(cachedData?['anyValueItem']?['name'], 'AnyItem B');
       List<dynamic> values = cachedData?['anyValueItem']?['blob']?['values'];

@@ -26,8 +26,9 @@ Future<void> main() async {
   await for (final packageDir in packagesDir.list()) {
     if (packageDir is Directory) {
       final packageName = basename(packageDir.path);
-      final webDir =
-          Directory(joinAll([packageDir.path, '${packageName}_web']));
+      final webDir = Directory(
+        joinAll([packageDir.path, '${packageName}_web']),
+      );
 
       if (webDir.existsSync()) {
         webPackages.add(packageName);
@@ -82,7 +83,8 @@ Future<void> _generateVersionFile(String packageName) async {
     print('Processing $webPackageName version $currentVersion');
 
     // Create the version file content
-    final fileContent = '''
+    final fileContent =
+        '''
 // Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -103,13 +105,7 @@ const packageVersion = '$currentVersion';
 
     // Ensure the src directory exists
     final srcDir = Directory(
-      joinAll([
-        'packages',
-        packageName,
-        webPackageName,
-        'lib',
-        'src',
-      ]),
+      joinAll(['packages', packageName, webPackageName, 'lib', 'src']),
     );
 
     if (!srcDir.existsSync()) {

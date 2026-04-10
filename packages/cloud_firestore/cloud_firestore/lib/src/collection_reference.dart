@@ -130,11 +130,7 @@ class _JsonCollectionReference extends _JsonQuery
     required FromFirestore<R> fromFirestore,
     required ToFirestore<R> toFirestore,
   }) {
-    return _WithConverterCollectionReference(
-      this,
-      fromFirestore,
-      toFirestore,
-    );
+    return _WithConverterCollectionReference(this, fromFirestore, toFirestore);
   }
 
   @override
@@ -156,7 +152,8 @@ class _JsonCollectionReference extends _JsonQuery
 /// inherited from [Query]).
 @immutable
 class _WithConverterCollectionReference<T extends Object?>
-    extends _WithConverterQuery<T> implements CollectionReference<T> {
+    extends _WithConverterQuery<T>
+    implements CollectionReference<T> {
   _WithConverterCollectionReference(
     CollectionReference<Map<String, dynamic>> collectionReference,
     FromFirestore<T> fromFirestore,
@@ -164,7 +161,7 @@ class _WithConverterCollectionReference<T extends Object?>
   ) : super(collectionReference, fromFirestore, toFirestore);
 
   CollectionReference<Map<String, dynamic>>
-      get _originalCollectionReferenceQuery {
+  get _originalCollectionReferenceQuery {
     return super._originalQuery as CollectionReference<Map<String, dynamic>>;
   }
 
@@ -224,11 +221,11 @@ class _WithConverterCollectionReference<T extends Object?>
 
   @override
   int get hashCode => Object.hash(
-        runtimeType,
-        _originalCollectionReferenceQuery,
-        _fromFirestore,
-        _toFirestore,
-      );
+    runtimeType,
+    _originalCollectionReferenceQuery,
+    _fromFirestore,
+    _toFirestore,
+  );
 
   @override
   String toString() => 'CollectionReference<$T>($path)';

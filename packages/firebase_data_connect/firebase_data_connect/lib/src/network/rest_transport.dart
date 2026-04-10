@@ -85,7 +85,7 @@ class RestTransport implements DataConnectTransport {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
-      'x-firebase-client': getFirebaseClientVal(packageVersion)
+      'x-firebase-client': getFirebaseClientVal(packageVersion),
     };
     String? appCheckToken;
     try {
@@ -193,5 +193,4 @@ DataConnectTransport getTransport(
   String appId,
   CallerSDKType sdkType,
   FirebaseAppCheck? appCheck,
-) =>
-    RestTransport(transportOptions, options, appId, sdkType, appCheck);
+) => RestTransport(transportOptions, options, appId, sdkType, appCheck);

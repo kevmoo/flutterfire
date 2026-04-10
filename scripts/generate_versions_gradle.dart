@@ -28,13 +28,11 @@ import 'package:path/path.dart' show joinAll;
 void main() async {
   final workspace = await getMelosWorkspace();
   // To edit versions for all packages, edit the global-config.gradle file in ./scripts/global-config.gradle
-  final globalConfigPath = joinAll(
-    [
-      Directory.current.path,
-      'scripts',
-      'global-config.gradle',
-    ],
-  );
+  final globalConfigPath = joinAll([
+    Directory.current.path,
+    'scripts',
+    'global-config.gradle',
+  ]);
 
   // Define files using paths
   final globalConfig = File(globalConfigPath);
@@ -65,9 +63,7 @@ void main() async {
         final localConfigGradleFilePath =
             '${package.path}/android/local-config.gradle';
 
-        final copiedConfig = await globalConfig.copy(
-          localConfigGradleFilePath,
-        );
+        final copiedConfig = await globalConfig.copy(localConfigGradleFilePath);
         print('File copied to: ${copiedConfig.path}');
 
         final gradlePropertiesFilePath =
@@ -82,9 +78,7 @@ void main() async {
         // Only has gradle in the example application.
         final localConfigGradleFilePath =
             '${package.path}/example/android/app/local-config.gradle';
-        final copiedConfig = await globalConfig.copy(
-          localConfigGradleFilePath,
-        );
+        final copiedConfig = await globalConfig.copy(localConfigGradleFilePath);
         print('File copied to: ${copiedConfig.path}');
 
         final gradlePropertiesFilePath =
@@ -107,11 +101,7 @@ void main() async {
 Future<melos.MelosWorkspace> getMelosWorkspace() async {
   final packageFilters = melos.PackageFilters(
     includePrivatePackages: false,
-    ignore: [
-      Glob('*web*'),
-      Glob('*platform*'),
-      Glob('*internals*'),
-    ],
+    ignore: [Glob('*web*'), Glob('*platform*'), Glob('*internals*')],
   );
   final workspace = await melos.MelosWorkspace.fromConfig(
     await melos.MelosWorkspaceConfig.fromWorkspaceRoot(Directory.current),

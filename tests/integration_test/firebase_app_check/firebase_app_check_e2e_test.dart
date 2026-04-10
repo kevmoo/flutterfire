@@ -12,93 +12,74 @@ import 'package:tests/firebase_options.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group(
-    'firebase_app_check',
-    () {
-      setUpAll(() async {
-        await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
+  group('firebase_app_check', () {
+    setUpAll(() async {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    });
+
+    test('activate', () async {
+      await expectLater(
+        FirebaseAppCheck.instance.activate(
+          providerWeb: ReCaptchaV3Provider(
+            '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
+          ),
+        ),
+        completes,
+      );
+    });
+
+    test('getToken', () async {
+      try {
+        await FirebaseAppCheck.instance.getToken(true);
+      } catch (exception) {
+        // Needs a debug token pasted in the Firebase console to work so we catch the exception.
+        expect(exception, isA<FirebaseException>());
+      }
+    });
+
+    test('setTokenAutoRefreshEnabled', () async {
+      await expectLater(
+        FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true),
+        completes,
+      );
+    });
+
+    test('onTokenChange', () async {
+      final stream = FirebaseAppCheck.instance.onTokenChange;
+      expect(stream, isA<Stream<String?>>());
+    });
+
+    test('getLimitedUseToken', () async {
+      try {
+        await FirebaseAppCheck.instance.getLimitedUseToken();
+      } catch (exception) {
+        // Needs a debug token pasted in the Firebase console to work so we catch the exception.
+        expect(exception, isA<FirebaseException>());
+      }
+    });
+
+    test(
+      'debugToken on Android',
+      () async {
+        await expectLater(
+          FirebaseAppCheck.instance.activate(
+            providerAndroid: const AndroidDebugProvider(),
+          ),
+          completes,
         );
-      });
+      },
+      skip: defaultTargetPlatform != TargetPlatform.android,
+    );
 
-      test(
-        'activate',
-        () async {
-          await expectLater(
-            FirebaseAppCheck.instance.activate(
-              providerWeb: ReCaptchaV3Provider(
-                '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
-              ),
-            ),
-            completes,
-          );
-        },
+    test('debugToken on iOS', () async {
+      await expectLater(
+        FirebaseAppCheck.instance.activate(
+          providerApple: const AppleDebugProvider(),
+        ),
+        completes,
       );
-
-      test(
-        'getToken',
-        () async {
-          try {
-            await FirebaseAppCheck.instance.getToken(true);
-          } catch (exception) {
-            // Needs a debug token pasted in the Firebase console to work so we catch the exception.
-            expect(exception, isA<FirebaseException>());
-          }
-        },
-      );
-
-      test(
-        'setTokenAutoRefreshEnabled',
-        () async {
-          await expectLater(
-            FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true),
-            completes,
-          );
-        },
-      );
-
-      test('onTokenChange', () async {
-        final stream = FirebaseAppCheck.instance.onTokenChange;
-        expect(stream, isA<Stream<String?>>());
-      });
-
-      test(
-        'getLimitedUseToken',
-        () async {
-          try {
-            await FirebaseAppCheck.instance.getLimitedUseToken();
-          } catch (exception) {
-            // Needs a debug token pasted in the Firebase console to work so we catch the exception.
-            expect(exception, isA<FirebaseException>());
-          }
-        },
-      );
-
-      test(
-        'debugToken on Android',
-        () async {
-          await expectLater(
-            FirebaseAppCheck.instance.activate(
-              providerAndroid: const AndroidDebugProvider(),
-            ),
-            completes,
-          );
-        },
-        skip: defaultTargetPlatform != TargetPlatform.android,
-      );
-
-      test(
-        'debugToken on iOS',
-        () async {
-          await expectLater(
-            FirebaseAppCheck.instance.activate(
-              providerApple: const AppleDebugProvider(),
-            ),
-            completes,
-          );
-        },
-        skip: defaultTargetPlatform != TargetPlatform.iOS,
-      );
-    },
-  );
+    }, skip: defaultTargetPlatform != TargetPlatform.iOS);
+  });
 }

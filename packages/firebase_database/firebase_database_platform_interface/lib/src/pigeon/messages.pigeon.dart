@@ -18,8 +18,11 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
-List<Object?> wrapResponse(
-    {Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
   if (empty) {
     return <Object?>[];
   }
@@ -32,14 +35,17 @@ List<Object?> wrapResponse(
 bool _deepEquals(Object? a, Object? b) {
   if (a is List && b is List) {
     return a.length == b.length &&
-        a.indexed
-            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+        a.indexed.every(
+          ((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]),
+        );
   }
   if (a is Map && b is Map) {
     return a.length == b.length &&
-        a.entries.every((MapEntry<Object?, Object?> entry) =>
-            (b as Map<Object?, Object?>).containsKey(entry.key) &&
-            _deepEquals(entry.value, b[entry.key]));
+        a.entries.every(
+          (MapEntry<Object?, Object?> entry) =>
+              (b as Map<Object?, Object?>).containsKey(entry.key) &&
+              _deepEquals(entry.value, b[entry.key]),
+        );
   }
   return a == b;
 }
@@ -119,11 +125,7 @@ class DatabasePigeonFirebaseApp {
   DatabasePigeonSettings settings;
 
   List<Object?> _toList() {
-    return <Object?>[
-      appName,
-      databaseURL,
-      settings,
-    ];
+    return <Object?>[appName, databaseURL, settings];
   }
 
   Object encode() {
@@ -158,16 +160,12 @@ class DatabasePigeonFirebaseApp {
 }
 
 class DatabaseReferencePlatform {
-  DatabaseReferencePlatform({
-    required this.path,
-  });
+  DatabaseReferencePlatform({required this.path});
 
   String path;
 
   List<Object?> _toList() {
-    return <Object?>[
-      path,
-    ];
+    return <Object?>[path];
   }
 
   Object encode() {
@@ -176,9 +174,7 @@ class DatabaseReferencePlatform {
 
   static DatabaseReferencePlatform decode(Object result) {
     result as List<Object?>;
-    return DatabaseReferencePlatform(
-      path: result[0]! as String,
-    );
+    return DatabaseReferencePlatform(path: result[0]! as String);
   }
 
   @override
@@ -200,11 +196,7 @@ class DatabaseReferencePlatform {
 }
 
 class DatabaseReferenceRequest {
-  DatabaseReferenceRequest({
-    required this.path,
-    this.value,
-    this.priority,
-  });
+  DatabaseReferenceRequest({required this.path, this.value, this.priority});
 
   String path;
 
@@ -213,11 +205,7 @@ class DatabaseReferenceRequest {
   Object? priority;
 
   List<Object?> _toList() {
-    return <Object?>[
-      path,
-      value,
-      priority,
-    ];
+    return <Object?>[path, value, priority];
   }
 
   Object encode() {
@@ -252,20 +240,14 @@ class DatabaseReferenceRequest {
 }
 
 class UpdateRequest {
-  UpdateRequest({
-    required this.path,
-    required this.value,
-  });
+  UpdateRequest({required this.path, required this.value});
 
   String path;
 
   Map<String, Object?> value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      path,
-      value,
-    ];
+    return <Object?>[path, value];
   }
 
   Object encode() {
@@ -311,11 +293,7 @@ class TransactionRequest {
   bool applyLocally;
 
   List<Object?> _toList() {
-    return <Object?>[
-      path,
-      transactionKey,
-      applyLocally,
-    ];
+    return <Object?>[path, transactionKey, applyLocally];
   }
 
   Object encode() {
@@ -349,11 +327,7 @@ class TransactionRequest {
 }
 
 class QueryRequest {
-  QueryRequest({
-    required this.path,
-    required this.modifiers,
-    this.value,
-  });
+  QueryRequest({required this.path, required this.modifiers, this.value});
 
   String path;
 
@@ -362,11 +336,7 @@ class QueryRequest {
   bool? value;
 
   List<Object?> _toList() {
-    return <Object?>[
-      path,
-      modifiers,
-      value,
-    ];
+    return <Object?>[path, modifiers, value];
   }
 
   Object encode() {
@@ -413,11 +383,7 @@ class TransactionHandlerResult {
   bool exception;
 
   List<Object?> _toList() {
-    return <Object?>[
-      value,
-      aborted,
-      exception,
-    ];
+    return <Object?>[value, aborted, exception];
   }
 
   Object encode() {
@@ -516,11 +482,13 @@ class FirebaseDatabaseHostApi {
   /// Constructor for [FirebaseDatabaseHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseDatabaseHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  FirebaseDatabaseHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -532,12 +500,13 @@ class FirebaseDatabaseHostApi {
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOnline$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -558,12 +527,13 @@ class FirebaseDatabaseHostApi {
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.goOffline$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -580,17 +550,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> setPersistenceEnabled(
-      DatabasePigeonFirebaseApp app, bool enabled) async {
+    DatabasePigeonFirebaseApp app,
+    bool enabled,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceEnabled$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, enabled],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, enabled]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -607,17 +580,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> setPersistenceCacheSizeBytes(
-      DatabasePigeonFirebaseApp app, int cacheSize) async {
+    DatabasePigeonFirebaseApp app,
+    int cacheSize,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setPersistenceCacheSizeBytes$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, cacheSize],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, cacheSize]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -634,17 +610,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> setLoggingEnabled(
-      DatabasePigeonFirebaseApp app, bool enabled) async {
+    DatabasePigeonFirebaseApp app,
+    bool enabled,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.setLoggingEnabled$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, enabled],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, enabled]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -661,17 +640,21 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> useDatabaseEmulator(
-      DatabasePigeonFirebaseApp app, String host, int port) async {
+    DatabasePigeonFirebaseApp app,
+    String host,
+    int port,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.useDatabaseEmulator$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, host, port],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, host, port]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -687,18 +670,21 @@ class FirebaseDatabaseHostApi {
     }
   }
 
-  Future<DatabaseReferencePlatform> ref(DatabasePigeonFirebaseApp app,
-      [String? path]) async {
+  Future<DatabaseReferencePlatform> ref(
+    DatabasePigeonFirebaseApp app, [
+    String? path,
+  ]) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.ref$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, path],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, path]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -720,17 +706,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<DatabaseReferencePlatform> refFromURL(
-      DatabasePigeonFirebaseApp app, String url) async {
+    DatabasePigeonFirebaseApp app,
+    String url,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.refFromURL$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, url],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, url]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -756,12 +745,13 @@ class FirebaseDatabaseHostApi {
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.purgeOutstandingWrites$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -778,17 +768,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> databaseReferenceSet(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSet$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -805,17 +798,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> databaseReferenceSetWithPriority(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetWithPriority$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -832,17 +828,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> databaseReferenceUpdate(
-      DatabasePigeonFirebaseApp app, UpdateRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    UpdateRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceUpdate$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -859,17 +858,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> databaseReferenceSetPriority(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceSetPriority$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -886,17 +888,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> databaseReferenceRunTransaction(
-      DatabasePigeonFirebaseApp app, TransactionRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    TransactionRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceRunTransaction$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -913,17 +918,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<Map<String, Object?>> databaseReferenceGetTransactionResult(
-      DatabasePigeonFirebaseApp app, int transactionKey) async {
+    DatabasePigeonFirebaseApp app,
+    int transactionKey,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.databaseReferenceGetTransactionResult$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, transactionKey],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, transactionKey]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -946,17 +954,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> onDisconnectSet(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSet$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -973,17 +984,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> onDisconnectSetWithPriority(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectSetWithPriority$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1000,17 +1014,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> onDisconnectUpdate(
-      DatabasePigeonFirebaseApp app, UpdateRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    UpdateRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectUpdate$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1027,17 +1044,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> onDisconnectCancel(
-      DatabasePigeonFirebaseApp app, String path) async {
+    DatabasePigeonFirebaseApp app,
+    String path,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.onDisconnectCancel$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, path],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, path]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1054,17 +1074,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<String> queryObserve(
-      DatabasePigeonFirebaseApp app, QueryRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    QueryRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryObserve$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1086,17 +1109,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<void> queryKeepSynced(
-      DatabasePigeonFirebaseApp app, QueryRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    QueryRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryKeepSynced$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1113,17 +1139,20 @@ class FirebaseDatabaseHostApi {
   }
 
   Future<Map<String, Object?>> queryGet(
-      DatabasePigeonFirebaseApp app, QueryRequest request) async {
+    DatabasePigeonFirebaseApp app,
+    QueryRequest request,
+  ) async {
     final String pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseHostApi.queryGet$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, request],
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, request]);
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_sendFuture as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -1150,32 +1179,39 @@ abstract class FirebaseDatabaseFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   Future<TransactionHandlerResult> callTransactionHandler(
-      int transactionKey, Object? snapshotValue);
+    int transactionKey,
+    Object? snapshotValue,
+  );
 
   static void setUp(
     FirebaseDatabaseFlutterApi? api, {
     BinaryMessenger? binaryMessenger,
     String messageChannelSuffix = '',
   }) {
-    messageChannelSuffix =
-        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
-      final BasicMessageChannel<
-          Object?> pigeonVar_channel = BasicMessageChannel<
-              Object?>(
-          'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final int? arg_transactionKey = (args[0] as int?);
-          assert(arg_transactionKey != null,
-              'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler was null, expected non-null int.');
+          assert(
+            arg_transactionKey != null,
+            'Argument for dev.flutter.pigeon.firebase_database_platform_interface.FirebaseDatabaseFlutterApi.callTransactionHandler was null, expected non-null int.',
+          );
           final Object? arg_snapshotValue = (args[1] as Object?);
           try {
             final TransactionHandlerResult output = await api
@@ -1185,7 +1221,8 @@ abstract class FirebaseDatabaseFlutterApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }

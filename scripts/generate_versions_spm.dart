@@ -15,8 +15,9 @@ import 'package:yaml/yaml.dart';
 void main(List<String> args) async {
   final workspace = await getMelosWorkspace();
   // get version from core
-  final firebaseCorePackage = workspace.filteredPackages.values
-      .firstWhere((package) => package.name == 'firebase_core');
+  final firebaseCorePackage = workspace.filteredPackages.values.firstWhere(
+    (package) => package.name == 'firebase_core',
+  );
 
   final firebaseCoreIosVersionFile = File(
     '${firebaseCorePackage.path}/ios/firebase_sdk_version.rb',
@@ -27,8 +28,7 @@ void main(List<String> args) async {
   // Update hard-coded versions in all plugin Package.swift files
   final firebaseCoreVersion = loadYaml(
     File('${firebaseCorePackage.path}/pubspec.yaml').readAsStringSync(),
-  )['version']
-      .toString();
+  )['version'].toString();
   updatePluginPackageSwiftVersions(
     workspace,
     firebaseiOSVersion,
@@ -41,11 +41,7 @@ void main(List<String> args) async {
 Future<melos.MelosWorkspace> getMelosWorkspace() async {
   final packageFilters = melos.PackageFilters(
     includePrivatePackages: false,
-    ignore: [
-      Glob('*web*'),
-      Glob('*platform*'),
-      Glob('*internals*'),
-    ],
+    ignore: [Glob('*web*'), Glob('*platform*'), Glob('*internals*')],
   );
   final workspace = await melos.MelosWorkspace.fromConfig(
     await melos.MelosWorkspaceConfig.fromWorkspaceRoot(Directory.current),
@@ -79,8 +75,9 @@ void updatePluginPackageSwiftVersions(
 ) {
   for (final package in workspace.filteredPackages.values) {
     for (final platform in ['ios', 'macos']) {
-      final packageSwiftFile =
-          File('${package.path}/$platform/${package.name}/Package.swift');
+      final packageSwiftFile = File(
+        '${package.path}/$platform/${package.name}/Package.swift',
+      );
 
       if (!packageSwiftFile.existsSync()) continue;
 

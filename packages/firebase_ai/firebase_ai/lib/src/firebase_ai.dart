@@ -33,8 +33,8 @@ class FirebaseAI extends FirebasePluginPlatform {
     this.appCheck,
     this.auth,
     this.useLimitedUseAppCheckTokens = false,
-  })  : _useVertexBackend = useVertexBackend,
-        super(app.name, 'plugins.flutter.io/firebase_vertexai');
+  }) : _useVertexBackend = useVertexBackend,
+       super(app.name, 'plugins.flutter.io/firebase_vertexai');
 
   /// The [FirebaseApp] for this current [FirebaseAI] instance.
   FirebaseApp app;
@@ -158,20 +158,22 @@ class FirebaseAI extends FirebasePluginPlatform {
   ///
   /// The optional [safetySettings] can be used to control and guide the
   /// generation. See [ImagenSafetySettings] for details.
-  ImagenModel imagenModel(
-      {required String model,
-      ImagenGenerationConfig? generationConfig,
-      ImagenSafetySettings? safetySettings}) {
+  ImagenModel imagenModel({
+    required String model,
+    ImagenGenerationConfig? generationConfig,
+    ImagenSafetySettings? safetySettings,
+  }) {
     return createImagenModel(
-        app: app,
-        location: location,
-        model: model,
-        useVertexBackend: _useVertexBackend,
-        generationConfig: generationConfig,
-        safetySettings: safetySettings,
-        appCheck: appCheck,
-        auth: auth,
-        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens);
+      app: app,
+      location: location,
+      model: model,
+      useVertexBackend: _useVertexBackend,
+      generationConfig: generationConfig,
+      safetySettings: safetySettings,
+      appCheck: appCheck,
+      auth: auth,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+    );
   }
 
   /// Create a [LiveGenerativeModel] for real-time interaction.
@@ -204,12 +206,13 @@ class FirebaseAI extends FirebasePluginPlatform {
   @experimental
   TemplateGenerativeModel templateGenerativeModel() {
     return createTemplateGenerativeModel(
-        app: app,
-        location: location,
-        useVertexBackend: _useVertexBackend,
-        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-        auth: auth,
-        appCheck: appCheck);
+      app: app,
+      location: location,
+      useVertexBackend: _useVertexBackend,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      auth: auth,
+      appCheck: appCheck,
+    );
   }
 
   /// Returns a [TemplateImagenModel] instance.

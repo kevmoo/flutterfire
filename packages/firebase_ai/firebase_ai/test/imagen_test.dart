@@ -23,10 +23,14 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('ImagenSafetyFilterLevel', () {
     test('toJson returns correct string values', () {
-      expect(ImagenSafetyFilterLevel.blockLowAndAbove.toJson(),
-          'block_low_and_above');
-      expect(ImagenSafetyFilterLevel.blockMediumAndAbove.toJson(),
-          'block_medium_and_above');
+      expect(
+        ImagenSafetyFilterLevel.blockLowAndAbove.toJson(),
+        'block_low_and_above',
+      );
+      expect(
+        ImagenSafetyFilterLevel.blockMediumAndAbove.toJson(),
+        'block_medium_and_above',
+      );
       expect(ImagenSafetyFilterLevel.blockOnlyHigh.toJson(), 'block_only_high');
       expect(ImagenSafetyFilterLevel.blockNone.toJson(), 'block_none');
     });
@@ -59,9 +63,7 @@ void main() {
         null,
       );
       final json = settings.toJson();
-      expect(json, {
-        'safetySetting': 'block_medium_and_above',
-      });
+      expect(json, {'safetySetting': 'block_medium_and_above'});
     });
 
     test('toJson with only personFilterLevel', () {
@@ -70,9 +72,7 @@ void main() {
         ImagenPersonFilterLevel.allowAdult,
       );
       final json = settings.toJson();
-      expect(json, {
-        'personGeneration': 'allow_adult',
-      });
+      expect(json, {'personGeneration': 'allow_adult'});
     });
 
     test('toJson with null values', () {
@@ -117,44 +117,36 @@ void main() {
       expect(format.compressionQuality, isNull);
     });
 
-    test('jpeg constructor logs warning for out of range compressionQuality',
-        () {
-      ImagenFormat.jpeg(compressionQuality: 150);
-      ImagenFormat.jpeg(compressionQuality: -10);
-    });
+    test(
+      'jpeg constructor logs warning for out of range compressionQuality',
+      () {
+        ImagenFormat.jpeg(compressionQuality: 150);
+        ImagenFormat.jpeg(compressionQuality: -10);
+      },
+    );
 
     test('toJson with mimeType only', () {
       final format = ImagenFormat('image/png', null);
       final json = format.toJson();
-      expect(json, {
-        'mimeType': 'image/png',
-      });
+      expect(json, {'mimeType': 'image/png'});
     });
 
     test('toJson with mimeType and compressionQuality', () {
       final format = ImagenFormat('image/jpeg', 85);
       final json = format.toJson();
-      expect(json, {
-        'mimeType': 'image/jpeg',
-        'compressionQuality': 85,
-      });
+      expect(json, {'mimeType': 'image/jpeg', 'compressionQuality': 85});
     });
 
     test('png toJson', () {
       final format = ImagenFormat.png();
       final json = format.toJson();
-      expect(json, {
-        'mimeType': 'image/png',
-      });
+      expect(json, {'mimeType': 'image/png'});
     });
 
     test('jpeg toJson with compressionQuality', () {
       final format = ImagenFormat.jpeg(compressionQuality: 90);
       final json = format.toJson();
-      expect(json, {
-        'mimeType': 'image/jpeg',
-        'compressionQuality': 90,
-      });
+      expect(json, {'mimeType': 'image/jpeg', 'compressionQuality': 90});
     });
   });
 
@@ -198,10 +190,7 @@ void main() {
         'sampleCount': 4,
         'aspectRatio': '16:9',
         'addWatermark': true,
-        'outputOptions': {
-          'mimeType': 'image/jpeg',
-          'compressionQuality': 85,
-        },
+        'outputOptions': {'mimeType': 'image/jpeg', 'compressionQuality': 85},
       });
     });
 
@@ -214,13 +203,9 @@ void main() {
     });
 
     test('toJson with only numberOfImages', () {
-      final config = ImagenGenerationConfig(
-        numberOfImages: 2,
-      );
+      final config = ImagenGenerationConfig(numberOfImages: 2);
       final json = config.toJson();
-      expect(json, {
-        'sampleCount': 2,
-      });
+      expect(json, {'sampleCount': 2});
     });
 
     test('toJson with only aspectRatio', () {
@@ -232,22 +217,16 @@ void main() {
     });
 
     test('toJson with only imageFormat', () {
-      final config = ImagenGenerationConfig(
-        imageFormat: ImagenFormat.png(),
-      );
+      final config = ImagenGenerationConfig(imageFormat: ImagenFormat.png());
       final json = config.toJson();
       expect(json, {
-        'outputOptions': {
-          'mimeType': 'image/png',
-        },
-        'sampleCount': 1
+        'outputOptions': {'mimeType': 'image/png'},
+        'sampleCount': 1,
       });
     });
 
     test('toJson with only addWatermark', () {
-      final config = ImagenGenerationConfig(
-        addWatermark: false,
-      );
+      final config = ImagenGenerationConfig(addWatermark: false);
       final json = config.toJson();
       expect(json, {'addWatermark': false, 'sampleCount': 1});
     });
@@ -279,7 +258,7 @@ void main() {
       final json = {
         'mimeType': 'image/png',
         'bytesBase64Encoded':
-            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
       };
       final image = ImagenInlineImage.fromJson(json);
       expect(image.mimeType, 'image/png');
@@ -290,7 +269,7 @@ void main() {
     test('fromJson with invalid base64', () {
       final json = {
         'mimeType': 'image/png',
-        'bytesBase64Encoded': 'invalid_base64_string'
+        'bytesBase64Encoded': 'invalid_base64_string',
       };
       // Expect that the constructor throws an exception.
       expect(() => ImagenInlineImage.fromJson(json), throwsFormatException);
@@ -314,12 +293,14 @@ void main() {
       final json = {
         'mimeType': 'image/jpeg',
         'gcsUri':
-            'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_0.jpg'
+            'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_0.jpg',
       };
       final image = ImagenGCSImage.fromJson(json);
       expect(image.mimeType, 'image/jpeg');
-      expect(image.gcsUri,
-          'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_0.jpg');
+      expect(
+        image.gcsUri,
+        'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_0.jpg',
+      );
     });
 
     test('toJson', () {
@@ -344,24 +325,24 @@ void main() {
           {
             'mimeType': 'image/jpeg',
             'gcsUri':
-                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_0.jpg'
+                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_0.jpg',
           },
           {
             'mimeType': 'image/jpeg',
             'gcsUri':
-                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_1.jpg'
+                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_1.jpg',
           },
           {
             'mimeType': 'image/jpeg',
             'gcsUri':
-                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_2.jpg'
+                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_2.jpg',
           },
           {
             'mimeType': 'image/jpeg',
             'gcsUri':
-                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_3.jpg'
-          }
-        ]
+                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_3.jpg',
+          },
+        ],
       };
       final response = ImagenGenerationResponse<ImagenGCSImage>.fromJson(json);
       expect(response.images, isA<List<ImagenGCSImage>>());
@@ -374,24 +355,25 @@ void main() {
         'predictions': [
           {
             'mimeType': 'image/jpeg',
-            'bytesBase64Encoded': 'SGVsbG8sIHdvcmxkIQ=='
+            'bytesBase64Encoded': 'SGVsbG8sIHdvcmxkIQ==',
           },
           {
             'mimeType': 'image/jpeg',
-            'bytesBase64Encoded': 'SGVsbG8sIHdvcmxkIQ=='
+            'bytesBase64Encoded': 'SGVsbG8sIHdvcmxkIQ==',
           },
           {
             'mimeType': 'image/jpeg',
-            'bytesBase64Encoded': 'SGVsbG8sIHdvcmxkIQ=='
+            'bytesBase64Encoded': 'SGVsbG8sIHdvcmxkIQ==',
           },
           {
             'mimeType': 'image/jpeg',
-            'bytesBase64Encoded': 'SGVsbG8sIHdvcmxkIQ=='
-          }
-        ]
+            'bytesBase64Encoded': 'SGVsbG8sIHdvcmxkIQ==',
+          },
+        ],
       };
-      final response =
-          ImagenGenerationResponse<ImagenInlineImage>.fromJson(json);
+      final response = ImagenGenerationResponse<ImagenInlineImage>.fromJson(
+        json,
+      );
       expect(response.images, isA<List<ImagenInlineImage>>());
       expect(response.images.length, 4);
       expect(response.filteredReason, isNull);
@@ -403,25 +385,28 @@ void main() {
           {
             'mimeType': 'image/png',
             'bytesBase64Encoded':
-                'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+                'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
           },
           {
             'mimeType': 'image/png',
             'bytesBase64Encoded':
-                'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+                'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
           },
           {
             'raiFilteredReason':
-                'Your current safety filter threshold filtered out 2 generated images. You will not be charged for blocked images. Try rephrasing the prompt. If you think this was an error, send feedback.'
-          }
-        ]
+                'Your current safety filter threshold filtered out 2 generated images. You will not be charged for blocked images. Try rephrasing the prompt. If you think this was an error, send feedback.',
+          },
+        ],
       };
-      final response =
-          ImagenGenerationResponse<ImagenInlineImage>.fromJson(json);
+      final response = ImagenGenerationResponse<ImagenInlineImage>.fromJson(
+        json,
+      );
       expect(response.images, isA<List<ImagenInlineImage>>());
       expect(response.images.length, 2);
-      expect(response.filteredReason,
-          'Your current safety filter threshold filtered out 2 generated images. You will not be charged for blocked images. Try rephrasing the prompt. If you think this was an error, send feedback.');
+      expect(
+        response.filteredReason,
+        'Your current safety filter threshold filtered out 2 generated images. You will not be charged for blocked images. Try rephrasing the prompt. If you think this was an error, send feedback.',
+      );
     });
 
     test('fromJson with only raiFilteredReason', () {
@@ -429,20 +414,24 @@ void main() {
         'predictions': [
           {
             'raiFilteredReason':
-                "Unable to show generated images. All images were filtered out because they violated Vertex AI's usage guidelines. You will not be charged for blocked images. Try rephrasing the prompt. If you think this was an error, send feedback. Support codes: 39322892, 29310472"
-          }
-        ]
+                "Unable to show generated images. All images were filtered out because they violated Vertex AI's usage guidelines. You will not be charged for blocked images. Try rephrasing the prompt. If you think this was an error, send feedback. Support codes: 39322892, 29310472",
+          },
+        ],
       };
       // Expect that the constructor throws an exception.
-      expect(() => ImagenGenerationResponse<ImagenInlineImage>.fromJson(json),
-          throwsA(isA<ImagenImagesBlockedException>()));
+      expect(
+        () => ImagenGenerationResponse<ImagenInlineImage>.fromJson(json),
+        throwsA(isA<ImagenImagesBlockedException>()),
+      );
     });
 
     test('fromJson with empty predictions', () {
       final json = {'predictions': {}};
       // Expect that the constructor throws an exception.
-      expect(() => ImagenGenerationResponse<ImagenInlineImage>.fromJson(json),
-          throwsA(isA<ServerException>()));
+      expect(
+        () => ImagenGenerationResponse<ImagenInlineImage>.fromJson(json),
+        throwsA(isA<ServerException>()),
+      );
     });
 
     test('fromJson with unsupported type', () {
@@ -451,13 +440,15 @@ void main() {
           {
             'mimeType': 'image/jpeg',
             'gcsUri':
-                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_0.jpg'
+                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_0.jpg',
           },
-        ]
+        ],
       };
       // Expect that the constructor throws an exception.
-      expect(() => ImagenGenerationResponse<ImagenImage>.fromJson(json),
-          throwsA(isA<ArgumentError>()));
+      expect(
+        () => ImagenGenerationResponse<ImagenImage>.fromJson(json),
+        throwsA(isA<ArgumentError>()),
+      );
     });
   });
 
@@ -468,9 +459,9 @@ void main() {
           {
             'mimeType': 'image/jpeg',
             'gcsUri':
-                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_0.jpg'
+                'gs://test-project-id-1234.firebasestorage.app/images/1234567890123/sample_0.jpg',
           },
-        ]
+        ],
       };
       final response = parseImagenGenerationResponse<ImagenGCSImage>(json);
       expect(response.images, isA<List<ImagenGCSImage>>());
@@ -484,12 +475,14 @@ void main() {
           'code': 400,
           'message':
               "Image generation failed with the following error: The prompt could not be submitted. This prompt contains sensitive words that violate Google's Responsible AI practices. Try rephrasing the prompt. If you think this was an error, send feedback. Support codes: 42876398",
-          'status': 'INVALID_ARGUMENT'
-        }
+          'status': 'INVALID_ARGUMENT',
+        },
       };
       // Expect that the function throws an exception.
-      expect(() => parseImagenGenerationResponse<ImagenGCSImage>(json),
-          throwsA(isA<ServerException>()));
+      expect(
+        () => parseImagenGenerationResponse<ImagenGCSImage>(json),
+        throwsA(isA<ServerException>()),
+      );
     });
   });
 }

@@ -51,9 +51,11 @@ final class Content {
   static Content model(Iterable<Part> parts) => Content('model', [...parts]);
 
   /// Return a [Content] with [FunctionResponse].
-  static Content functionResponse(String name, Map<String, Object?> response,
-          {String? id}) =>
-      Content('function', [FunctionResponse(name, response, id: id)]);
+  static Content functionResponse(
+    String name,
+    Map<String, Object?> response, {
+    String? id,
+  }) => Content('function', [FunctionResponse(name, response, id: id)]);
 
   /// Return a [Content] with multiple [FunctionResponse].
   static Content functionResponses(Iterable<FunctionResponse> responses) =>
@@ -65,22 +67,28 @@ final class Content {
 
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
-        if (role case final role?) 'role': role,
-        'parts': parts.map((p) {
-          return p.toJson();
-        }).toList(),
-      };
+    if (role case final role?) 'role': role,
+    'parts': parts.map((p) {
+      return p.toJson();
+    }).toList(),
+  };
 }
 
 /// Parse the [Content] from json object.
 Content parseContent(Object jsonObject) {
   return switch (jsonObject) {
-    {'role': final String role, 'parts': final List<Object?> parts} =>
-      Content(role, parts.map(parsePart).toList()),
-    {'role': final String role} =>
-      Content(role, <Part>[]), // Handle case with only role
+    {'role': final String role, 'parts': final List<Object?> parts} => Content(
+      role,
+      parts.map(parsePart).toList(),
+    ),
+    {'role': final String role} => Content(
+      role,
+      <Part>[],
+    ), // Handle case with only role
     {'parts': final List<Object?> parts} => Content(
-        null, parts.map(parsePart).toList()), // Handle case with only parts
+      null,
+      parts.map(parsePart).toList(),
+    ), // Handle case with only parts
     _ => throw unhandledFormat('Content', jsonObject),
   };
 }
@@ -89,9 +97,7 @@ Content parseContent(Object jsonObject) {
 Part parsePart(Object? jsonObject) {
   if (jsonObject is! Map<String, Object?>) {
     log('Unhandled part format: $jsonObject');
-    return UnknownPart(<String, Object?>{
-      'unhandled': jsonObject,
-    });
+    return UnknownPart(<String, Object?>{'unhandled': jsonObject});
   }
 
   final isThought =
@@ -165,20 +171,27 @@ Part parsePart(Object? jsonObject) {
     }
   }
   return switch (jsonObject) {
-    {'text': final String text} => TextPart._(text,
-        isThought: isThought, thoughtSignature: thoughtSignature),
+    {'text': final String text} => TextPart._(
+      text,
+      isThought: isThought,
+      thoughtSignature: thoughtSignature,
+    ),
     {
       'file_data': {
         'file_uri': final String fileUri,
         'mime_type': final String mimeType,
-      }
+      },
     } =>
-      FileData._(mimeType, fileUri,
-          isThought: isThought, thoughtSignature: thoughtSignature),
+      FileData._(
+        mimeType,
+        fileUri,
+        isThought: isThought,
+        thoughtSignature: thoughtSignature,
+      ),
     _ => () {
-        log('unhandled part format: $jsonObject');
-        return UnknownPart(jsonObject);
-      }(),
+      log('unhandled part format: $jsonObject');
+      return UnknownPart(jsonObject);
+    }(),
   };
 }
 
@@ -186,7 +199,7 @@ Part parsePart(Object? jsonObject) {
 sealed class Part {
   // ignore: public_member_api_docs
   const Part({this.isThought, String? thoughtSignature})
-      : _thoughtSignature = thoughtSignature;
+    : _thoughtSignature = thoughtSignature;
   // ignore: public_member_api_docs
   final bool? isThought;
 
@@ -195,10 +208,10 @@ sealed class Part {
 
   /// Convert the [Part] content to json format.
   Object toJson() => {
-        if (isThought case final isThought?) 'thought': isThought,
-        if (_thoughtSignature case final thoughtSignature?)
-          'thoughtSignature': thoughtSignature,
-      };
+    if (isThought case final isThought?) 'thought': isThought,
+    if (_thoughtSignature case final thoughtSignature?)
+      'thoughtSignature': thoughtSignature,
+  };
 }
 
 /// A [Part] that contains unparsable data.
@@ -220,30 +233,15 @@ final class UnknownPart extends Part {
 final class TextPart extends Part {
   // ignore: public_member_api_docs
   const TextPart(this.text, {bool? isThought})
-      : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+    : super(isThought: isThought, thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
-  const TextPart.forTest(
-    this.text, {
-    bool? isThought,
-    String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  const TextPart.forTest(this.text, {bool? isThought, String? thoughtSignature})
+    : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
-  const TextPart._(
-    this.text, {
-    bool? isThought,
-    String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  const TextPart._(this.text, {bool? isThought, String? thoughtSignature})
+    : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// The text content of the [Part]
   final String text;
@@ -262,10 +260,7 @@ final class InlineDataPart extends Part {
     this.bytes, {
     this.willContinue,
     bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  }) : super(isThought: isThought, thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
@@ -275,10 +270,7 @@ final class InlineDataPart extends Part {
     this.willContinue,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   const InlineDataPart._(
     this.mimeType,
@@ -286,10 +278,7 @@ final class InlineDataPart extends Part {
     this.willContinue,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// File type of the [InlineDataPart].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -315,10 +304,10 @@ final class InlineDataPart extends Part {
 
   /// The representation of the data in media streaming chunk.
   Object toMediaChunkJson() => {
-        'mimeType': mimeType,
-        'data': base64Encode(bytes),
-        if (willContinue != null) 'willContinue': willContinue,
-      };
+    'mimeType': mimeType,
+    'data': base64Encode(bytes),
+    if (willContinue != null) 'willContinue': willContinue,
+  };
 }
 
 /// A predicted `FunctionCall` returned from the model that contains
@@ -326,15 +315,8 @@ final class InlineDataPart extends Part {
 /// arguments and their values.
 final class FunctionCall extends Part {
   // ignore: public_member_api_docs
-  const FunctionCall(
-    this.name,
-    this.args, {
-    this.id,
-    bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  const FunctionCall(this.name, this.args, {this.id, bool? isThought})
+    : super(isThought: isThought, thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
@@ -344,10 +326,7 @@ final class FunctionCall extends Part {
     this.id,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   const FunctionCall._(
     this.name,
@@ -355,10 +334,7 @@ final class FunctionCall extends Part {
     this.id,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// The name of the function to call.
   final String name;
@@ -377,11 +353,7 @@ final class FunctionCall extends Part {
     final superJson = super.toJson() as Map<String, Object?>;
     return <String, Object?>{
       ...superJson,
-      'functionCall': {
-        'name': name,
-        'args': args,
-        if (id != null) 'id': id,
-      },
+      'functionCall': {'name': name, 'args': args, if (id != null) 'id': id},
     };
   }
 }
@@ -389,15 +361,8 @@ final class FunctionCall extends Part {
 /// The response class for [FunctionCall]
 final class FunctionResponse extends Part {
   // ignore: public_member_api_docs
-  const FunctionResponse(
-    this.name,
-    this.response, {
-    this.id,
-    bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  const FunctionResponse(this.name, this.response, {this.id, bool? isThought})
+    : super(isThought: isThought, thoughtSignature: null);
 
   /// The name of the function that was called.
   final String name;
@@ -430,14 +395,8 @@ final class FunctionResponse extends Part {
 /// A [Part] with Firebase Storage uri as prompt content
 final class FileData extends Part {
   // ignore: public_member_api_docs
-  const FileData(
-    this.mimeType,
-    this.fileUri, {
-    bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  const FileData(this.mimeType, this.fileUri, {bool? isThought})
+    : super(isThought: isThought, thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
@@ -446,20 +405,14 @@ final class FileData extends Part {
     this.fileUri, {
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   const FileData._(
     this.mimeType,
     this.fileUri, {
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// File type of the [FileData].
   /// https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-multimodal-prompts#media_requirements
@@ -485,20 +438,14 @@ final class ExecutableCodePart extends Part {
     required this.language,
     required this.code,
     bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  }) : super(isThought: isThought, thoughtSignature: null);
 
   ExecutableCodePart._({
     required this.language,
     required this.code,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// The programming language of the code.
   final CodeLanguage language;
@@ -523,20 +470,14 @@ final class CodeExecutionResultPart extends Part {
     required this.outcome,
     required this.output,
     bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  }) : super(isThought: isThought, thoughtSignature: null);
 
   CodeExecutionResultPart._({
     required this.outcome,
     required this.output,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// The result of the execution.
   final Outcome outcome;

@@ -73,9 +73,7 @@ class _BidiPageState extends State<BidiPage> {
 
     final config = LiveGenerationConfig(
       speechConfig: SpeechConfig(voiceName: 'Fenrir'),
-      responseModalities: [
-        ResponseModalities.audio,
-      ],
+      responseModalities: [ResponseModalities.audio],
       inputAudioTranscription: AudioTranscriptionConfig(),
       outputAudioTranscription: AudioTranscriptionConfig(),
     );
@@ -125,9 +123,7 @@ class _BidiPageState extends State<BidiPage> {
   void _scrollDown() {
     if (!_scrollController.hasClients) return;
 
-    _scrollController.jumpTo(
-      _scrollController.position.maxScrollExtent,
-    );
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
   }
 
   @override
@@ -162,15 +158,15 @@ class _BidiPageState extends State<BidiPage> {
                       },
                     )
                   : (_videoInput.cameraController != null &&
-                          _videoInput.controllerInitialized)
-                      ? FullCameraPreview(
-                          controller: _videoInput.cameraController,
-                          deviceId: _videoInput.selectedCameraId,
-                          onInitialized: (controller) {
-                            // Web/Mobile callback (often unused if controller passed in)
-                          },
-                        )
-                      : const Center(child: CircularProgressIndicator()),
+                        _videoInput.controllerInitialized)
+                  ? FullCameraPreview(
+                      controller: _videoInput.cameraController,
+                      deviceId: _videoInput.selectedCameraId,
+                      onInitialized: (controller) {
+                        // Web/Mobile callback (often unused if controller passed in)
+                      },
+                    )
+                  : const Center(child: CircularProgressIndicator()),
             ),
           Expanded(
             child: ListView.builder(
@@ -193,10 +189,7 @@ class _BidiPageState extends State<BidiPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 25,
-              horizontal: 15,
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
             child: Row(
               children: [
                 Expanded(
@@ -206,16 +199,12 @@ class _BidiPageState extends State<BidiPage> {
                     onSubmitted: _sendTextPrompt,
                   ),
                 ),
-                const SizedBox.square(
-                  dimension: 15,
-                ),
+                const SizedBox.square(dimension: 15),
                 AudioVisualizer(
                   audioStreamIsActive: _recording,
                   amplitudeStream: _audioInput.amplitudeStream,
                 ),
-                const SizedBox.square(
-                  dimension: 15,
-                ),
+                const SizedBox.square(dimension: 15),
                 IconButton(
                   tooltip: 'Start Streaming',
                   onPressed: !_loading
@@ -283,11 +272,13 @@ class _BidiPageState extends State<BidiPage> {
     'Set the brightness and color temperature of a room light.',
     parameters: {
       'brightness': Schema.integer(
-        description: 'Light level from 0 to 100. '
+        description:
+            'Light level from 0 to 100. '
             'Zero is off and 100 is full brightness.',
       ),
       'colorTemperature': Schema.string(
-        description: 'Color temperature of the light fixture, '
+        description:
+            'Color temperature of the light fixture, '
             'which can be `daylight`, `cool` or `warm`.',
       ),
     },
@@ -297,10 +288,7 @@ class _BidiPageState extends State<BidiPage> {
     int? brightness,
     String? colorTemperature,
   }) async {
-    final apiResponse = {
-      'colorTemprature': 'warm',
-      'brightness': brightness,
-    };
+    final apiResponse = {'colorTemprature': 'warm', 'brightness': brightness};
     return apiResponse;
   }
 
@@ -323,9 +311,7 @@ class _BidiPageState extends State<BidiPage> {
     if (!_sessionOpening) {
       _session = await _liveModel.connect();
       _sessionOpening = true;
-      unawaited(
-        _processMessagesContinuously(),
-      );
+      unawaited(_processMessagesContinuously());
     } else {
       await _session.close();
       _sessionOpening = false;
@@ -430,18 +416,15 @@ class _BidiPageState extends State<BidiPage> {
       }
 
       // 9. Start Video Stream
-      _videoInput.startStreamingImages().listen(
-        (data) {
-          String mimeType = 'image/jpeg';
-          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
-            if (data.length > 3 && data[0] == 0x89 && data[1] == 0x50) {
-              mimeType = 'image/png';
-            }
+      _videoInput.startStreamingImages().listen((data) {
+        String mimeType = 'image/jpeg';
+        if (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS) {
+          if (data.length > 3 && data[0] == 0x89 && data[1] == 0x50) {
+            mimeType = 'image/png';
           }
-          _session.sendVideoRealtime(InlineDataPart(mimeType, data));
-        },
-        onError: (e) => developer.log('Video Stream Error: $e'),
-      );
+        }
+        _session.sendVideoRealtime(InlineDataPart(mimeType, data));
+      }, onError: (e) => developer.log('Video Stream Error: $e'));
     } catch (e) {
       developer.log('Error switching to video: $e');
       _showError(e.toString());
@@ -625,9 +608,7 @@ class _BidiPageState extends State<BidiPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () {

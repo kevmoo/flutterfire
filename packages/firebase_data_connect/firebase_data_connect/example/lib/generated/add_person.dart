@@ -9,30 +9,30 @@ class AddPersonVariablesBuilder {
     return this;
   }
 
-  AddPersonVariablesBuilder(
-    this._dataConnect,
-  );
-  Deserializer<AddPersonData> dataDeserializer =
-      (dynamic json) => AddPersonData.fromJson(jsonDecode(json));
-  Serializer<AddPersonVariables> varsSerializer =
-      (AddPersonVariables vars) => jsonEncode(vars.toJson());
+  AddPersonVariablesBuilder(this._dataConnect);
+  Deserializer<AddPersonData> dataDeserializer = (dynamic json) =>
+      AddPersonData.fromJson(jsonDecode(json));
+  Serializer<AddPersonVariables> varsSerializer = (AddPersonVariables vars) =>
+      jsonEncode(vars.toJson());
   Future<OperationResult<AddPersonData, AddPersonVariables>> execute() {
     return ref().execute();
   }
 
   MutationRef<AddPersonData, AddPersonVariables> ref() {
-    AddPersonVariables vars = AddPersonVariables(
-      name: _name,
-    );
+    AddPersonVariables vars = AddPersonVariables(name: _name);
     return _dataConnect.mutation(
-        "addPerson", dataDeserializer, varsSerializer, vars);
+      "addPerson",
+      dataDeserializer,
+      varsSerializer,
+      vars,
+    );
   }
 }
 
 class AddPersonPersonInsert {
   String id;
   AddPersonPersonInsert.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']);
+    : id = nativeFromJson<String>(json['id']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -40,15 +40,13 @@ class AddPersonPersonInsert {
     return json;
   }
 
-  AddPersonPersonInsert({
-    required this.id,
-  });
+  AddPersonPersonInsert({required this.id});
 }
 
 class AddPersonData {
   AddPersonPersonInsert person_insert;
   AddPersonData.fromJson(dynamic json)
-      : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']);
+    : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -56,19 +54,19 @@ class AddPersonData {
     return json;
   }
 
-  AddPersonData({
-    required this.person_insert,
-  });
+  AddPersonData({required this.person_insert});
 }
 
 class AddPersonVariables {
   late Optional<String> name;
   @Deprecated(
-      'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
+    'fromJson is deprecated for Variable classes as they are no longer required for deserialization.',
+  )
   AddPersonVariables.fromJson(Map<String, dynamic> json) {
     name = Optional.optional(nativeFromJson, nativeToJson);
-    name.value =
-        json['name'] == null ? null : nativeFromJson<String>(json['name']);
+    name.value = json['name'] == null
+        ? null
+        : nativeFromJson<String>(json['name']);
   }
 
   Map<String, dynamic> toJson() {
@@ -79,7 +77,5 @@ class AddPersonVariables {
     return json;
   }
 
-  AddPersonVariables({
-    required this.name,
-  });
+  AddPersonVariables({required this.name});
 }

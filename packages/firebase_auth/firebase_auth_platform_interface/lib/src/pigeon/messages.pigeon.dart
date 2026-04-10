@@ -18,8 +18,11 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
-List<Object?> wrapResponse(
-    {Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
   if (empty) {
     return <Object?>[];
   }
@@ -55,23 +58,17 @@ enum ActionCodeInfoOperation {
 }
 
 class PigeonMultiFactorSession {
-  PigeonMultiFactorSession({
-    required this.id,
-  });
+  PigeonMultiFactorSession({required this.id});
 
   String id;
 
   Object encode() {
-    return <Object?>[
-      id,
-    ];
+    return <Object?>[id];
   }
 
   static PigeonMultiFactorSession decode(Object result) {
     result as List<Object?>;
-    return PigeonMultiFactorSession(
-      id: result[0]! as String,
-    );
+    return PigeonMultiFactorSession(id: result[0]! as String);
   }
 }
 
@@ -86,10 +83,7 @@ class PigeonPhoneMultiFactorAssertion {
   String verificationCode;
 
   Object encode() {
-    return <Object?>[
-      verificationId,
-      verificationCode,
-    ];
+    return <Object?>[verificationId, verificationCode];
   }
 
   static PigeonPhoneMultiFactorAssertion decode(Object result) {
@@ -156,11 +150,7 @@ class AuthPigeonFirebaseApp {
   String? customAuthDomain;
 
   Object encode() {
-    return <Object?>[
-      appName,
-      tenantId,
-      customAuthDomain,
-    ];
+    return <Object?>[appName, tenantId, customAuthDomain];
   }
 
   static AuthPigeonFirebaseApp decode(Object result) {
@@ -174,20 +164,14 @@ class AuthPigeonFirebaseApp {
 }
 
 class PigeonActionCodeInfoData {
-  PigeonActionCodeInfoData({
-    this.email,
-    this.previousEmail,
-  });
+  PigeonActionCodeInfoData({this.email, this.previousEmail});
 
   String? email;
 
   String? previousEmail;
 
   Object encode() {
-    return <Object?>[
-      email,
-      previousEmail,
-    ];
+    return <Object?>[email, previousEmail];
   }
 
   static PigeonActionCodeInfoData decode(Object result) {
@@ -200,20 +184,14 @@ class PigeonActionCodeInfoData {
 }
 
 class PigeonActionCodeInfo {
-  PigeonActionCodeInfo({
-    required this.operation,
-    required this.data,
-  });
+  PigeonActionCodeInfo({required this.operation, required this.data});
 
   ActionCodeInfoOperation operation;
 
   PigeonActionCodeInfoData data;
 
   Object encode() {
-    return <Object?>[
-      operation.index,
-      data,
-    ];
+    return <Object?>[operation.index, data];
   }
 
   static PigeonActionCodeInfo decode(Object result) {
@@ -283,12 +261,7 @@ class PigeonAuthCredential {
   String? accessToken;
 
   Object encode() {
-    return <Object?>[
-      providerId,
-      signInMethod,
-      nativeId,
-      accessToken,
-    ];
+    return <Object?>[providerId, signInMethod, nativeId, accessToken];
   }
 
   static PigeonAuthCredential decode(Object result) {
@@ -379,38 +352,28 @@ class PigeonUserInfo {
 }
 
 class PigeonUserDetails {
-  PigeonUserDetails({
-    required this.userInfo,
-    required this.providerData,
-  });
+  PigeonUserDetails({required this.userInfo, required this.providerData});
 
   PigeonUserInfo userInfo;
 
   List<Map<Object?, Object?>?> providerData;
 
   Object encode() {
-    return <Object?>[
-      userInfo,
-      providerData,
-    ];
+    return <Object?>[userInfo, providerData];
   }
 
   static PigeonUserDetails decode(Object result) {
     result as List<Object?>;
     return PigeonUserDetails(
       userInfo: result[0]! as PigeonUserInfo,
-      providerData:
-          (result[1] as List<Object?>?)!.cast<Map<Object?, Object?>?>(),
+      providerData: (result[1] as List<Object?>?)!
+          .cast<Map<Object?, Object?>?>(),
     );
   }
 }
 
 class PigeonUserCredential {
-  PigeonUserCredential({
-    this.user,
-    this.additionalUserInfo,
-    this.credential,
-  });
+  PigeonUserCredential({this.user, this.additionalUserInfo, this.credential});
 
   PigeonUserDetails? user;
 
@@ -419,11 +382,7 @@ class PigeonUserCredential {
   PigeonAuthCredential? credential;
 
   Object encode() {
-    return <Object?>[
-      user,
-      additionalUserInfo,
-      credential,
-    ];
+    return <Object?>[user, additionalUserInfo, credential];
   }
 
   static PigeonUserCredential decode(Object result) {
@@ -547,11 +506,7 @@ class PigeonSignInProvider {
   Map<String?, String?>? customParameters;
 
   Object encode() {
-    return <Object?>[
-      providerId,
-      scopes,
-      customParameters,
-    ];
+    return <Object?>[providerId, scopes, customParameters];
   }
 
   static PigeonSignInProvider decode(Object result) {
@@ -559,8 +514,8 @@ class PigeonSignInProvider {
     return PigeonSignInProvider(
       providerId: result[0]! as String,
       scopes: (result[1] as List<Object?>?)?.cast<String?>(),
-      customParameters:
-          (result[2] as Map<Object?, Object?>?)?.cast<String?, String?>(),
+      customParameters: (result[2] as Map<Object?, Object?>?)
+          ?.cast<String?, String?>(),
     );
   }
 }
@@ -851,11 +806,13 @@ class FirebaseAuthHostApi {
   /// Constructor for [FirebaseAuthHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseAuthHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : __pigeon_binaryMessenger = binaryMessenger,
-        __pigeon_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  FirebaseAuthHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : __pigeon_binaryMessenger = binaryMessenger,
+       __pigeon_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? __pigeon_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec =
@@ -868,10 +825,10 @@ class FirebaseAuthHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerIdTokenListener$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -897,10 +854,10 @@ class FirebaseAuthHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.registerAuthStateListener$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -922,17 +879,21 @@ class FirebaseAuthHostApi {
   }
 
   Future<void> useEmulator(
-      AuthPigeonFirebaseApp app, String host, int port) async {
+    AuthPigeonFirebaseApp app,
+    String host,
+    int port,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.useEmulator$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, host, port]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, host, port])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -951,10 +912,10 @@ class FirebaseAuthHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.applyActionCode$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, code]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -971,15 +932,17 @@ class FirebaseAuthHostApi {
   }
 
   Future<PigeonActionCodeInfo> checkActionCode(
-      AuthPigeonFirebaseApp app, String code) async {
+    AuthPigeonFirebaseApp app,
+    String code,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.checkActionCode$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, code]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1001,17 +964,21 @@ class FirebaseAuthHostApi {
   }
 
   Future<void> confirmPasswordReset(
-      AuthPigeonFirebaseApp app, String code, String newPassword) async {
+    AuthPigeonFirebaseApp app,
+    String code,
+    String newPassword,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.confirmPasswordReset$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, code, newPassword]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, code, newPassword])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1026,17 +993,21 @@ class FirebaseAuthHostApi {
   }
 
   Future<PigeonUserCredential> createUserWithEmailAndPassword(
-      AuthPigeonFirebaseApp app, String email, String password) async {
+    AuthPigeonFirebaseApp app,
+    String email,
+    String password,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.createUserWithEmailAndPassword$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, email, password]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, email, password])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1056,15 +1027,16 @@ class FirebaseAuthHostApi {
   }
 
   Future<PigeonUserCredential> signInAnonymously(
-      AuthPigeonFirebaseApp app) async {
+    AuthPigeonFirebaseApp app,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInAnonymously$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1086,15 +1058,17 @@ class FirebaseAuthHostApi {
   }
 
   Future<PigeonUserCredential> signInWithCredential(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
+    AuthPigeonFirebaseApp app,
+    Map<String?, Object?> input,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCredential$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, input]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1116,15 +1090,17 @@ class FirebaseAuthHostApi {
   }
 
   Future<PigeonUserCredential> signInWithCustomToken(
-      AuthPigeonFirebaseApp app, String token) async {
+    AuthPigeonFirebaseApp app,
+    String token,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithCustomToken$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, token]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1146,17 +1122,21 @@ class FirebaseAuthHostApi {
   }
 
   Future<PigeonUserCredential> signInWithEmailAndPassword(
-      AuthPigeonFirebaseApp app, String email, String password) async {
+    AuthPigeonFirebaseApp app,
+    String email,
+    String password,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailAndPassword$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, email, password]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, email, password])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1176,17 +1156,21 @@ class FirebaseAuthHostApi {
   }
 
   Future<PigeonUserCredential> signInWithEmailLink(
-      AuthPigeonFirebaseApp app, String email, String emailLink) async {
+    AuthPigeonFirebaseApp app,
+    String email,
+    String emailLink,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithEmailLink$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, email, emailLink]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, email, emailLink])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1206,17 +1190,20 @@ class FirebaseAuthHostApi {
   }
 
   Future<PigeonUserCredential> signInWithProvider(
-      AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider) async {
+    AuthPigeonFirebaseApp app,
+    PigeonSignInProvider signInProvider,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signInWithProvider$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, signInProvider]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, signInProvider])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1240,10 +1227,10 @@ class FirebaseAuthHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.signOut$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1260,15 +1247,17 @@ class FirebaseAuthHostApi {
   }
 
   Future<List<String?>> fetchSignInMethodsForEmail(
-      AuthPigeonFirebaseApp app, String email) async {
+    AuthPigeonFirebaseApp app,
+    String email,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.fetchSignInMethodsForEmail$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, email]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1289,18 +1278,22 @@ class FirebaseAuthHostApi {
     }
   }
 
-  Future<void> sendPasswordResetEmail(AuthPigeonFirebaseApp app, String email,
-      PigeonActionCodeSettings? actionCodeSettings) async {
+  Future<void> sendPasswordResetEmail(
+    AuthPigeonFirebaseApp app,
+    String email,
+    PigeonActionCodeSettings? actionCodeSettings,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendPasswordResetEmail$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, email, actionCodeSettings]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, email, actionCodeSettings])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1314,18 +1307,22 @@ class FirebaseAuthHostApi {
     }
   }
 
-  Future<void> sendSignInLinkToEmail(AuthPigeonFirebaseApp app, String email,
-      PigeonActionCodeSettings actionCodeSettings) async {
+  Future<void> sendSignInLinkToEmail(
+    AuthPigeonFirebaseApp app,
+    String email,
+    PigeonActionCodeSettings actionCodeSettings,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.sendSignInLinkToEmail$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, email, actionCodeSettings]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, email, actionCodeSettings])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1340,17 +1337,20 @@ class FirebaseAuthHostApi {
   }
 
   Future<String> setLanguageCode(
-      AuthPigeonFirebaseApp app, String? languageCode) async {
+    AuthPigeonFirebaseApp app,
+    String? languageCode,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setLanguageCode$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, languageCode]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, languageCode])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1370,15 +1370,17 @@ class FirebaseAuthHostApi {
   }
 
   Future<void> setSettings(
-      AuthPigeonFirebaseApp app, PigeonFirebaseAuthSettings settings) async {
+    AuthPigeonFirebaseApp app,
+    PigeonFirebaseAuthSettings settings,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, settings]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1395,15 +1397,17 @@ class FirebaseAuthHostApi {
   }
 
   Future<String> verifyPasswordResetCode(
-      AuthPigeonFirebaseApp app, String code) async {
+    AuthPigeonFirebaseApp app,
+    String code,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPasswordResetCode$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, code]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1425,15 +1429,17 @@ class FirebaseAuthHostApi {
   }
 
   Future<String> verifyPhoneNumber(
-      AuthPigeonFirebaseApp app, PigeonVerifyPhoneNumberRequest request) async {
+    AuthPigeonFirebaseApp app,
+    PigeonVerifyPhoneNumberRequest request,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.verifyPhoneNumber$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, request]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1455,17 +1461,20 @@ class FirebaseAuthHostApi {
   }
 
   Future<void> revokeTokenWithAuthorizationCode(
-      AuthPigeonFirebaseApp app, String authorizationCode) async {
+    AuthPigeonFirebaseApp app,
+    String authorizationCode,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.revokeTokenWithAuthorizationCode$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, authorizationCode]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, authorizationCode])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1484,10 +1493,10 @@ class FirebaseAuthHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.initializeRecaptchaConfig$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1616,11 +1625,13 @@ class FirebaseAuthUserHostApi {
   /// Constructor for [FirebaseAuthUserHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseAuthUserHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : __pigeon_binaryMessenger = binaryMessenger,
-        __pigeon_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  FirebaseAuthUserHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : __pigeon_binaryMessenger = binaryMessenger,
+       __pigeon_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? __pigeon_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec =
@@ -1633,10 +1644,10 @@ class FirebaseAuthUserHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.delete$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1653,17 +1664,20 @@ class FirebaseAuthUserHostApi {
   }
 
   Future<PigeonIdTokenResult> getIdToken(
-      AuthPigeonFirebaseApp app, bool forceRefresh) async {
+    AuthPigeonFirebaseApp app,
+    bool forceRefresh,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.getIdToken$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, forceRefresh]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, forceRefresh])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1683,15 +1697,17 @@ class FirebaseAuthUserHostApi {
   }
 
   Future<PigeonUserCredential> linkWithCredential(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
+    AuthPigeonFirebaseApp app,
+    Map<String?, Object?> input,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithCredential$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, input]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1713,17 +1729,20 @@ class FirebaseAuthUserHostApi {
   }
 
   Future<PigeonUserCredential> linkWithProvider(
-      AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider) async {
+    AuthPigeonFirebaseApp app,
+    PigeonSignInProvider signInProvider,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.linkWithProvider$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, signInProvider]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, signInProvider])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1743,15 +1762,17 @@ class FirebaseAuthUserHostApi {
   }
 
   Future<PigeonUserCredential> reauthenticateWithCredential(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
+    AuthPigeonFirebaseApp app,
+    Map<String?, Object?> input,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithCredential$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, input]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1773,17 +1794,20 @@ class FirebaseAuthUserHostApi {
   }
 
   Future<PigeonUserCredential> reauthenticateWithProvider(
-      AuthPigeonFirebaseApp app, PigeonSignInProvider signInProvider) async {
+    AuthPigeonFirebaseApp app,
+    PigeonSignInProvider signInProvider,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reauthenticateWithProvider$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, signInProvider]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, signInProvider])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1807,10 +1831,10 @@ class FirebaseAuthUserHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.reload$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1831,18 +1855,21 @@ class FirebaseAuthUserHostApi {
     }
   }
 
-  Future<void> sendEmailVerification(AuthPigeonFirebaseApp app,
-      PigeonActionCodeSettings? actionCodeSettings) async {
+  Future<void> sendEmailVerification(
+    AuthPigeonFirebaseApp app,
+    PigeonActionCodeSettings? actionCodeSettings,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.sendEmailVerification$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, actionCodeSettings]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, actionCodeSettings])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1857,17 +1884,20 @@ class FirebaseAuthUserHostApi {
   }
 
   Future<PigeonUserCredential> unlink(
-      AuthPigeonFirebaseApp app, String providerId) async {
+    AuthPigeonFirebaseApp app,
+    String providerId,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.unlink$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, providerId]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, providerId])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1887,15 +1917,17 @@ class FirebaseAuthUserHostApi {
   }
 
   Future<PigeonUserDetails> updateEmail(
-      AuthPigeonFirebaseApp app, String newEmail) async {
+    AuthPigeonFirebaseApp app,
+    String newEmail,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateEmail$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, newEmail]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1917,17 +1949,20 @@ class FirebaseAuthUserHostApi {
   }
 
   Future<PigeonUserDetails> updatePassword(
-      AuthPigeonFirebaseApp app, String newPassword) async {
+    AuthPigeonFirebaseApp app,
+    String newPassword,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePassword$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, newPassword]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, newPassword])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -1947,15 +1982,17 @@ class FirebaseAuthUserHostApi {
   }
 
   Future<PigeonUserDetails> updatePhoneNumber(
-      AuthPigeonFirebaseApp app, Map<String?, Object?> input) async {
+    AuthPigeonFirebaseApp app,
+    Map<String?, Object?> input,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updatePhoneNumber$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, input]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -1977,15 +2014,17 @@ class FirebaseAuthUserHostApi {
   }
 
   Future<PigeonUserDetails> updateProfile(
-      AuthPigeonFirebaseApp app, PigeonUserProfile profile) async {
+    AuthPigeonFirebaseApp app,
+    PigeonUserProfile profile,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.updateProfile$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app, profile]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -2006,18 +2045,26 @@ class FirebaseAuthUserHostApi {
     }
   }
 
-  Future<void> verifyBeforeUpdateEmail(AuthPigeonFirebaseApp app,
-      String newEmail, PigeonActionCodeSettings? actionCodeSettings) async {
+  Future<void> verifyBeforeUpdateEmail(
+    AuthPigeonFirebaseApp app,
+    String newEmail,
+    PigeonActionCodeSettings? actionCodeSettings,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthUserHostApi.verifyBeforeUpdateEmail$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, newEmail, actionCodeSettings]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[
+              app,
+              newEmail,
+              actionCodeSettings,
+            ])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -2074,11 +2121,13 @@ class MultiFactorUserHostApi {
   /// Constructor for [MultiFactorUserHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  MultiFactorUserHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : __pigeon_binaryMessenger = binaryMessenger,
-        __pigeon_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  MultiFactorUserHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : __pigeon_binaryMessenger = binaryMessenger,
+       __pigeon_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? __pigeon_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec =
@@ -2086,18 +2135,22 @@ class MultiFactorUserHostApi {
 
   final String __pigeon_messageChannelSuffix;
 
-  Future<void> enrollPhone(AuthPigeonFirebaseApp app,
-      PigeonPhoneMultiFactorAssertion assertion, String? displayName) async {
+  Future<void> enrollPhone(
+    AuthPigeonFirebaseApp app,
+    PigeonPhoneMultiFactorAssertion assertion,
+    String? displayName,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollPhone$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, assertion, displayName]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, assertion, displayName])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -2111,18 +2164,22 @@ class MultiFactorUserHostApi {
     }
   }
 
-  Future<void> enrollTotp(AuthPigeonFirebaseApp app, String assertionId,
-      String? displayName) async {
+  Future<void> enrollTotp(
+    AuthPigeonFirebaseApp app,
+    String assertionId,
+    String? displayName,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.enrollTotp$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, assertionId, displayName]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, assertionId, displayName])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -2141,10 +2198,10 @@ class MultiFactorUserHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getSession$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -2170,12 +2227,13 @@ class MultiFactorUserHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.unenroll$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[app, factorUid]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[app, factorUid])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -2190,15 +2248,16 @@ class MultiFactorUserHostApi {
   }
 
   Future<List<PigeonMultiFactorInfo?>> getEnrolledFactors(
-      AuthPigeonFirebaseApp app) async {
+    AuthPigeonFirebaseApp app,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorUserHostApi.getEnrolledFactors$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[app]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -2273,11 +2332,13 @@ class MultiFactoResolverHostApi {
   /// Constructor for [MultiFactoResolverHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  MultiFactoResolverHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : __pigeon_binaryMessenger = binaryMessenger,
-        __pigeon_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  MultiFactoResolverHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : __pigeon_binaryMessenger = binaryMessenger,
+       __pigeon_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? __pigeon_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec =
@@ -2286,20 +2347,25 @@ class MultiFactoResolverHostApi {
   final String __pigeon_messageChannelSuffix;
 
   Future<PigeonUserCredential> resolveSignIn(
-      String resolverId,
-      PigeonPhoneMultiFactorAssertion? assertion,
-      String? totpAssertionId) async {
+    String resolverId,
+    PigeonPhoneMultiFactorAssertion? assertion,
+    String? totpAssertionId,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactoResolverHostApi.resolveSignIn$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-            .send(<Object?>[resolverId, assertion, totpAssertionId])
-        as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[
+              resolverId,
+              assertion,
+              totpAssertionId,
+            ])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -2346,11 +2412,13 @@ class MultiFactorTotpHostApi {
   /// Constructor for [MultiFactorTotpHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  MultiFactorTotpHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : __pigeon_binaryMessenger = binaryMessenger,
-        __pigeon_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  MultiFactorTotpHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : __pigeon_binaryMessenger = binaryMessenger,
+       __pigeon_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? __pigeon_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec =
@@ -2363,10 +2431,10 @@ class MultiFactorTotpHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.generateSecret$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[sessionId]) as List<Object?>?;
     if (__pigeon_replyList == null) {
@@ -2388,17 +2456,20 @@ class MultiFactorTotpHostApi {
   }
 
   Future<String> getAssertionForEnrollment(
-      String secretKey, String oneTimePassword) async {
+    String secretKey,
+    String oneTimePassword,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForEnrollment$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[secretKey, oneTimePassword]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[secretKey, oneTimePassword])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -2418,17 +2489,20 @@ class MultiFactorTotpHostApi {
   }
 
   Future<String> getAssertionForSignIn(
-      String enrollmentId, String oneTimePassword) async {
+    String enrollmentId,
+    String oneTimePassword,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpHostApi.getAssertionForSignIn$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[enrollmentId, oneTimePassword]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[enrollmentId, oneTimePassword])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -2452,11 +2526,13 @@ class MultiFactorTotpSecretHostApi {
   /// Constructor for [MultiFactorTotpSecretHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  MultiFactorTotpSecretHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : __pigeon_binaryMessenger = binaryMessenger,
-        __pigeon_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  MultiFactorTotpSecretHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : __pigeon_binaryMessenger = binaryMessenger,
+       __pigeon_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? __pigeon_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec =
@@ -2465,17 +2541,21 @@ class MultiFactorTotpSecretHostApi {
   final String __pigeon_messageChannelSuffix;
 
   Future<String> generateQrCodeUrl(
-      String secretKey, String? accountName, String? issuer) async {
+    String secretKey,
+    String? accountName,
+    String? issuer,
+  ) async {
     final String __pigeon_channelName =
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.generateQrCodeUrl$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[secretKey, accountName, issuer]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[secretKey, accountName, issuer])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -2499,12 +2579,13 @@ class MultiFactorTotpSecretHostApi {
         'dev.flutter.pigeon.firebase_auth_platform_interface.MultiFactorTotpSecretHostApi.openInOtpApp$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
-    final List<Object?>? __pigeon_replyList = await __pigeon_channel
-        .send(<Object?>[secretKey, qrCodeUrl]) as List<Object?>?;
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
+    final List<Object?>? __pigeon_replyList =
+        await __pigeon_channel.send(<Object?>[secretKey, qrCodeUrl])
+            as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -2547,11 +2628,13 @@ class GenerateInterfaces {
   /// Constructor for [GenerateInterfaces].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  GenerateInterfaces(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : __pigeon_binaryMessenger = binaryMessenger,
-        __pigeon_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  GenerateInterfaces({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : __pigeon_binaryMessenger = binaryMessenger,
+       __pigeon_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? __pigeon_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec =
@@ -2564,10 +2647,10 @@ class GenerateInterfaces {
         'dev.flutter.pigeon.firebase_auth_platform_interface.GenerateInterfaces.pigeonInterface$__pigeon_messageChannelSuffix';
     final BasicMessageChannel<Object?> __pigeon_channel =
         BasicMessageChannel<Object?>(
-      __pigeon_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: __pigeon_binaryMessenger,
-    );
+          __pigeon_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: __pigeon_binaryMessenger,
+        );
     final List<Object?>? __pigeon_replyList =
         await __pigeon_channel.send(<Object?>[info]) as List<Object?>?;
     if (__pigeon_replyList == null) {

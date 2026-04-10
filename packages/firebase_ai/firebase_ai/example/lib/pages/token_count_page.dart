@@ -33,9 +33,7 @@ class _TokenCountPageState extends State<TokenCountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -54,10 +52,7 @@ class _TokenCountPageState extends State<TokenCountPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 25,
-                horizontal: 15,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
               child: Row(
                 children: [
                   Expanded(
@@ -118,7 +113,8 @@ class _TokenCountPageState extends State<TokenCountPage> {
     final usageMetadata = response.usageMetadata;
 
     if (usageMetadata != null) {
-      final message = '''
+      final message =
+          '''
 Usage Metadata:
 - promptTokenCount: ${usageMetadata.promptTokenCount}
 - candidatesTokenCount: ${usageMetadata.candidatesTokenCount}

@@ -5,8 +5,10 @@ class CreateMovieVariablesBuilder {
   int releaseYear;
   String genre;
   Optional<double> _rating = Optional.optional(nativeFromJson, nativeToJson);
-  Optional<String> _description =
-      Optional.optional(nativeFromJson, nativeToJson);
+  Optional<String> _description = Optional.optional(
+    nativeFromJson,
+    nativeToJson,
+  );
 
   final FirebaseDataConnect _dataConnect;
   CreateMovieVariablesBuilder rating(double? t) {
@@ -25,8 +27,8 @@ class CreateMovieVariablesBuilder {
     required this.releaseYear,
     required this.genre,
   });
-  Deserializer<CreateMovieData> dataDeserializer =
-      (dynamic json) => CreateMovieData.fromJson(jsonDecode(json));
+  Deserializer<CreateMovieData> dataDeserializer = (dynamic json) =>
+      CreateMovieData.fromJson(jsonDecode(json));
   Serializer<CreateMovieVariables> varsSerializer =
       (CreateMovieVariables vars) => jsonEncode(vars.toJson());
   Future<OperationResult<CreateMovieData, CreateMovieVariables>> execute() {
@@ -42,14 +44,18 @@ class CreateMovieVariablesBuilder {
       description: _description,
     );
     return _dataConnect.mutation(
-        "createMovie", dataDeserializer, varsSerializer, vars);
+      "createMovie",
+      dataDeserializer,
+      varsSerializer,
+      vars,
+    );
   }
 }
 
 class CreateMovieMovieInsert {
   String id;
   CreateMovieMovieInsert.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']);
+    : id = nativeFromJson<String>(json['id']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -57,15 +63,13 @@ class CreateMovieMovieInsert {
     return json;
   }
 
-  CreateMovieMovieInsert({
-    required this.id,
-  });
+  CreateMovieMovieInsert({required this.id});
 }
 
 class CreateMovieData {
   CreateMovieMovieInsert movie_insert;
   CreateMovieData.fromJson(dynamic json)
-      : movie_insert = CreateMovieMovieInsert.fromJson(json['movie_insert']);
+    : movie_insert = CreateMovieMovieInsert.fromJson(json['movie_insert']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -73,9 +77,7 @@ class CreateMovieData {
     return json;
   }
 
-  CreateMovieData({
-    required this.movie_insert,
-  });
+  CreateMovieData({required this.movie_insert});
 }
 
 class CreateMovieVariables {
@@ -85,14 +87,16 @@ class CreateMovieVariables {
   late Optional<double> rating;
   late Optional<String> description;
   @Deprecated(
-      'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
+    'fromJson is deprecated for Variable classes as they are no longer required for deserialization.',
+  )
   CreateMovieVariables.fromJson(Map<String, dynamic> json)
-      : title = nativeFromJson<String>(json['title']),
-        releaseYear = nativeFromJson<int>(json['releaseYear']),
-        genre = nativeFromJson<String>(json['genre']) {
+    : title = nativeFromJson<String>(json['title']),
+      releaseYear = nativeFromJson<int>(json['releaseYear']),
+      genre = nativeFromJson<String>(json['genre']) {
     rating = Optional.optional(nativeFromJson, nativeToJson);
-    rating.value =
-        json['rating'] == null ? null : nativeFromJson<double>(json['rating']);
+    rating.value = json['rating'] == null
+        ? null
+        : nativeFromJson<double>(json['rating']);
 
     description = Optional.optional(nativeFromJson, nativeToJson);
     description.value = json['description'] == null

@@ -35,10 +35,7 @@ sealed class ImagenImage {
 )
 final class ImagenInlineImage implements ImagenImage {
   // ignore: public_member_api_docs
-  ImagenInlineImage({
-    required this.bytesBase64Encoded,
-    required this.mimeType,
-  });
+  ImagenInlineImage({required this.bytesBase64Encoded, required this.mimeType});
 
   /// Factory method to create an [ImagenInlineImage] from a JSON object.
   factory ImagenInlineImage.fromJson(Map<String, dynamic> json) {
@@ -59,28 +56,22 @@ final class ImagenInlineImage implements ImagenImage {
 
   @override
   Object toJson() => {
-        'mimeType': mimeType,
-        'bytesBase64Encoded': base64Encode(bytesBase64Encoded),
-      };
+    'mimeType': mimeType,
+    'bytesBase64Encoded': base64Encode(bytesBase64Encoded),
+  };
 }
 
 /// Represents an image stored in Google Cloud Storage.
 final class ImagenGCSImage implements ImagenImage {
   // ignore: public_member_api_docs
-  ImagenGCSImage({
-    required this.gcsUri,
-    required this.mimeType,
-  });
+  ImagenGCSImage({required this.gcsUri, required this.mimeType});
 
   /// Factory method to create an [ImagenGCSImage] from a JSON object.
   factory ImagenGCSImage.fromJson(Map<String, dynamic> json) {
     final mimeType = json['mimeType'] as String;
     final uri = json['gcsUri'] as String;
 
-    return ImagenGCSImage(
-      mimeType: mimeType,
-      gcsUri: uri,
-    );
+    return ImagenGCSImage(mimeType: mimeType, gcsUri: uri);
   }
 
   /// The storage URI of the image.
@@ -90,19 +81,13 @@ final class ImagenGCSImage implements ImagenImage {
   final String mimeType;
 
   @override
-  Object toJson() => {
-        'mimeType': mimeType,
-        'gcsUri': gcsUri,
-      };
+  Object toJson() => {'mimeType': mimeType, 'gcsUri': gcsUri};
 }
 
 /// Represents the response from an image generation request.
 final class ImagenGenerationResponse<T extends ImagenImage> {
   // ignore: public_member_api_docs
-  ImagenGenerationResponse({
-    required this.images,
-    this.filteredReason,
-  });
+  ImagenGenerationResponse({required this.images, this.filteredReason});
 
   /// Factory method to create an [ImagenGenerationResponse] from a JSON object.
   factory ImagenGenerationResponse.fromJson(Map<String, dynamic> json) {
@@ -141,7 +126,9 @@ final class ImagenGenerationResponse<T extends ImagenImage> {
     }
 
     return ImagenGenerationResponse<T>(
-        images: images, filteredReason: filteredReason);
+      images: images,
+      filteredReason: filteredReason,
+    );
   }
 
   /// A list of generated images. The type of the images depends on the T parameter.
@@ -153,7 +140,7 @@ final class ImagenGenerationResponse<T extends ImagenImage> {
 
 /// Parse the json to [ImagenGenerationResponse]
 ImagenGenerationResponse<T>
-    parseImagenGenerationResponse<T extends ImagenImage>(Object jsonObject) {
+parseImagenGenerationResponse<T extends ImagenImage>(Object jsonObject) {
   if (jsonObject case {'error': final Object error}) throw parseError(error);
   Map<String, dynamic> json = jsonObject as Map<String, dynamic>;
   return ImagenGenerationResponse<T>.fromJson(json);

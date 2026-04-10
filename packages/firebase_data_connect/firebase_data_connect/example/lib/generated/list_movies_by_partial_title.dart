@@ -13,18 +13,23 @@ class ListMoviesByPartialTitleVariablesBuilder {
   Serializer<ListMoviesByPartialTitleVariables> varsSerializer =
       (ListMoviesByPartialTitleVariables vars) => jsonEncode(vars.toJson());
   Future<
-      QueryResult<ListMoviesByPartialTitleData,
-          ListMoviesByPartialTitleVariables>> execute() {
+    QueryResult<ListMoviesByPartialTitleData, ListMoviesByPartialTitleVariables>
+  >
+  execute() {
     return ref().execute();
   }
 
   QueryRef<ListMoviesByPartialTitleData, ListMoviesByPartialTitleVariables>
-      ref() {
+  ref() {
     ListMoviesByPartialTitleVariables vars = ListMoviesByPartialTitleVariables(
       input: input,
     );
     return _dataConnect.query(
-        "ListMoviesByPartialTitle", dataDeserializer, varsSerializer, vars);
+      "ListMoviesByPartialTitle",
+      dataDeserializer,
+      varsSerializer,
+      vars,
+    );
   }
 }
 
@@ -34,12 +39,12 @@ class ListMoviesByPartialTitleMovies {
   String genre;
   double? rating;
   ListMoviesByPartialTitleMovies.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']),
-        title = nativeFromJson<String>(json['title']),
-        genre = nativeFromJson<String>(json['genre']),
-        rating = json['rating'] == null
-            ? null
-            : nativeFromJson<double>(json['rating']);
+    : id = nativeFromJson<String>(json['id']),
+      title = nativeFromJson<String>(json['title']),
+      genre = nativeFromJson<String>(json['genre']),
+      rating = json['rating'] == null
+          ? null
+          : nativeFromJson<double>(json['rating']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -63,9 +68,9 @@ class ListMoviesByPartialTitleMovies {
 class ListMoviesByPartialTitleData {
   List<ListMoviesByPartialTitleMovies> movies;
   ListMoviesByPartialTitleData.fromJson(dynamic json)
-      : movies = (json['movies'] as List<dynamic>)
-            .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
-            .toList();
+    : movies = (json['movies'] as List<dynamic>)
+          .map((e) => ListMoviesByPartialTitleMovies.fromJson(e))
+          .toList();
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -73,17 +78,16 @@ class ListMoviesByPartialTitleData {
     return json;
   }
 
-  ListMoviesByPartialTitleData({
-    required this.movies,
-  });
+  ListMoviesByPartialTitleData({required this.movies});
 }
 
 class ListMoviesByPartialTitleVariables {
   String input;
   @Deprecated(
-      'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
+    'fromJson is deprecated for Variable classes as they are no longer required for deserialization.',
+  )
   ListMoviesByPartialTitleVariables.fromJson(Map<String, dynamic> json)
-      : input = nativeFromJson<String>(json['input']);
+    : input = nativeFromJson<String>(json['input']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -91,7 +95,5 @@ class ListMoviesByPartialTitleVariables {
     return json;
   }
 
-  ListMoviesByPartialTitleVariables({
-    required this.input,
-  });
+  ListMoviesByPartialTitleVariables({required this.input});
 }

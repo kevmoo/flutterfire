@@ -29,23 +29,26 @@ class MethodChannelFirebaseAppInstallations
 
   /// Creates a new [MethodChannelFirebaseAppInstallations] instance with an [app].
   MethodChannelFirebaseAppInstallations({required FirebaseApp app})
-      : super(app) {
+    : super(app) {
     final controller = _idTokenChangesListeners[app.name] =
         StreamController<String>.broadcast();
 
-    channel.invokeMethod<String>(
-        'FirebaseInstallations#registerIdChangeListener', {
-      'appName': app.name,
-    }).then((channelName) {
-      final events = EventChannel(channelName!, channel.codec);
+    channel
+        .invokeMethod<String>(
+          'FirebaseInstallations#registerIdChangeListener',
+          {'appName': app.name},
+        )
+        .then((channelName) {
+          final events = EventChannel(channelName!, channel.codec);
 
-      events
-          .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen(
-            (Object? arguments) => controller.add((arguments as Map)['token']),
-            onError: controller.addError,
-          );
-    });
+          events
+              .receiveGuardedBroadcastStream(onError: convertPlatformException)
+              .listen(
+                (Object? arguments) =>
+                    controller.add((arguments as Map)['token']),
+                onError: controller.addError,
+              );
+        });
   }
 
   /// Internal stub class initializer.

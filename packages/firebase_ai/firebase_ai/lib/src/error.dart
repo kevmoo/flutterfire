@@ -103,7 +103,8 @@ final class FirebaseAISdkException implements Exception {
   final String message;
 
   @override
-  String toString() => '$message\n'
+  String toString() =>
+      '$message\n'
       'This indicates a problem with the Firebase AI Logic SDK. '
       'Try updating to the latest version '
       '(https://pub.dev/packages/firebase_ai/versions), '
@@ -154,7 +155,7 @@ FirebaseAIException parseError(Object jsonObject) {
   return switch (jsonObject) {
     {
       'message': final String message,
-      'details': [{'reason': 'API_KEY_INVALID'}, ...]
+      'details': [{'reason': 'API_KEY_INVALID'}, ...],
     } =>
       InvalidApiKey(message),
     {'message': UnsupportedUserLocation._message} => UnsupportedUserLocation(),
@@ -170,13 +171,13 @@ FirebaseAIException parseError(Object jsonObject) {
           'metadata': {
             'service': 'firebasevertexai.googleapis.com',
             'consumer': final String projectId,
-          }
+          },
         },
-      ]
+      ],
     } =>
       ServiceApiNotEnabled(projectId),
     {'message': final String message} => ServerException(message),
-    _ => throw unhandledFormat('server error', jsonObject)
+    _ => throw unhandledFormat('server error', jsonObject),
   };
 }
 

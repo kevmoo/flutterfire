@@ -17,27 +17,23 @@ import 'package:path/path.dart' show joinAll;
 import 'package:yaml/yaml.dart' show YamlMap, loadYaml;
 
 Future<void> main() async {
-  final outputPath = joinAll(
-    [
-      Directory.current.path,
-      'packages',
-      'firebase_ai',
-      'firebase_ai',
-      'lib',
-      'src',
-      'firebaseai_version.dart',
-    ],
-  );
+  final outputPath = joinAll([
+    Directory.current.path,
+    'packages',
+    'firebase_ai',
+    'firebase_ai',
+    'lib',
+    'src',
+    'firebaseai_version.dart',
+  ]);
 
-  final pubspecPath = joinAll(
-    [
-      Directory.current.path,
-      'packages',
-      'firebase_data_connect',
-      'firebase_data_connect',
-      'pubspec.yaml',
-    ],
-  );
+  final pubspecPath = joinAll([
+    Directory.current.path,
+    'packages',
+    'firebase_data_connect',
+    'firebase_data_connect',
+    'pubspec.yaml',
+  ]);
   final yamlMap = loadYaml(File(pubspecPath).readAsStringSync()) as YamlMap;
   final currentVersion = yamlMap['version'] as String;
   final fileContents = File(outputPath).readAsStringSync();

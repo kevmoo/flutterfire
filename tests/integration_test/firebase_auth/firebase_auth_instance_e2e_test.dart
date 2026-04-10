@@ -44,39 +44,41 @@ void main() {
           await ensureSignedOut();
         });
 
-        test('calls callback with the current user and when auth state changes',
-            () async {
-          await ensureSignedIn(testEmail);
-          String uid = FirebaseAuth.instance.currentUser!.uid;
+        test(
+          'calls callback with the current user and when auth state changes',
+          () async {
+            await ensureSignedIn(testEmail);
+            String uid = FirebaseAuth.instance.currentUser!.uid;
 
-          Stream<User?> stream = FirebaseAuth.instance.authStateChanges();
-          int call = 0;
+            Stream<User?> stream = FirebaseAuth.instance.authStateChanges();
+            int call = 0;
 
-          subscription = stream.listen(
-            expectAsync1(
-              (User? user) {
-                call++;
-                if (call == 1) {
-                  expect(user!.uid, isA<String>());
-                  expect(user.uid, equals(uid)); // initial user
-                } else if (call == 2) {
-                  expect(user, isNull); // logged out
-                } else if (call == 3) {
-                  expect(user!.uid, isA<String>());
-                  expect(user.uid != uid, isTrue); // anonymous user
-                } else {
-                  fail('Should not have been called');
-                }
-              },
-              count: 3,
-              reason: 'Stream should only have been called 3 times',
-            ),
-          );
+            subscription = stream.listen(
+              expectAsync1(
+                (User? user) {
+                  call++;
+                  if (call == 1) {
+                    expect(user!.uid, isA<String>());
+                    expect(user.uid, equals(uid)); // initial user
+                  } else if (call == 2) {
+                    expect(user, isNull); // logged out
+                  } else if (call == 3) {
+                    expect(user!.uid, isA<String>());
+                    expect(user.uid != uid, isTrue); // anonymous user
+                  } else {
+                    fail('Should not have been called');
+                  }
+                },
+                count: 3,
+                reason: 'Stream should only have been called 3 times',
+              ),
+            );
 
-          // Prevent race condition where signOut is called before the stream hits
-          await FirebaseAuth.instance.signOut();
-          await FirebaseAuth.instance.signInAnonymously();
-        });
+            // Prevent race condition where signOut is called before the stream hits
+            await FirebaseAuth.instance.signOut();
+            await FirebaseAuth.instance.signInAnonymously();
+          },
+        );
       });
 
       group('idTokenChanges()', () {
@@ -87,83 +89,85 @@ void main() {
           await ensureSignedOut();
         });
 
-        test('calls callback with the current user and when auth state changes',
-            () async {
-          await ensureSignedIn(testEmail);
-          String uid = FirebaseAuth.instance.currentUser!.uid;
+        test(
+          'calls callback with the current user and when auth state changes',
+          () async {
+            await ensureSignedIn(testEmail);
+            String uid = FirebaseAuth.instance.currentUser!.uid;
 
-          Stream<User?> stream = FirebaseAuth.instance.idTokenChanges();
-          int call = 0;
+            Stream<User?> stream = FirebaseAuth.instance.idTokenChanges();
+            int call = 0;
 
-          subscription = stream.listen(
-            expectAsync1(
-              (User? user) {
-                call++;
-                if (call == 1) {
-                  expect(user!.uid, equals(uid)); // initial user
-                } else if (call == 2) {
-                  expect(user, isNull); // logged out
-                } else if (call == 3) {
-                  expect(user!.uid, isA<String>());
-                  expect(user.uid != uid, isTrue); // anonymous user
-                } else {
-                  fail('Should not have been called');
-                }
-              },
-              count: 3,
-              reason: 'Stream should only have been called 3 times',
-            ),
-          );
+            subscription = stream.listen(
+              expectAsync1(
+                (User? user) {
+                  call++;
+                  if (call == 1) {
+                    expect(user!.uid, equals(uid)); // initial user
+                  } else if (call == 2) {
+                    expect(user, isNull); // logged out
+                  } else if (call == 3) {
+                    expect(user!.uid, isA<String>());
+                    expect(user.uid != uid, isTrue); // anonymous user
+                  } else {
+                    fail('Should not have been called');
+                  }
+                },
+                count: 3,
+                reason: 'Stream should only have been called 3 times',
+              ),
+            );
 
-          // Prevent race condition where signOut is called before the stream hits
-          await FirebaseAuth.instance.signOut();
-          await FirebaseAuth.instance.signInAnonymously();
-        });
+            // Prevent race condition where signOut is called before the stream hits
+            await FirebaseAuth.instance.signOut();
+            await FirebaseAuth.instance.signInAnonymously();
+          },
+        );
       });
 
-      group(
-        'userChanges()',
-        () {
-          late StreamSubscription subscription;
-          tearDown(() async {
-            await subscription.cancel();
-          });
+      group('userChanges()', () {
+        late StreamSubscription subscription;
+        tearDown(() async {
+          await subscription.cancel();
+        });
 
-          test(
-            'fires once on first initialization of FirebaseAuth',
-            () async {
-              // Fixes a very specific bug: https://github.com/firebase/flutterfire/issues/3628
-              // If the first initialization of FirebaseAuth involves the listeners userChanges() or idTokenChanges()
-              // the user will receive two events. Why? The native SDK listener will always fire an event upon initial
-              // listen. FirebaseAuth also sends an initial synthetic event. We send a synthetic event because, ordinarily, the user will
-              // not use a listener as the first occurrence of FirebaseAuth. We, therefore, mimic native behavior by sending an
-              // event. This test proves the logic of PR: https://github.com/firebase/flutterfire/pull/6560
+        test(
+          'fires once on first initialization of FirebaseAuth',
+          () async {
+            // Fixes a very specific bug: https://github.com/firebase/flutterfire/issues/3628
+            // If the first initialization of FirebaseAuth involves the listeners userChanges() or idTokenChanges()
+            // the user will receive two events. Why? The native SDK listener will always fire an event upon initial
+            // listen. FirebaseAuth also sends an initial synthetic event. We send a synthetic event because, ordinarily, the user will
+            // not use a listener as the first occurrence of FirebaseAuth. We, therefore, mimic native behavior by sending an
+            // event. This test proves the logic of PR: https://github.com/firebase/flutterfire/pull/6560
 
-              // Requires a fresh app.
-              FirebaseApp second = await Firebase.initializeApp(
-                name: 'test-init',
-                options: DefaultFirebaseOptions.currentPlatform,
-              );
+            // Requires a fresh app.
+            FirebaseApp second = await Firebase.initializeApp(
+              name: 'test-init',
+              options: DefaultFirebaseOptions.currentPlatform,
+            );
 
-              Stream<User?> stream =
-                  FirebaseAuth.instanceFor(app: second).userChanges();
+            Stream<User?> stream = FirebaseAuth.instanceFor(
+              app: second,
+            ).userChanges();
 
-              subscription = stream.listen(
-                expectAsync1(
-                  (User? user) {},
-                  reason: 'Stream should only call once',
-                ),
-              );
+            subscription = stream.listen(
+              expectAsync1(
+                (User? user) {},
+                reason: 'Stream should only call once',
+              ),
+            );
 
-              await Future.delayed(const Duration(seconds: 2));
-            },
-            skip: defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows,
-          );
+            await Future.delayed(const Duration(seconds: 2));
+          },
+          skip:
+              defaultTargetPlatform == TargetPlatform.macOS ||
+              defaultTargetPlatform == TargetPlatform.windows,
+        );
 
-          test(
-              'calls callback with the current user and when user state changes',
-              () async {
+        test(
+          'calls callback with the current user and when user state changes',
+          () async {
             await ensureSignedIn(testEmail);
 
             Stream<User?> stream = FirebaseAuth.instance.userChanges();
@@ -189,53 +193,58 @@ void main() {
               ),
             );
 
-            await FirebaseAuth.instance.currentUser!
-                .updateDisplayName('updatedName');
+            await FirebaseAuth.instance.currentUser!.updateDisplayName(
+              'updatedName',
+            );
 
             expect(
               FirebaseAuth.instance.currentUser!.displayName,
               equals('updatedName'),
             );
-          });
-        },
-        skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS),
-      );
+          },
+        );
+      }, skip: !kIsWeb && (Platform.isWindows || Platform.isMacOS));
 
       group('test all stream listeners', () {
         Matcher containsExactlyThreeUsers() => predicate<List>(
-              (list) => list.whereType<User>().length == 3,
-              'a list containing exactly 3 User instances',
+          (list) => list.whereType<User>().length == 3,
+          'a list containing exactly 3 User instances',
+        );
+        test(
+          'create, cancel and reopen all user event stream handlers',
+          () async {
+            final auth = FirebaseAuth.instance;
+            final events = [];
+            final streamHandler = events.add;
+
+            StreamSubscription<User?> userChanges = auth.userChanges().listen(
+              streamHandler,
             );
-        test('create, cancel and reopen all user event stream handlers',
-            () async {
-          final auth = FirebaseAuth.instance;
-          final events = [];
-          final streamHandler = events.add;
 
-          StreamSubscription<User?> userChanges =
-              auth.userChanges().listen(streamHandler);
+            StreamSubscription<User?> authStateChanges = auth
+                .authStateChanges()
+                .listen(streamHandler);
 
-          StreamSubscription<User?> authStateChanges =
-              auth.authStateChanges().listen(streamHandler);
+            StreamSubscription<User?> idTokenChanges = auth
+                .idTokenChanges()
+                .listen(streamHandler);
 
-          StreamSubscription<User?> idTokenChanges =
-              auth.idTokenChanges().listen(streamHandler);
+            await userChanges.cancel();
+            await authStateChanges.cancel();
+            await idTokenChanges.cancel();
 
-          await userChanges.cancel();
-          await authStateChanges.cancel();
-          await idTokenChanges.cancel();
+            userChanges = auth.userChanges().listen(streamHandler);
+            authStateChanges = auth.authStateChanges().listen(streamHandler);
+            idTokenChanges = auth.idTokenChanges().listen(streamHandler);
 
-          userChanges = auth.userChanges().listen(streamHandler);
-          authStateChanges = auth.authStateChanges().listen(streamHandler);
-          idTokenChanges = auth.idTokenChanges().listen(streamHandler);
+            await auth.signInWithEmailAndPassword(
+              email: testEmail,
+              password: testPassword,
+            );
 
-          await auth.signInWithEmailAndPassword(
-            email: testEmail,
-            password: testPassword,
-          );
-
-          expect(events, containsExactlyThreeUsers());
-        });
+            expect(events, containsExactlyThreeUsers());
+          },
+        );
       });
 
       group('currentUser', () {
@@ -246,65 +255,59 @@ void main() {
         });
       });
 
-      group(
-        'applyActionCode',
-        () {
-          test('throws if invalid code', () async {
-            try {
-              await FirebaseAuth.instance.applyActionCode('!!!!!!');
-              fail('Should have thrown');
-            } on FirebaseException catch (e) {
-              expect(e.code, equals('invalid-action-code'));
-            } catch (e) {
-              fail(e.toString());
-            }
-          });
-        },
-        skip: !kIsWeb && Platform.isWindows,
-      );
+      group('applyActionCode', () {
+        test('throws if invalid code', () async {
+          try {
+            await FirebaseAuth.instance.applyActionCode('!!!!!!');
+            fail('Should have thrown');
+          } on FirebaseException catch (e) {
+            expect(e.code, equals('invalid-action-code'));
+          } catch (e) {
+            fail(e.toString());
+          }
+        });
+      }, skip: !kIsWeb && Platform.isWindows);
 
-      group(
-        'checkActionCode()',
-        () {
-          test('throws on invalid code', () async {
-            try {
-              await FirebaseAuth.instance.checkActionCode('!!!!!!');
-              fail('Should have thrown');
-            } on FirebaseException catch (e) {
-              expect(e.code, equals('invalid-action-code'));
-            } catch (e) {
-              fail(e.toString());
-            }
-          });
+      group('checkActionCode()', () {
+        test('throws on invalid code', () async {
+          try {
+            await FirebaseAuth.instance.checkActionCode('!!!!!!');
+            fail('Should have thrown');
+          } on FirebaseException catch (e) {
+            expect(e.code, equals('invalid-action-code'));
+          } catch (e) {
+            fail(e.toString());
+          }
+        });
 
-          test('returns correct operation for verifyEmail action code',
-              () async {
-            final email = generateRandomEmail();
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
+        test('returns correct operation for verifyEmail action code', () async {
+          final email = generateRandomEmail();
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
 
-            await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+          await FirebaseAuth.instance.currentUser!.sendEmailVerification();
 
-            final oobCode = await emulatorOutOfBandCode(
-              email,
-              EmulatorOobCodeType.verifyEmail,
-            );
-            expect(oobCode, isNotNull);
+          final oobCode = await emulatorOutOfBandCode(
+            email,
+            EmulatorOobCodeType.verifyEmail,
+          );
+          expect(oobCode, isNotNull);
 
-            final actionCodeInfo = await FirebaseAuth.instance.checkActionCode(
-              oobCode!.oobCode!,
-            );
+          final actionCodeInfo = await FirebaseAuth.instance.checkActionCode(
+            oobCode!.oobCode!,
+          );
 
-            expect(
-              actionCodeInfo.operation,
-              equals(ActionCodeInfoOperation.verifyEmail),
-            );
-          });
+          expect(
+            actionCodeInfo.operation,
+            equals(ActionCodeInfoOperation.verifyEmail),
+          );
+        });
 
-          test('returns correct operation for passwordReset action code',
-              () async {
+        test(
+          'returns correct operation for passwordReset action code',
+          () async {
             final email = generateRandomEmail();
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
               email: email,
@@ -328,30 +331,25 @@ void main() {
               actionCodeInfo.operation,
               equals(ActionCodeInfoOperation.passwordReset),
             );
-          });
-        },
-        skip: !kIsWeb && Platform.isWindows,
-      );
+          },
+        );
+      }, skip: !kIsWeb && Platform.isWindows);
 
-      group(
-        'confirmPasswordReset()',
-        () {
-          test('throws on invalid code', () async {
-            try {
-              await FirebaseAuth.instance.confirmPasswordReset(
-                code: '!!!!!!',
-                newPassword: 'thingamajig',
-              );
-              fail('Should have thrown');
-            } on FirebaseException catch (e) {
-              expect(e.code, equals('invalid-action-code'));
-            } catch (e) {
-              fail(e.toString());
-            }
-          });
-        },
-        skip: !kIsWeb && Platform.isWindows,
-      );
+      group('confirmPasswordReset()', () {
+        test('throws on invalid code', () async {
+          try {
+            await FirebaseAuth.instance.confirmPasswordReset(
+              code: '!!!!!!',
+              newPassword: 'thingamajig',
+            );
+            fail('Should have thrown');
+          } on FirebaseException catch (e) {
+            expect(e.code, equals('invalid-action-code'));
+          } catch (e) {
+            fail(e.toString());
+          }
+        });
+      }, skip: !kIsWeb && Platform.isWindows);
 
       group('createUserWithEmailAndPassword', () {
         test('should create a user with an email and password', () async {
@@ -464,45 +462,37 @@ void main() {
         });
       });
 
-      group(
-        'sendPasswordResetEmail()',
-        () {
-          test(
-            'should not error',
-            () async {
-              var email = generateRandomEmail();
+      group('sendPasswordResetEmail()', () {
+        test('should not error', () async {
+          var email = generateRandomEmail();
 
-              try {
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: email,
-                  password: testPassword,
-                );
+          try {
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
 
-                await FirebaseAuth.instance
-                    .sendPasswordResetEmail(email: email);
-                await FirebaseAuth.instance.currentUser!.delete();
-              } catch (e) {
-                await FirebaseAuth.instance.currentUser!.delete();
-                fail(e.toString());
-              }
-            },
-            skip: !kIsWeb && Platform.isMacOS,
-          );
+            await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+            await FirebaseAuth.instance.currentUser!.delete();
+          } catch (e) {
+            await FirebaseAuth.instance.currentUser!.delete();
+            fail(e.toString());
+          }
+        }, skip: !kIsWeb && Platform.isMacOS);
 
-          test('fails if the user could not be found', () async {
-            try {
-              await FirebaseAuth.instance
-                  .sendPasswordResetEmail(email: 'does-not-exist@bar.com');
-              fail('Should have thrown');
-            } on FirebaseAuthException catch (e) {
-              expect(e.code, equals('user-not-found'));
-            } catch (e) {
-              fail(e.toString());
-            }
-          });
-        },
-        skip: !kIsWeb && Platform.isWindows,
-      );
+        test('fails if the user could not be found', () async {
+          try {
+            await FirebaseAuth.instance.sendPasswordResetEmail(
+              email: 'does-not-exist@bar.com',
+            );
+            fail('Should have thrown');
+          } on FirebaseAuthException catch (e) {
+            expect(e.code, equals('user-not-found'));
+          } catch (e) {
+            fail(e.toString());
+          }
+        });
+      }, skip: !kIsWeb && Platform.isWindows);
 
       group(
         'sendSignInLinkToEmail()',
@@ -566,50 +556,38 @@ void main() {
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
         );
 
-        test(
-          'should allow null value and set to null',
-          () async {
-            // Isn't possible anymore to set the language code to null
-            // See API: https://firebase.google.com/docs/reference/js/auth.md?_gl=1*120kqub*_up*MQ..*_ga*NTg2MzgzNDU0LjE3MDc5MTYxMjI.*_ga_CW55HF8NVT*MTcwNzkxNjEyMi4xLjAuMTcwNzkxNjEyMi4wLjAuMA..#usedevicelanguage_2a61ea7
-            // Effectively will set the language code to the device language.
-            await FirebaseAuth.instance.setLanguageCode(null);
-            // This will return the device language now. e.g. "en-GB"
-            expect(FirebaseAuth.instance.languageCode, null);
-          },
-          skip: true,
-        );
+        test('should allow null value and set to null', () async {
+          // Isn't possible anymore to set the language code to null
+          // See API: https://firebase.google.com/docs/reference/js/auth.md?_gl=1*120kqub*_up*MQ..*_ga*NTg2MzgzNDU0LjE3MDc5MTYxMjI.*_ga_CW55HF8NVT*MTcwNzkxNjEyMi4xLjAuMTcwNzkxNjEyMi4wLjAuMA..#usedevicelanguage_2a61ea7
+          // Effectively will set the language code to the device language.
+          await FirebaseAuth.instance.setLanguageCode(null);
+          // This will return the device language now. e.g. "en-GB"
+          expect(FirebaseAuth.instance.languageCode, null);
+        }, skip: true);
       });
 
-      group(
-        'setPersistence()',
-        () {
-          test(
-            'throw an unimplemented error',
-            () async {
-              try {
-                await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
-                fail('Should have thrown');
-              } catch (e) {
-                expect(e, isInstanceOf<UnimplementedError>());
-              }
-            },
-            skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
-          );
+      group('setPersistence()', () {
+        test(
+          'throw an unimplemented error',
+          () async {
+            try {
+              await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+              fail('Should have thrown');
+            } catch (e) {
+              expect(e, isInstanceOf<UnimplementedError>());
+            }
+          },
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+        );
 
-          test(
-            'should set persistence',
-            () async {
-              try {
-                await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
-              } catch (e) {
-                fail('unexpected error thrown');
-              }
-            },
-            skip: !kIsWeb,
-          );
-        },
-        skip: !kIsWeb && Platform.isWindows,
-      );
+        test('should set persistence', () async {
+          try {
+            await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+          } catch (e) {
+            fail('unexpected error thrown');
+          }
+        }, skip: !kIsWeb);
+      }, skip: !kIsWeb && Platform.isWindows);
 
       group('signInAnonymously()', () {
         test(
@@ -668,9 +646,7 @@ void main() {
             expect(e.code, equals('user-disabled'));
             expect(
               e.message,
-              equals(
-                'The user account has been disabled by an administrator.',
-              ),
+              equals('The user account has been disabled by an administrator.'),
             );
           } catch (e) {
             fail(e.toString());
@@ -720,48 +696,49 @@ void main() {
         });
 
         test(
-            'throw Exception when using incorrect auth details with GoogleAuthProvider',
-            () async {
-          final credential = GoogleAuthProvider.credential(
-            idToken: 'incorrect idToken',
-          );
+          'throw Exception when using incorrect auth details with GoogleAuthProvider',
+          () async {
+            final credential = GoogleAuthProvider.credential(
+              idToken: 'incorrect idToken',
+            );
 
-          await expectLater(
-            FirebaseAuth.instance.signInWithCredential(credential),
-            throwsA(
-              isA<FirebaseAuthException>().having(
-                (e) => e.code,
-                'code',
-                contains('invalid-credential'),
+            await expectLater(
+              FirebaseAuth.instance.signInWithCredential(credential),
+              throwsA(
+                isA<FirebaseAuthException>().having(
+                  (e) => e.code,
+                  'code',
+                  contains('invalid-credential'),
+                ),
               ),
-            ),
-          );
+            );
 
-          final credential2 = GoogleAuthProvider.credential(
-            accessToken: 'incorrect accessToken',
-          );
+            final credential2 = GoogleAuthProvider.credential(
+              accessToken: 'incorrect accessToken',
+            );
 
-          await expectLater(
-            FirebaseAuth.instance.signInWithCredential(credential2),
-            throwsA(
-              isA<FirebaseAuthException>(),
-              // Live project has this error code, emulator throws "internal-error"
-              // .having(
-              //   (e) => e.code,
-              //   'code',
-              //   contains('invalid-credential'),
-              // ),
-            ),
-          );
-        });
+            await expectLater(
+              FirebaseAuth.instance.signInWithCredential(credential2),
+              throwsA(
+                isA<FirebaseAuthException>(),
+                // Live project has this error code, emulator throws "internal-error"
+                // .having(
+                //   (e) => e.code,
+                //   'code',
+                //   contains('invalid-credential'),
+                // ),
+              ),
+            );
+          },
+        );
       });
 
       group(
         'signInWithCustomToken()',
         () {
           test('signs in with custom auth token', () async {
-            final userCredential =
-                await FirebaseAuth.instance.signInAnonymously();
+            final userCredential = await FirebaseAuth.instance
+                .signInAnonymously();
             final uid = userCredential.user!.uid;
             final claims = {
               'roles': [
@@ -776,14 +753,14 @@ void main() {
 
             final customToken = emulatorCreateCustomToken(uid, claims: claims);
 
-            final customTokenUserCredential =
-                await FirebaseAuth.instance.signInWithCustomToken(customToken);
+            final customTokenUserCredential = await FirebaseAuth.instance
+                .signInWithCustomToken(customToken);
 
             expect(customTokenUserCredential.user!.uid, equals(uid));
             expect(FirebaseAuth.instance.currentUser!.uid, equals(uid));
 
-            final idTokenResult =
-                await FirebaseAuth.instance.currentUser!.getIdTokenResult();
+            final idTokenResult = await FirebaseAuth.instance.currentUser!
+                .getIdTokenResult();
 
             expect(idTokenResult.claims!['roles'], isA<List>());
             expect(idTokenResult.claims!['roles'][0], isA<Map>());
@@ -814,9 +791,7 @@ void main() {
             expect(e.code, equals('user-disabled'));
             expect(
               e.message,
-              equals(
-                'The user account has been disabled by an administrator.',
-              ),
+              equals('The user account has been disabled by an administrator.'),
             );
           } catch (e) {
             fail(e.toString());
@@ -898,7 +873,8 @@ void main() {
             }
           },
           // TODO(russellwheatley): this is crashing iOS/macOS app (reinit app), but does not when running as app.
-          skip: defaultTargetPlatform == TargetPlatform.iOS ||
+          skip:
+              defaultTargetPlatform == TargetPlatform.iOS ||
               defaultTargetPlatform == TargetPlatform.macOS,
         );
       });
@@ -926,7 +902,8 @@ void main() {
             }
           });
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS ||
+        skip:
+            defaultTargetPlatform == TargetPlatform.macOS ||
             defaultTargetPlatform == TargetPlatform.windows,
       );
 
@@ -987,8 +964,9 @@ void main() {
                     autoRetrievedSmsCodeForTesting: testSmsCode,
                     verificationCompleted: (PhoneAuthCredential credential) {
                       if (credential.smsCode != testSmsCode) {
-                        return completer
-                            .completeError(Exception('SMS code did not match'));
+                        return completer.completeError(
+                          Exception('SMS code did not match'),
+                        );
                       }
 
                       completer.complete(credential);
@@ -1020,7 +998,8 @@ void main() {
             skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
           );
         },
-        skip: defaultTargetPlatform == TargetPlatform.macOS ||
+        skip:
+            defaultTargetPlatform == TargetPlatform.macOS ||
             defaultTargetPlatform == TargetPlatform.windows ||
             kIsWeb,
       );
@@ -1034,16 +1013,22 @@ void main() {
             await expectLater(
               FirebaseAuth.instance.setSettings(phoneNumber: '123456'),
               throwsA(
-                isA<ArgumentError>()
-                    .having((e) => e.message, 'message', contains(message)),
+                isA<ArgumentError>().having(
+                  (e) => e.message,
+                  'message',
+                  contains(message),
+                ),
               ),
             );
 
             await expectLater(
               FirebaseAuth.instance.setSettings(smsCode: '123456'),
               throwsA(
-                isA<ArgumentError>()
-                    .having((e) => e.message, 'message', contains(message)),
+                isA<ArgumentError>().having(
+                  (e) => e.message,
+                  'message',
+                  contains(message),
+                ),
               ),
             );
           },
@@ -1051,42 +1036,33 @@ void main() {
         );
       });
 
-      group(
-        'tenantId',
-        () {
-          test('User associated with the tenantId correctly', () async {
-            // tenantId created in the GCP console
-            const String tenantId = 'auth-tenant-test-xukxg';
-            // created User on GCP console associated with the above tenantId
-            final userCredential =
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-              email: 'test-tenant@email.com',
-              password: 'fake-password',
-            );
+      group('tenantId', () {
+        test('User associated with the tenantId correctly', () async {
+          // tenantId created in the GCP console
+          const String tenantId = 'auth-tenant-test-xukxg';
+          // created User on GCP console associated with the above tenantId
+          final userCredential = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(
+                email: 'test-tenant@email.com',
+                password: 'fake-password',
+              );
 
-            expect(userCredential.user!.tenantId, tenantId);
-          });
-          // todo(russellwheatley85): get/set tenantId and authenticating user via auth emulator is not possible at the moment.
-        },
-        skip: true,
-      );
+          expect(userCredential.user!.tenantId, tenantId);
+        });
+        // todo(russellwheatley85): get/set tenantId and authenticating user via auth emulator is not possible at the moment.
+      }, skip: true);
 
-      group(
-        'initializeRecaptchaConfig',
-        () {
-          test('initializeRecaptchaConfig completes without throwing',
-              () async {
-            // Skipping this test as initializeRecaptchaConfig is not supported
-            // by the Firebase emulator suite.
-            try {
-              await FirebaseAuth.instance.initializeRecaptchaConfig();
-            } catch (e) {
-              fail('Should not have thrown: $e');
-            }
-          });
-        },
-        skip: true,
-      );
+      group('initializeRecaptchaConfig', () {
+        test('initializeRecaptchaConfig completes without throwing', () async {
+          // Skipping this test as initializeRecaptchaConfig is not supported
+          // by the Firebase emulator suite.
+          try {
+            await FirebaseAuth.instance.initializeRecaptchaConfig();
+          } catch (e) {
+            fail('Should not have thrown: $e');
+          }
+        });
+      }, skip: true);
 
       group('validatePassword()', () {
         const String validPassword =
@@ -1116,20 +1092,24 @@ void main() {
           expect(status.meetsMinPasswordLength, isFalse);
         });
 
-        test('should not validate a password that has no uppercase characters',
-            () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance
-              .validatePassword(FirebaseAuth.instance, invalidPassword2);
-          expect(status.isValid, isFalse);
-          expect(status.meetsUppercaseRequirement, isFalse);
-        });
+        test(
+          'should not validate a password that has no uppercase characters',
+          () async {
+            final PasswordValidationStatus status = await FirebaseAuth.instance
+                .validatePassword(FirebaseAuth.instance, invalidPassword2);
+            expect(status.isValid, isFalse);
+            expect(status.meetsUppercaseRequirement, isFalse);
+          },
+        );
 
-        test('should not validate a password that has no lowercase characters',
-            () async {
-          final PasswordValidationStatus status = await FirebaseAuth.instance
-              .validatePassword(FirebaseAuth.instance, invalidPassword3);
-          expect(status.isValid, isFalse);
-        });
+        test(
+          'should not validate a password that has no lowercase characters',
+          () async {
+            final PasswordValidationStatus status = await FirebaseAuth.instance
+                .validatePassword(FirebaseAuth.instance, invalidPassword3);
+            expect(status.isValid, isFalse);
+          },
+        );
 
         test('should not validate a password that has no digits', () async {
           final PasswordValidationStatus status = await FirebaseAuth.instance

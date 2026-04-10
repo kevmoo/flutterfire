@@ -92,9 +92,7 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       themeMode: ThemeMode.dark,
       theme: _darkTheme,
       home: HomeScreen(
-        key: ValueKey(
-          '${_useVertexBackend}_${_currentModel.hashCode}',
-        ),
+        key: ValueKey('${_useVertexBackend}_${_currentModel.hashCode}'),
         model: _currentModel,
         useVertexBackend: _useVertexBackend,
         onBackendChanged: _toggleBackend,
@@ -128,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-// Method to build the selected page on demand
+  // Method to build the selected page on demand
   Widget _buildSelectedPage(
     int index,
     GenerativeModel currentModel,
@@ -136,10 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ) {
     switch (index) {
       case 0:
-        return ChatPage(
-          title: 'Chat',
-          useVertexBackend: useVertexBackend,
-        );
+        return ChatPage(title: 'Chat', useVertexBackend: useVertexBackend);
       case 1:
         return MultimodalPage(title: 'Multimodal', model: currentModel);
       case 2:
@@ -175,10 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       default:
         // Fallback to the first page in case of an unexpected index
-        return ChatPage(
-          title: 'Chat',
-          useVertexBackend: useVertexBackend,
-        );
+        return ChatPage(title: 'Chat', useVertexBackend: useVertexBackend);
     }
   }
 
@@ -218,10 +210,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: 12,
                     color: widget.useVertexBackend
                         ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withAlpha(180),
+                        : Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withAlpha(180),
                   ),
                 ),
               ],
@@ -286,16 +277,12 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'JSON Schema',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.stream,
-            ),
+            icon: Icon(Icons.stream),
             label: 'Live',
             tooltip: 'Live Stream',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.storage,
-            ),
+            icon: Icon(Icons.storage),
             label: 'Server',
             tooltip: 'Server Template',
           ),

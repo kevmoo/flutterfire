@@ -55,13 +55,7 @@ void setupOnDisconnectTests() {
       await ref.onDisconnect().update({'bar': 'baz'});
       await toggleState();
       var snapshot = await ref.get();
-      expect(
-        snapshot.value,
-        equals({
-          'foo': 'bar',
-          'bar': 'baz',
-        }),
-      );
+      expect(snapshot.value, equals({'foo': 'bar', 'bar': 'baz'}));
     });
 
     test('cancels disconnect operations', () async {
@@ -70,10 +64,7 @@ void setupOnDisconnectTests() {
       await ref.onDisconnect().cancel();
       await toggleState();
       var snapshot = await ref.get();
-      expect(
-        snapshot.value,
-        'foo',
-      );
+      expect(snapshot.value, 'foo');
     });
   });
 }

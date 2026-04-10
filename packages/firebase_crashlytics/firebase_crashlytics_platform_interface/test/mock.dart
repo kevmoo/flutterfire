@@ -20,10 +20,11 @@ void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(MethodChannelFirebaseCrashlytics.channel,
-            (call) async {
-      return await methodCallCallback(call);
-    });
+        .setMockMethodCallHandler(MethodChannelFirebaseCrashlytics.channel, (
+          call,
+        ) async {
+          return await methodCallCallback(call);
+        });
 
 Future<void> testExceptionHandling(String type, Function testMethod) async {
   try {
@@ -33,7 +34,8 @@ Future<void> testExceptionHandling(String type, Function testMethod) async {
       return;
     }
     fail(
-        'testExceptionHandling: $testMethod threw unexpected FirebaseException');
+      'testExceptionHandling: $testMethod threw unexpected FirebaseException',
+    );
   } catch (e) {
     fail('testExceptionHandling: $testMethod threw invalid exception $e');
   }

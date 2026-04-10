@@ -89,8 +89,9 @@ void main() {
     });
 
     test('should deserialize string data into expected format', () {
-      Deserializer<Map<String, dynamic>> deserializer =
-          (String data) => {'data': data};
+      Deserializer<Map<String, dynamic>> deserializer = (String data) => {
+        'data': data,
+      };
 
       const inputData = '{"message": "Hello World"}';
       final deserializedData = deserializer(inputData);

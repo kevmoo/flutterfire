@@ -77,7 +77,7 @@ class GRPCTransport implements DataConnectTransport {
     Map<String, String> metadata = {
       'x-goog-request-params': 'location=${options.location}&frontend=data',
       'x-goog-api-client': getGoogApiVal(sdkType, packageVersion),
-      'x-firebase-client': getFirebaseClientVal(packageVersion)
+      'x-firebase-client': getFirebaseClientVal(packageVersion),
     };
 
     if (authToken != null) {
@@ -101,8 +101,10 @@ class GRPCTransport implements DataConnectTransport {
   ) async {
     ExecuteQueryResponse response;
 
-    ExecuteQueryRequest request =
-        ExecuteQueryRequest(name: name, operationName: queryName);
+    ExecuteQueryRequest request = ExecuteQueryRequest(
+      name: name,
+      operationName: queryName,
+    );
     if (vars != null && serializer != null) {
       request.variables = getStruct(vars, serializer);
     }
@@ -112,7 +114,8 @@ class GRPCTransport implements DataConnectTransport {
         options: CallOptions(metadata: await getMetadata(authToken)),
       );
       return handleResponse(
-          CommonResponse.fromExecuteQuery(deserializer, response));
+        CommonResponse.fromExecuteQuery(deserializer, response),
+      );
     } on Exception catch (e) {
       if (e.toString().contains('invalid Firebase Auth Credentials')) {
         throw DataConnectError(
@@ -144,8 +147,10 @@ class GRPCTransport implements DataConnectTransport {
     String? authToken,
   ) async {
     ExecuteMutationResponse response;
-    ExecuteMutationRequest request =
-        ExecuteMutationRequest(name: name, operationName: queryName);
+    ExecuteMutationRequest request = ExecuteMutationRequest(
+      name: name,
+      operationName: queryName,
+    );
     if (vars != null && serializer != null) {
       request.variables = getStruct(vars, serializer);
     }
@@ -156,7 +161,8 @@ class GRPCTransport implements DataConnectTransport {
         options: CallOptions(metadata: await getMetadata(authToken)),
       );
       return handleResponse(
-          CommonResponse.fromExecuteMutation(deserializer, response));
+        CommonResponse.fromExecuteMutation(deserializer, response),
+      );
     } on Exception catch (e) {
       if (e.toString().contains('invalid Firebase Auth Credentials')) {
         throw DataConnectError(
@@ -182,13 +188,20 @@ ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
     Data? decodedData;
     List<DataConnectOperationFailureResponseErrorInfo> errors = commonResponse
         .errors
-        .map((e) => DataConnectOperationFailureResponseErrorInfo(
+        .map(
+          (e) => DataConnectOperationFailureResponseErrorInfo(
             e.path.values
-                .map((val) => val.hasStringValue()
-                    ? DataConnectFieldPathSegment(val.stringValue)
-                    : DataConnectListIndexPathSegment(val.numberValue.toInt()))
+                .map(
+                  (val) => val.hasStringValue()
+                      ? DataConnectFieldPathSegment(val.stringValue)
+                      : DataConnectListIndexPathSegment(
+                          val.numberValue.toInt(),
+                        ),
+                )
                 .toList(),
-            e.message))
+            e.message,
+          ),
+        )
         .toList();
     if (data != null) {
       try {
@@ -197,10 +210,16 @@ ServerResponse handleResponse<Data>(CommonResponse<Data> commonResponse) {
         // nothing required
       }
     }
-    final response =
-        DataConnectOperationFailureResponse(errors, data, decodedData);
-    throw DataConnectOperationError(DataConnectErrorCode.other,
-        'failed to invoke operation: ${response.errors}', response);
+    final response = DataConnectOperationFailureResponse(
+      errors,
+      data,
+      decodedData,
+    );
+    throw DataConnectOperationError(
+      DataConnectErrorCode.other,
+      'failed to invoke operation: ${response.errors}',
+      response,
+    );
   }
 
   // no errors - return a standard response
@@ -218,21 +237,32 @@ DataConnectTransport getTransport(
   String appId,
   CallerSDKType sdkType,
   FirebaseAppCheck? appCheck,
-) =>
-    GRPCTransport(transportOptions, options, appId, sdkType, appCheck);
+) => GRPCTransport(transportOptions, options, appId, sdkType, appCheck);
 
 class CommonResponse<Data> {
   CommonResponse(this.deserializer, this.data, this.errors, this.extensions);
   static CommonResponse<Data> fromExecuteMutation<Data>(
-      Deserializer<Data> deserializer, ExecuteMutationResponse response) {
+    Deserializer<Data> deserializer,
+    ExecuteMutationResponse response,
+  ) {
     return CommonResponse(
-        deserializer, response.data.toProto3Json(), response.errors, null);
+      deserializer,
+      response.data.toProto3Json(),
+      response.errors,
+      null,
+    );
   }
 
   static CommonResponse<Data> fromExecuteQuery<Data>(
-      Deserializer<Data> deserializer, ExecuteQueryResponse response) {
-    return CommonResponse(deserializer, response.data.toProto3Json(),
-        response.errors, response.extensions.toProto3Json());
+    Deserializer<Data> deserializer,
+    ExecuteQueryResponse response,
+  ) {
+    return CommonResponse(
+      deserializer,
+      response.data.toProto3Json(),
+      response.errors,
+      response.extensions.toProto3Json(),
+    );
   }
 
   final Deserializer<Data> deserializer;
