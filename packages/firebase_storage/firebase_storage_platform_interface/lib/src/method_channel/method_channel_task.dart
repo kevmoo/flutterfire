@@ -7,7 +7,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../firebase_storage_platform_interface.dart';
 import '../pigeon/messages.pigeon.dart';

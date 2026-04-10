@@ -5,7 +5,6 @@
 
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 
 import '../../cloud_functions_platform_interface.dart';
 import 'method_channel_firebase_functions.dart';

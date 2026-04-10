@@ -8,7 +8,6 @@ import 'dart:js_interop_unsafe';
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:flutter/foundation.dart';
 
 import 'app_check_interop.dart' as app_check_interop;
 

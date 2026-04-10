@@ -4,7 +4,6 @@
 
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_core/test.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);

@@ -7,7 +7,6 @@ import 'package:cloud_functions_platform_interface/cloud_functions_platform_inte
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_https_callable.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';

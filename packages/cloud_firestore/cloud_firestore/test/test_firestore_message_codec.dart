@@ -7,7 +7,6 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 
 /// This codec is able to decode FieldValues.
 /// This ability is only required in tests, hence why

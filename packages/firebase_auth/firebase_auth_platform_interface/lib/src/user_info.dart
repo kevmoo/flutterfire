@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
-import 'package:meta/meta.dart';
 
 /// User profile information, visible only to the Firebase project's apps.
 class UserInfo {

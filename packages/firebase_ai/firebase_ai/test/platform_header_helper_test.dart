@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import 'package:firebase_ai/src/platform_header_helper.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

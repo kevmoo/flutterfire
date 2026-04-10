@@ -5,7 +5,6 @@
 // ignore_for_file: require_trailing_commas
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Requests & displays the current user permissions for this device.

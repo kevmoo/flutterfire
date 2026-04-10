@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
 import 'dart:async';
 import 'package:waveform_flutter/waveform_flutter.dart' as wf;

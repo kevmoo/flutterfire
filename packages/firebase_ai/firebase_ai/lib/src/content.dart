@@ -16,7 +16,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:meta/meta.dart';
 
 import 'api.dart';
 import 'error.dart';

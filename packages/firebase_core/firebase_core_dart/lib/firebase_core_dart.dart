@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:collection/collection.dart';
-import 'package:meta/meta.dart';
 
 /// A generic class which provides exceptions in a Firebase-friendly format
 /// to users.

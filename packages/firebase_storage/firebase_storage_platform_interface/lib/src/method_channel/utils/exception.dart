@@ -6,7 +6,6 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and returns an [Exception].
 ///

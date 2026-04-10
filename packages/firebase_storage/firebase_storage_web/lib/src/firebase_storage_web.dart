@@ -4,12 +4,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:meta/meta.dart';
 
 import 'firebase_storage_version.dart';
 import 'interop/storage.dart' as storage_interop;
@@ -38,7 +35,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   // Empty constructor. This is only used by the registerWith method.
   // superclass also needs to be initialized and 'bucket' param is required.
-  FirebaseStorageWeb._nullInstance() : _webStorage = null, super(bucket: '');
+  FirebaseStorageWeb.nullInstance() : _webStorage = null, super(bucket: '');
   static const String _libraryName = 'flutter-fire-gcs';
 
   /// The js-interop layer for Firebase Storage
@@ -60,14 +57,6 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   // Same default as the method channel implementation
   int _maxOperationRetryTime = const Duration(minutes: 2).inMilliseconds;
-
-  /// Called by PluginRegistry to register this plugin for Flutter Web.
-  static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
-
-    FirebaseCoreWeb.registerService('storage');
-    FirebaseStoragePlatform.instance = FirebaseStorageWeb._nullInstance();
-  }
 
   /// Returns a [FirebaseStorageWeb] with the provided arguments.
   @override

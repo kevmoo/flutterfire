@@ -15,7 +15,6 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:flutter/foundation.dart';
 
 import 'firestore_interop.dart' as firestore_interop;
 import 'utils/utils.dart';

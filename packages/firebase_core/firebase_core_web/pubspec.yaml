@@ -7,18 +7,17 @@ resolution: workspace
 
 environment:
   sdk: ^3.10.0
-  flutter: '>=3.22.0'
 
 dependencies:
   firebase_core_platform_interface: ^6.0.3
-  flutter:
-    sdk: flutter
-  flutter_web_plugins:
-    sdk: flutter
   meta: ^1.18.0
   web: ^1.1.1
 
 dev_dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
   flutter_test:
     sdk: flutter
 
@@ -26,5 +25,5 @@ flutter:
   plugin:
     platforms:
       web:
-        pluginClass: FirebaseCoreWeb
-        fileName: firebase_core_web.dart
+        pluginClass: FirebaseCoreWebRegistration
+        fileName: firebase_core_web_registration.dart

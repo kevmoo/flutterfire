@@ -6,7 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_trace.dart';
 import 'package:firebase_performance_platform_interface/src/pigeon/messages.pigeon.dart'
     as pigeon;
-import 'package:flutter/services.dart';
 
 import '../../firebase_performance_platform_interface.dart';
 import 'method_channel_http_metric.dart';

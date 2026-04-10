@@ -5,7 +5,6 @@
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
     hide DatabaseReferencePlatform;
-import 'package:flutter/services.dart';
 
 import 'method_channel_data_snapshot.dart';
 import 'method_channel_database.dart';

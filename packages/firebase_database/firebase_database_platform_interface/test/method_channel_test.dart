@@ -10,7 +10,6 @@ import 'package:firebase_database_platform_interface/src/method_channel/method_c
 import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database_reference.dart';
 import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
     as pigeon;
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'pigeon/test_api.dart';

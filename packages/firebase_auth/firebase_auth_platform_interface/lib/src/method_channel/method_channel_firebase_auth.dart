@@ -10,8 +10,6 @@ import 'package:firebase_auth_platform_interface/src/method_channel/utils/conver
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/event_channel.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 
 import '../../firebase_auth_platform_interface.dart';
 import 'method_channel_user.dart';

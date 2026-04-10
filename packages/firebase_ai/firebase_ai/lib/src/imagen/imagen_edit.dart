@@ -14,7 +14,6 @@
 
 import 'dart:convert';
 
-import 'package:meta/meta.dart';
 
 /// The desired outcome of the image editing.
 @experimental

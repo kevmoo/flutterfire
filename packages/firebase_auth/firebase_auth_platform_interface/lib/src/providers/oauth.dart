@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:meta/meta.dart';
 
 /// A generic provider instance.
 ///

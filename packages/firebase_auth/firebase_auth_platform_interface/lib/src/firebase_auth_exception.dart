@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:meta/meta.dart';
 import 'auth_credential.dart';
 
 /// Generic exception related to Firebase Authentication. Check the error code

@@ -3,16 +3,13 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_remote_config_web/src/internals.dart';
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/interop/firebase_remote_config.dart' as remote_config_interop;
 
-import 'src/firebase_remote_config_version.dart';
 
 /// Web implementation of [FirebaseRemoteConfigPlatform].
 class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
@@ -35,17 +32,6 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
     return _webRemoteConfig ??= remote_config_interop.getRemoteConfigInstance(
       core_interop.app(app.name),
     );
-  }
-
-  /// Create the default instance of the [FirebaseRemoteConfigPlatform] as a [FirebaseRemoteConfigWeb]
-  static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
-
-    FirebaseCoreWeb.registerService(
-      'remote-config',
-      productNameOverride: 'remote_config',
-    );
-    FirebaseRemoteConfigPlatform.instance = FirebaseRemoteConfigWeb.instance;
   }
 
   /// Returns an instance of [FirebaseRemoteConfigWeb].

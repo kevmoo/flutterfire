@@ -10,7 +10,6 @@ import 'dart:typed_data' show Uint8List;
 
 import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _TestFirebaseFirestoreHostApiCodec extends StandardMessageCodec {

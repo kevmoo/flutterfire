@@ -5,7 +5,6 @@
 // ignore_for_file: require_trailing_commas
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 
 /// ValueSource defines the possible sources of a config parameter value.
 enum ValueSource {

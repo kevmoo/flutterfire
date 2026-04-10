@@ -2,23 +2,19 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:firebase_app_installations_platform_interface/firebase_app_installations_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/guard.dart';
 import 'src/interop/installations.dart' as installations_interop;
 
-import 'src/firebase_app_installations_version.dart';
-
 class FirebaseAppInstallationsWeb extends FirebaseAppInstallationsPlatform {
-  static const String _libraryName = 'flutter-fire-installations';
-
   /// The entry point for the [FirebaseAppInstallationsWeb] class.
-  FirebaseAppInstallationsWeb({FirebaseApp? app}) : super(app);
+  FirebaseAppInstallationsWeb({required FirebaseApp app}) : super(app);
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
@@ -30,20 +26,11 @@ class FirebaseAppInstallationsWeb extends FirebaseAppInstallationsPlatform {
   /// Lazily initialize [_webFunctions] on first method call
   installations_interop.Installations get _delegate {
     return _webInstallations ??= installations_interop.getInstallationsInstance(
-      core_interop.app(app?.name),
+      core_interop.app(app!.name),
     );
   }
 
-  /// Create the default instance of the [FirebaseAppInstallationsPlatform] as a [FirebaseAppInstallationsWeb]
-  static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
-
-    FirebaseCoreWeb.registerService('installations');
-    FirebaseAppInstallationsPlatform.instance =
-        FirebaseAppInstallationsWeb.instance;
-  }
-
-  /// Returns an instance of [FirebaseAppInstallationsWeb].
+  /// Initializes a stub instance to allow the class to be registered.
   static FirebaseAppInstallationsWeb get instance {
     return FirebaseAppInstallationsWeb._();
   }

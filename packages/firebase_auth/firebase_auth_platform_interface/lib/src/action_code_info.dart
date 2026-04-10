@@ -4,7 +4,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
-import 'package:meta/meta.dart';
 
 /// A response from calling [checkActionCode].
 class ActionCodeInfo {

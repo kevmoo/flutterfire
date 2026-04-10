@@ -7,7 +7,6 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config_platform_interface/src/pigeon/messages.pigeon.dart';
-import 'package:flutter/services.dart';
 
 import '../../firebase_remote_config_platform_interface.dart';
 import 'utils/exception.dart';

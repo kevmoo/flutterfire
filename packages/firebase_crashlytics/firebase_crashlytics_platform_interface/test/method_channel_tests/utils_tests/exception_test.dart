@@ -6,7 +6,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_crashlytics_platform_interface/src/method_channel/utils/exception.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   group('catchPlatformException()', () {

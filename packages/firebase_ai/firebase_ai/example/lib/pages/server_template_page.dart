@@ -13,7 +13,6 @@
 // limitations under the License.
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../utils/function_call_utils.dart';
 import '../widgets/message_widget.dart';
 import 'package:firebase_ai/firebase_ai.dart';

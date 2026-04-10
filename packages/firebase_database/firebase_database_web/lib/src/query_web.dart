@@ -88,13 +88,15 @@ class QueryWeb extends QueryPlatform {
     throw UnsupportedError('keepSynced() is not supported on web');
   }
 
+const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product');
+
   String _createHashCode(
     QueryModifiers modifiers,
     DatabaseEventType eventType,
     String appName,
   ) {
     String hashCode = '0';
-    if (kDebugMode) {
+    if (_kDebugMode) {
       hashCode = Object.hashAll([
         appName,
         path,

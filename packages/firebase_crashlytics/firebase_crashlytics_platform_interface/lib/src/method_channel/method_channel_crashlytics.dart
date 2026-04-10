@@ -6,7 +6,6 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 
 import './utils/exception.dart';
 import '../platform_interface/platform_interface_crashlytics.dart';

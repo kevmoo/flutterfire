@@ -10,14 +10,10 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 import 'package:firebase_auth_web/src/utils/web_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:flutter/foundation.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:web/web.dart' as web;
 
-import 'src/firebase_auth_version.dart';
 
 import 'src/firebase_auth_web_confirmation_result.dart';
 import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
@@ -27,6 +23,8 @@ import 'src/interop/auth.dart' as auth_interop;
 import 'src/interop/multi_factor.dart' as multi_factor;
 
 enum StateListener { authStateChange, userStateChange, idTokenChange }
+
+const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product');
 
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
@@ -44,50 +42,6 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     _createStreamListener(app.name, StateListener.authStateChange);
     _createStreamListener(app.name, StateListener.idTokenChange);
     _createStreamListener(app.name, StateListener.userStateChange);
-  }
-
-  /// Called by PluginRegistry to register this plugin for Flutter Web
-  static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
-
-    FirebaseCoreWeb.registerService(
-      'auth',
-      ensurePluginInitialized: (firebaseApp) async {
-        final authDelegate = auth_interop.getAuthInstance(firebaseApp);
-        // if localhost, and emulator was previously set in localStorage, use it
-        if (web.window.location.hostname == 'localhost' && kDebugMode) {
-          final String? emulatorOrigin = web.window.sessionStorage.getItem(
-            getOriginName(firebaseApp.name),
-          );
-
-          if (emulatorOrigin != null) {
-            try {
-              authDelegate.useAuthEmulator(emulatorOrigin);
-              // ignore: avoid_print
-              print(
-                'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name} \nTo switch back to production, restart your app with the emulator turned off.',
-              );
-            } catch (e) {
-              if (e.toString().contains('sooner')) {
-                // Happens during hot reload when the emulator is already configured
-                // ignore: avoid_print
-                print(
-                  'Auth emulator is already configured at $emulatorOrigin for ${firebaseApp.name} and kept across hot reload.\nTo switch back to production, restart your app with the emulator turned off.',
-                );
-              } else {
-                rethrow;
-              }
-            }
-          }
-        }
-        await authDelegate.onWaitInitState();
-      },
-    );
-    FirebaseAuthPlatform.instance = FirebaseAuthWeb.instance;
-    PhoneMultiFactorGeneratorPlatform.instance = PhoneMultiFactorGeneratorWeb();
-    TotpMultiFactorGeneratorPlatform.instance = TotpMultiFactorGeneratorWeb();
-    RecaptchaVerifierFactoryPlatform.instance =
-        RecaptchaVerifierFactoryWeb.instance;
   }
 
   static final Map<String, StreamController<UserPlatform?>>
@@ -514,7 +468,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       delegate.useAuthEmulator(origin);
       // Save to session storage so that the emulator is used on refresh
       // only in debug mode
-      if (kDebugMode) {
+      if (_kDebugMode) {
         web.window.sessionStorage.setItem(
           getOriginName(delegate.app.name),
           origin,

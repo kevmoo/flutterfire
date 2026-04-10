@@ -13,7 +13,6 @@
 // limitations under the License.
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';

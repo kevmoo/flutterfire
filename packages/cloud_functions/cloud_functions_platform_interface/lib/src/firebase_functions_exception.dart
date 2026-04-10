@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:meta/meta.dart';
 
 /// Generic exception related to Cloud Functions. Check the error code
 /// and message for more details.

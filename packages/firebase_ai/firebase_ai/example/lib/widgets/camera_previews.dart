@@ -14,7 +14,6 @@
 
 import 'package:camera/camera.dart';
 import 'package:camera_macos/camera_macos.dart' deferred as camera_macos_lib;
-import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 

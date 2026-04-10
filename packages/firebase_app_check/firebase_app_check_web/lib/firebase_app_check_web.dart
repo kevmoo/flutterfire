@@ -9,7 +9,6 @@ import 'dart:js_interop';
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart' as core_interop;
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/interop/app_check.dart' as app_check_interop;
 import 'src/internals.dart';
@@ -18,12 +17,6 @@ import 'src/internals.dart';
 class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   /// The entry point for the [FirebaseAppCheckWeb] class.
   FirebaseAppCheckWeb({required FirebaseApp app}) : super(appInstance: app);
-
-  /// Called by [FirebaseAppCheck.instance] to register the [FirebaseAppCheckWeb]
-  /// plugin with the [FirebaseAppCheckPlatform] instance.
-  static void registerWith(Registrar registrar) {
-    FirebaseAppCheckPlatform.instance = FirebaseAppCheckWeb(app: Firebase.app());
-  }
 
   app_check_interop.AppCheck? _webAppCheck;
 

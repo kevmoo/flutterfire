@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:meta/meta.dart';
 
 /// MultiFactor exception related to Firebase Authentication. Check the error code
 /// and message for more details.

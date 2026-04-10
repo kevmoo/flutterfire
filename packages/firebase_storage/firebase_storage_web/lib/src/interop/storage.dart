@@ -11,7 +11,6 @@ import 'dart:js_interop';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:flutter/foundation.dart';
 
 import 'storage_interop.dart' as storage_interop;
 

@@ -5,7 +5,6 @@
 
 import 'package:cloud_functions_platform_interface/src/firebase_functions_exception.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/utils/exception.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

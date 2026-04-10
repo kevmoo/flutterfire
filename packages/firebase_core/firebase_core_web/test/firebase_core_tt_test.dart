@@ -5,7 +5,6 @@
 @TestOn('browser')
 library;
 
-import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'tools.dart';

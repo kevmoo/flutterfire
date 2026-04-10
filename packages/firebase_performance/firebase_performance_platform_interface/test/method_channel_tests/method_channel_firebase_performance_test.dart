@@ -7,7 +7,6 @@ import 'package:firebase_performance_platform_interface/firebase_performance_pla
 import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_firebase_performance.dart';
 import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_trace.dart';
 import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_http_metric.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';

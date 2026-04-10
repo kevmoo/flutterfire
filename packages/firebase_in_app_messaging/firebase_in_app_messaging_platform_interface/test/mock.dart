@@ -4,7 +4,6 @@
 
 import 'package:firebase_core/test.dart';
 import 'package:firebase_in_app_messaging_platform_interface/src/method_channel/method_channel_firebase_in_app_messaging.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);

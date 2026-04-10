@@ -4,7 +4,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 
 import '../../../cloud_functions_platform_interface.dart';
 

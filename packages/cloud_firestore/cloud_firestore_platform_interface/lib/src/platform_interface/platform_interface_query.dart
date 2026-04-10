@@ -6,7 +6,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 Map<String, dynamic> _initialParameters = Map<String, dynamic>.unmodifiable({

@@ -5,7 +5,6 @@
 
 import 'package:cloud_functions_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 
 import '../../cloud_functions_platform_interface.dart';
 import 'method_channel_https_callable.dart';

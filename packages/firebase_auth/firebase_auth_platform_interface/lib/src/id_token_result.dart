@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
-import 'package:meta/meta.dart';
 
 /// Interface representing ID token result obtained from [getIdTokenResult].
 /// It contains the ID token JWT string and other helper properties for getting

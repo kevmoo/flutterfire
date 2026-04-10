@@ -12,10 +12,8 @@ import 'package:cloud_firestore_web/src/load_bundle_task_web.dart';
 import 'package:cloud_firestore_web/src/persistent_cache_index_manager_web.dart';
 import 'package:cloud_firestore_web/src/utils/web_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/collection_reference_web.dart';
 import 'src/document_reference_web.dart';
@@ -25,7 +23,6 @@ import 'src/query_web.dart';
 import 'src/transaction_web.dart';
 import 'src/write_batch_web.dart';
 
-import 'src/cloud_firestore_version.dart';
 
 /// Web implementation for [FirebaseFirestorePlatform]
 /// delegates calls to firestore web plugin
@@ -44,14 +41,6 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       _interopSettings,
       databaseId,
     );
-  }
-
-  /// Called by PluginRegistry to register this plugin for Flutter Web
-  static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
-
-    FirebaseCoreWeb.registerService('firestore');
-    FirebaseFirestorePlatform.instance = FirebaseFirestoreWeb();
   }
 
   /// Builds an instance of [FirebaseFirestoreWeb] with an optional [FirebaseApp] instance

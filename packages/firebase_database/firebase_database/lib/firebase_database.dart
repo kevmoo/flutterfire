@@ -8,7 +8,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
-import 'package:flutter/foundation.dart';
 
 export 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart'
     show ServerValue, TransactionHandler, DatabaseEventType, Transaction;

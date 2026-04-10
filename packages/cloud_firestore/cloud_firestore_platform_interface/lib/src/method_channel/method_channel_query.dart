@@ -10,7 +10,6 @@ import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_query.dart'
     as query;
 import 'package:collection/collection.dart';
-import 'package:flutter/services.dart';
 
 import 'method_channel_aggregate_query.dart';
 import 'method_channel_firestore.dart';

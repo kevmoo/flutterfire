@@ -11,9 +11,10 @@ import 'dart:async';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'package:web/web.dart' as web;
-import 'package:flutter/foundation.dart';
 
 import 'func.dart';
+
+const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product');
 
 /// Handles the [Future] object with the provided [mapper] function.
 JSPromise handleFutureWithMapper<T, S>(
@@ -51,7 +52,7 @@ JSPromise handleFutureWithMapper<T, S>(
 // and clean up on hot restart if it exists.
 // See: https://github.com/firebase/flutterfire/issues/7064
 void unsubscribeWindowsListener(String key) {
-  if (kDebugMode) {
+  if (_kDebugMode) {
     final unsubscribe = web.window.getProperty(key.toJS);
     if (unsubscribe != null) {
       (unsubscribe as JSFunction).callAsFunction();
@@ -60,13 +61,13 @@ void unsubscribeWindowsListener(String key) {
 }
 
 void setWindowsListener(String key, JSFunction unsubscribe) {
-  if (kDebugMode) {
+  if (_kDebugMode) {
     web.window.setProperty(key.toJS, unsubscribe);
   }
 }
 
 void removeWindowsListener(String key) {
-  if (kDebugMode) {
+  if (_kDebugMode) {
     if (web.window.hasProperty(key.toJS) == true.toJS) {
       web.window.delete(key.toJS);
     }

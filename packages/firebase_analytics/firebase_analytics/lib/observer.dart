@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'package:flutter/widgets.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 /// Signature for a function that extracts a screen name from [RouteSettings].

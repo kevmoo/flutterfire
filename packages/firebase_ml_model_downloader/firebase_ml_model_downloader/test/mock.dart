@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/test.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 typedef Callback = void Function(MethodCall call);

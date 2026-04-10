@@ -16,7 +16,6 @@ import 'dart:developer';
 import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:camera_macos/camera_macos.dart';
-import 'package:flutter/foundation.dart';
 
 class VideoInput extends ChangeNotifier {
   List<dynamic> _cameras = [];

@@ -5,7 +5,6 @@
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
 
 import './utils/exception.dart';
 import '../../firebase_ml_model_downloader_platform_interface.dart';

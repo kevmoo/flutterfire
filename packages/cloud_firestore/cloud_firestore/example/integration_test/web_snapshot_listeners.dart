@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Run only on web for demonstrating snapshot listener clean up in debug mode does not clean up the listeners incorrectly.

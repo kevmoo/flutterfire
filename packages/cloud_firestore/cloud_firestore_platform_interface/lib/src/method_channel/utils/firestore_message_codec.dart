@@ -12,8 +12,6 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 import 'package:firebase_core/firebase_core.dart';
 // TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
 // ignore: unnecessary_import
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 
 import '../method_channel_firestore.dart';
 import '../method_channel_query.dart';

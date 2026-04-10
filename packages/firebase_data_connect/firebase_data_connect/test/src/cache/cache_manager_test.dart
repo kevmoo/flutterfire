@@ -22,7 +22,6 @@ import 'package:firebase_data_connect/src/cache/cache.dart';
 import 'package:firebase_data_connect/src/cache/cache_provider.dart';
 import 'package:firebase_data_connect/src/cache/in_memory_cache_provider.dart';
 import 'package:firebase_data_connect/src/cache/sqlite_cache_provider.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
 

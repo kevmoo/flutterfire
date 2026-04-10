@@ -9,7 +9,6 @@ import 'dart:typed_data';
 
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:http/http.dart' as http;
-import 'package:meta/meta.dart';
 import 'package:web/web.dart' as web;
 
 import './firebase_storage_web.dart';

@@ -4,7 +4,6 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart';
-import 'package:flutter/services.dart';
 
 import 'utils/exception.dart';
 
