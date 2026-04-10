@@ -266,7 +266,7 @@ class FirebaseCoreHostApi {
     CoreFirebaseOptions initializeAppRequest,
   ) async {
     final String pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.initializeApp$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
           pigeonVar_channelName,
@@ -298,7 +298,7 @@ class FirebaseCoreHostApi {
 
   Future<List<CoreInitializeResponse>> initializeCore() async {
     final String pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.initializeCore$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
           pigeonVar_channelName,
@@ -329,7 +329,7 @@ class FirebaseCoreHostApi {
 
   Future<CoreFirebaseOptions> optionsFromResource() async {
     final String pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.optionsFromResource$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
           pigeonVar_channelName,
@@ -380,7 +380,7 @@ class FirebaseAppHostApi {
     bool enabled,
   ) async {
     final String pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticDataCollectionEnabled$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
           pigeonVar_channelName,
@@ -410,7 +410,7 @@ class FirebaseAppHostApi {
     bool enabled,
   ) async {
     final String pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticResourceManagementEnabled$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
           pigeonVar_channelName,
@@ -437,7 +437,7 @@ class FirebaseAppHostApi {
 
   Future<void> delete(String appName) async {
     final String pigeonVar_channelName =
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete$pigeonVar_messageChannelSuffix';
+        'dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.delete$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel =
         BasicMessageChannel<Object?>(
           pigeonVar_channelName,

@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'messages.pigeon.dart';
+import 'package:firebase_core/src/pigeon/messages.pigeon.dart';
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -69,7 +69,7 @@ abstract class TestFirebaseCoreHostApi {
     {
       final BasicMessageChannel<Object?>
       pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp$messageChannelSuffix',
+        'dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.initializeApp$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -82,19 +82,19 @@ abstract class TestFirebaseCoreHostApi {
         >(pigeonVar_channel, (Object? message) async {
           assert(
             message != null,
-            'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp was null.',
+            'Argument for dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.initializeApp was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
           assert(
             arg_appName != null,
-            'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp was null, expected non-null String.',
+            'Argument for dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.initializeApp was null, expected non-null String.',
           );
           final CoreFirebaseOptions? arg_initializeAppRequest =
               (args[1] as CoreFirebaseOptions?);
           assert(
             arg_initializeAppRequest != null,
-            'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp was null, expected non-null CoreFirebaseOptions.',
+            'Argument for dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.initializeApp was null, expected non-null CoreFirebaseOptions.',
           );
           try {
             final CoreInitializeResponse output = await api.initializeApp(
@@ -115,7 +115,7 @@ abstract class TestFirebaseCoreHostApi {
     {
       final BasicMessageChannel<Object?>
       pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore$messageChannelSuffix',
+        'dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.initializeCore$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -147,7 +147,7 @@ abstract class TestFirebaseCoreHostApi {
     {
       final BasicMessageChannel<Object?>
       pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource$messageChannelSuffix',
+        'dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.optionsFromResource$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -204,7 +204,7 @@ abstract class TestFirebaseAppHostApi {
     {
       final BasicMessageChannel<Object?>
       pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled$messageChannelSuffix',
+        'dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticDataCollectionEnabled$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -217,18 +217,18 @@ abstract class TestFirebaseAppHostApi {
         >(pigeonVar_channel, (Object? message) async {
           assert(
             message != null,
-            'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled was null.',
+            'Argument for dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticDataCollectionEnabled was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
           assert(
             arg_appName != null,
-            'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled was null, expected non-null String.',
+            'Argument for dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticDataCollectionEnabled was null, expected non-null String.',
           );
           final bool? arg_enabled = (args[1] as bool?);
           assert(
             arg_enabled != null,
-            'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled was null, expected non-null bool.',
+            'Argument for dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticDataCollectionEnabled was null, expected non-null bool.',
           );
           try {
             await api.setAutomaticDataCollectionEnabled(
@@ -249,7 +249,7 @@ abstract class TestFirebaseAppHostApi {
     {
       final BasicMessageChannel<Object?>
       pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled$messageChannelSuffix',
+        'dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticResourceManagementEnabled$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -262,18 +262,18 @@ abstract class TestFirebaseAppHostApi {
         >(pigeonVar_channel, (Object? message) async {
           assert(
             message != null,
-            'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled was null.',
+            'Argument for dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticResourceManagementEnabled was null.',
           );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
           assert(
             arg_appName != null,
-            'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled was null, expected non-null String.',
+            'Argument for dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticResourceManagementEnabled was null, expected non-null String.',
           );
           final bool? arg_enabled = (args[1] as bool?);
           assert(
             arg_enabled != null,
-            'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled was null, expected non-null bool.',
+            'Argument for dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticResourceManagementEnabled was null, expected non-null bool.',
           );
           try {
             await api.setAutomaticResourceManagementEnabled(
@@ -294,7 +294,7 @@ abstract class TestFirebaseAppHostApi {
     {
       final BasicMessageChannel<Object?>
       pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete$messageChannelSuffix',
+        'dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.delete$messageChannelSuffix',
         pigeonChannelCodec,
         binaryMessenger: binaryMessenger,
       );
@@ -308,13 +308,13 @@ abstract class TestFirebaseAppHostApi {
             ) async {
               assert(
                 message != null,
-                'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete was null.',
+                'Argument for dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.delete was null.',
               );
               final List<Object?> args = (message as List<Object?>?)!;
               final String? arg_appName = (args[0] as String?);
               assert(
                 arg_appName != null,
-                'Argument for dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete was null, expected non-null String.',
+                'Argument for dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.delete was null, expected non-null String.',
               );
               try {
                 await api.delete(arg_appName!);

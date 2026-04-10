@@ -4,12 +4,9 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:firebase_core_platform_interface/test.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('$FirebaseOptions', () {
     test('should return true if instances are the same', () {
       const options1 = FirebaseOptions(
@@ -46,26 +43,6 @@ void main() {
       );
 
       expect(options1 == options2, isFalse);
-    });
-
-    test('should construct an instance from a Map', () {
-      FirebaseOptions options1 = FirebaseOptionsExtension.fromPigeon(
-        CoreFirebaseOptions(
-          apiKey: 'apiKey',
-          appId: 'appId',
-          messagingSenderId: 'messagingSenderId',
-          projectId: 'projectId',
-        ),
-      );
-
-      FirebaseOptions options2 = const FirebaseOptions(
-        apiKey: 'apiKey',
-        appId: 'appId',
-        messagingSenderId: 'messagingSenderId',
-        projectId: 'projectId',
-      );
-
-      expect(options1 == options2, isTrue);
     });
 
     test('should copyWith new values', () {

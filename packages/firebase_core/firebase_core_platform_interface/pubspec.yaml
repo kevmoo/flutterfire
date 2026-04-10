@@ -10,20 +10,15 @@ resolution: workspace
 
 environment:
   sdk: ^3.10.0
-  flutter: '>=3.27.0'
 
 dependencies:
   collection: ^1.19.1
   firebase_core_dart:
     path: ../firebase_core_dart
-  flutter:
-    sdk: flutter
-  # Needed to export the mocks
-  flutter_test:
-    sdk: flutter
   meta: ^1.18.0
   plugin_platform_interface: ^2.1.8
 
 dev_dependencies:
   mockito: ^5.6.3
   pigeon: ^26.3.4
+  test: ^1.16.0

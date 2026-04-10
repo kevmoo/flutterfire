@@ -8,37 +8,44 @@ import 'package:firebase_auth_platform_interface/src/method_channel/method_chann
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/pigeon_helper.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
+import 'package:firebase_core_dart/firebase_core_dart.dart';
 
-/// Catches a [PlatformException] and converts it into a [FirebaseAuthException]
+/// Catches a native exception and converts it into a [FirebaseAuthException]
 /// if it was intentionally caught on the native platform.
 Never convertPlatformException(
   Object exception,
   StackTrace stackTrace, {
   bool fromPigeon = true,
 }) {
-  if (exception is! PlatformException) {
+  final dynamic e = exception;
+  final bool isPlatformException = _isPlatformException(e);
+
+  if (!isPlatformException) {
     Error.throwWithStackTrace(exception, stackTrace);
   }
 
   Error.throwWithStackTrace(
-    platformExceptionToFirebaseAuthException(exception, fromPigeon: fromPigeon),
+    platformExceptionToFirebaseAuthException(e, fromPigeon: fromPigeon),
     stackTrace,
   );
 }
 
-/// Converts a [PlatformException] into a [FirebaseAuthException].
-///
-/// A [PlatformException] can only be converted to a [FirebaseAuthException] if
-/// the `details` of the exception exist. Firebase returns specific codes and
-/// messages which can be converted into user friendly exceptions.
+bool _isPlatformException(dynamic e) {
+  try {
+    return e.code != null && e is! FirebaseException;
+  } catch (_) {
+    return false;
+  }
+}
+
+/// Converts a native exception into a [FirebaseAuthException].
 FirebaseException platformExceptionToFirebaseAuthException(
-  PlatformException platformException, {
+  dynamic platformException, {
   bool fromPigeon = true,
 }) {
   if (fromPigeon) {
     var code = platformException.code
+        .toString()
         .replaceAll('ERROR_', '')
         .toLowerCase()
         .replaceAll('_', '-');
@@ -60,11 +67,13 @@ FirebaseException platformExceptionToFirebaseAuthException(
     AuthCredential? credential;
     String? email;
 
-    if (platformException.details != null) {
-      if (platformException.details['authCredential'] != null &&
-          platformException.details['authCredential'] is PigeonAuthCredential) {
+    final dynamic details = platformException.details;
+
+    if (details != null) {
+      if (details['authCredential'] != null &&
+          details['authCredential'] is PigeonAuthCredential) {
         PigeonAuthCredential pigeonAuthCredential =
-            platformException.details['authCredential'];
+            details['authCredential'];
 
         credential = AuthCredential(
           providerId: pigeonAuthCredential.providerId,
@@ -74,12 +83,12 @@ FirebaseException platformExceptionToFirebaseAuthException(
         );
       }
 
-      if (platformException.details['email'] != null) {
-        email = platformException.details['email'];
+      if (details['email'] != null) {
+        email = details['email'];
       }
     }
 
-    var parsedMessage = platformException.message?.split(': ').last;
+    var parsedMessage = platformException.message?.toString().split(': ').last;
     if (parsedMessage?.endsWith(' ]') ?? false) {
       // Fixes JSON response from Auth blocking function: https://github.com/firebase/flutterfire/issues/11532
       parsedMessage = parsedMessage!.substring(0, parsedMessage.length - 2);
@@ -95,12 +104,13 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
   // Parsing code to match the format of the other platforms
 
-  Map<String, dynamic>? details = platformException.details != null
-      ? Map<String, dynamic>.from(platformException.details)
+  final dynamic rawDetails = platformException.details;
+  Map<String, dynamic>? details = rawDetails != null
+      ? Map<String, dynamic>.from(rawDetails)
       : null;
 
   String code = 'unknown';
-  String? message = platformException.message;
+  String? message = platformException.message?.toString();
   String? email;
   AuthCredential? credential;
 
@@ -143,7 +153,7 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
 // Check for custom error codes that are not returned in the normal errors by Firebase SDKs
 // The error code is only returned in a String on Android
-String? _getCustomCode(Map? additionalData, String? message) {
+String? _getCustomCode(dynamic additionalData, String? message) {
   final listOfRecognizedCode = [
     // This code happens when using Enumerate Email protection
     'INVALID_LOGIN_CREDENTIALS',
@@ -164,10 +174,10 @@ String? _getCustomCode(Map? additionalData, String? message) {
 const kMultiFactorError = 'second-factor-required';
 
 FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
-  PlatformException exception,
+  dynamic exception,
 ) {
   const code = kMultiFactorError;
-  final message = exception.message;
+  final String? message = exception.message?.toString();
   final additionalData = exception.details as Map<Object?, Object?>?;
 
   if (additionalData == null) {

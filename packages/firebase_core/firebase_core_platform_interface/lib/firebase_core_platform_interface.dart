@@ -9,17 +9,11 @@ library;
 import 'dart:async';
 
 import 'package:firebase_core_dart/firebase_core_dart.dart';
-import 'package:firebase_core_platform_interface/src/pigeon/messages.pigeon.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 export 'package:firebase_core_dart/firebase_core_dart.dart';
 
 part 'src/firebase_core_exceptions.dart';
-part 'src/firebase_options_extension.dart';
-part 'src/method_channel/method_channel_firebase.dart';
-part 'src/method_channel/method_channel_firebase_app.dart';
 part 'src/platform_interface/platform_interface_firebase.dart';
 part 'src/platform_interface/platform_interface_firebase_app.dart';
 part 'src/platform_interface/platform_interface_firebase_plugin.dart';

@@ -6,6 +6,6 @@
 /// Test helpers for this package.
 library;
 
-export 'package:firebase_core_platform_interface/src/pigeon/messages.pigeon.dart';
-export 'package:firebase_core_platform_interface/src/pigeon/mocks.dart';
-export 'package:firebase_core_platform_interface/src/pigeon/test_api.dart';
+export 'package:firebase_core/src/pigeon/messages.pigeon.dart';
+export 'package:firebase_core/src/pigeon/mocks.dart';
+export 'package:firebase_core/src/pigeon/test_api.dart';

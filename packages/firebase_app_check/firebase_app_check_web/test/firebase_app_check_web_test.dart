@@ -23,7 +23,7 @@ void main() {
     });
 
     test('instance', () {
-      final appCheck = FirebaseAppCheckWeb.instance;
+      final appCheck = FirebaseAppCheckPlatform.instance;
 
       expect(appCheck, isA<FirebaseAppCheckWeb>());
     });

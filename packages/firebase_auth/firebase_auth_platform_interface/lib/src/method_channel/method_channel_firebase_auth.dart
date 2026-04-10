@@ -5,9 +5,9 @@
 
 import 'dart:async';
 
-import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/utils/event_channel.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';

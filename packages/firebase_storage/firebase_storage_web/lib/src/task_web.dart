@@ -39,8 +39,8 @@ class TaskWeb extends TaskPlatform {
   /// wait for the stream to complete via [onComplete].
   @override
   Stream<TaskSnapshotPlatform> get snapshotEvents {
-    _stream ??= guard(() {
-      // The mobile version of the plugin pushes a "success" snapshot to the
+    _stream ??= guardStream(() {
+      // The mobile version of the plugin pushes a \"success\" snapshot to the
       // onStateChanged stream, but the Firebase JS SDK does *not*.
       // We use a StreamGroup + Future.asStream to simulate that feature:
       // ignore: close_sinks

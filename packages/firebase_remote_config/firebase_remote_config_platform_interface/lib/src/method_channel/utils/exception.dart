@@ -3,9 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 // ignore_for_file: require_trailing_commas
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
-
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 
 /// Catches a [PlatformException] and returns an [Exception].

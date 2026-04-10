@@ -5,13 +5,13 @@
 
 import 'dart:async';
 
-import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 import 'utils/exception.dart';
+import 'utils/event_channel.dart';
 
 /// An implementation of [DocumentReferencePlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.

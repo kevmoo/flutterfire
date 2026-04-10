@@ -26,7 +26,7 @@ class FirebaseAppPlatform extends PlatformInterface {
   final FirebaseOptions options;
 
   /// Returns whether this instance is the default Firebase app.
-  bool get _isDefault => name == defaultFirebaseAppName;
+  bool get isDefault => name == defaultFirebaseAppName;
 
   /// Returns true if automatic data collection is enabled for this app.
   bool get isAutomaticDataCollectionEnabled {

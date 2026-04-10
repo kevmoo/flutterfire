@@ -7,17 +7,12 @@ resolution: workspace
 
 environment:
   sdk: ^3.10.0
-  flutter: '>=3.27.0'
 
 dependencies:
   collection: ^1.19.1
-  firebase_core: ^4.6.0
-  firebase_core_platform_interface: ^6.0.3
-  flutter:
-    sdk: flutter
+  firebase_core_dart: any # workspace experiment ATM
   meta: ^1.18.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   mockito: ^5.6.3
+  test: ^1.16.0

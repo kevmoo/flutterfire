@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +11,7 @@ import 'package:flutter/services.dart';
 import '../../firebase_app_check_platform_interface.dart';
 import '../pigeon/messages.pigeon.dart';
 import 'utils/exception.dart';
+import 'utils/event_channel.dart';
 import 'utils/provider_to_string.dart';
 
 class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {

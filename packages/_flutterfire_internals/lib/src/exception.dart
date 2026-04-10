@@ -3,12 +3,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/services.dart';
+import 'package:firebase_core_dart/firebase_core_dart.dart';
 
-/// Catches a [PlatformException] and returns an [Exception].
+/// Catches a native exception and returns a [FirebaseException] if possible.
 ///
-/// If the [Exception] is a [PlatformException], a [FirebaseException] is returned.
+/// This is pure Dart and does not depend on the Flutter SDK, but it can
+/// handle native exceptions passed from Flutter (e.g. PlatformException)
+/// by using dynamic property access.
 Never convertPlatformExceptionToFirebaseException(
   Object exception,
   StackTrace rawStackTrace, {
@@ -19,28 +20,38 @@ Never convertPlatformExceptionToFirebaseException(
     stackTrace = StackTrace.current;
   }
 
-  if (exception is! PlatformException) {
+  // We check for the existence of properties commonly found on PlatformException
+  // without explicitly importing the Flutter SDK.
+  final dynamic e = exception;
+  final bool isPlatformException = _isPlatformException(e);
+
+  if (!isPlatformException) {
     Error.throwWithStackTrace(exception, stackTrace);
   }
 
   Error.throwWithStackTrace(
-    platformExceptionToFirebaseException(exception, plugin: plugin),
+    _platformExceptionToFirebaseException(e, plugin: plugin),
     stackTrace,
   );
 }
 
-/// Converts a [PlatformException] into a [FirebaseException].
-///
-/// A [PlatformException] can only be converted to a [FirebaseException] if the
-/// `details` of the exception exist. Firebase returns specific codes and messages
-/// which can be converted into user friendly exceptions.
-FirebaseException platformExceptionToFirebaseException(
-  PlatformException platformException, {
+bool _isPlatformException(dynamic e) {
+  try {
+    // PlatformException has a 'code' and 'message' property.
+    return e.code != null && e is! FirebaseException;
+  } catch (_) {
+    return false;
+  }
+}
+
+/// Converts a native exception into a [FirebaseException].
+FirebaseException _platformExceptionToFirebaseException(
+  dynamic platformException, {
   required String plugin,
 }) {
   Map<String, Object>? details;
 
-  final rawDetails = platformException.details;
+  final dynamic rawDetails = platformException.details;
 
   if (rawDetails is Map) {
     details = Map<String, Object>.from(rawDetails);
@@ -61,22 +72,4 @@ FirebaseException platformExceptionToFirebaseException(
     code: code ?? 'unknown',
     message: message,
   );
-}
-
-/// A custom [EventChannel] with default error handling logic.
-extension EventChannelExtension on EventChannel {
-  /// Similar to [receiveBroadcastStream], but with enforced error handling.
-  Stream<dynamic> receiveGuardedBroadcastStream({
-    dynamic arguments,
-    required dynamic Function(Object error, StackTrace stackTrace) onError,
-  }) {
-    final incomingStackTrace = StackTrace.current;
-
-    return receiveBroadcastStream(arguments).handleError((Object error) {
-      // TODO(rrousselGit): use package:stack_trace to merge the error's StackTrace with "incomingStackTrace"
-      // This TODO assumes that EventChannel is updated to actually pass a StackTrace
-      // (as it currently only sends StackTrace.empty)
-      return onError(error, incomingStackTrace);
-    });
-  }
 }

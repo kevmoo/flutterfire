@@ -106,7 +106,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
     String path, {
     @visibleForTesting ReferenceBuilder? refBuilder,
   }) {
-    return guard(() {
+    return guardSync(() {
       ReferenceBuilder refBuilderFunction = refBuilder ?? _createReference;
       ReferencePlatform ref = refBuilderFunction(this, path);
 

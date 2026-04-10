@@ -685,7 +685,7 @@ public class GeneratedAndroidFirebaseCore {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
                 binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeApp"
+                "dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.initializeApp"
                     + messageChannelSuffix,
                 getCodec());
         if (api != null) {
@@ -718,7 +718,7 @@ public class GeneratedAndroidFirebaseCore {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
                 binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore"
+                "dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.initializeCore"
                     + messageChannelSuffix,
                 getCodec());
         if (api != null) {
@@ -748,7 +748,7 @@ public class GeneratedAndroidFirebaseCore {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
                 binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.optionsFromResource"
+                "dev.flutter.pigeon.firebase_core.FirebaseCoreHostApi.optionsFromResource"
                     + messageChannelSuffix,
                 getCodec());
         if (api != null) {
@@ -807,7 +807,7 @@ public class GeneratedAndroidFirebaseCore {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
                 binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticDataCollectionEnabled"
+                "dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticDataCollectionEnabled"
                     + messageChannelSuffix,
                 getCodec());
         if (api != null) {
@@ -840,7 +840,7 @@ public class GeneratedAndroidFirebaseCore {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
                 binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.setAutomaticResourceManagementEnabled"
+                "dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.setAutomaticResourceManagementEnabled"
                     + messageChannelSuffix,
                 getCodec());
         if (api != null) {
@@ -873,8 +873,7 @@ public class GeneratedAndroidFirebaseCore {
         BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(
                 binaryMessenger,
-                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseAppHostApi.delete"
-                    + messageChannelSuffix,
+                "dev.flutter.pigeon.firebase_core.FirebaseAppHostApi.delete" + messageChannelSuffix,
                 getCodec());
         if (api != null) {
           channel.setMessageHandler(

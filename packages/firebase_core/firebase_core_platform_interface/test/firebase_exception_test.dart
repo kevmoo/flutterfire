@@ -4,11 +4,9 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('$FirebaseException', () {
     test('should return a formatted message', () async {
       FirebaseException e = FirebaseException(plugin: 'foo', message: 'bar');

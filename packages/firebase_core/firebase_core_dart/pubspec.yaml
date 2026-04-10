@@ -1,10 +1,11 @@
 name: firebase_core_dart
 description: Pure Dart shared core for Firebase plugins.
 version: 0.1.0-wip
+resolution: workspace
 publish_to: none
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: ^3.10.0
 
 dependencies:
   collection: ^1.18.0

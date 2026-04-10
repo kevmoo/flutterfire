@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../../firebase_core_platform_interface.dart';
+part of '../../firebase_core.dart';
 
 /// The entry point for accessing a Firebase app instance.
 ///
@@ -40,7 +40,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   /// The default app cannot be deleted.
   @override
   Future<void> delete() async {
-    if (_isDefault) {
+    if (isDefault) {
       throw noDefaultAppDelete();
     }
 
@@ -51,7 +51,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
     await _api.delete(name);
 
     MethodChannelFirebase.appInstances.remove(name);
-    FirebasePluginPlatform._constantsForPluginApps.remove(name);
+    FirebasePluginPlatform.constantsForPluginApps.remove(name);
     _isDeleted = true;
   }
 

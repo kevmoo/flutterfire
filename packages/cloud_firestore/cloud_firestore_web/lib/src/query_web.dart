@@ -199,7 +199,7 @@ class QueryWeb extends QueryPlatform {
           hashCode: hashCode,
         );
 
-    return convertWebExceptions(
+    return convertWebStreamExceptions(
       () => querySnapshots.map((webQuerySnapshot) {
         return convertWebQuerySnapshot(
           firestore,

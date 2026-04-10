@@ -76,7 +76,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
           source: listenSource,
         );
 
-    return convertWebExceptions(
+    return convertWebStreamExceptions(
       () => querySnapshots.map((webSnapshot) {
         return convertWebDocumentSnapshot(
           firestore,

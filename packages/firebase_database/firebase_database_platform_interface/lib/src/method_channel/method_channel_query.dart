@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
     hide DatabaseReferencePlatform;
@@ -13,6 +12,7 @@ import 'method_channel_database.dart';
 import 'method_channel_database_event.dart';
 import 'method_channel_database_reference.dart';
 import 'utils/exception.dart';
+import 'utils/event_channel.dart';
 
 final _api = FirebaseDatabaseHostApi();
 

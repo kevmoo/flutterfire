@@ -6,9 +6,10 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: 'lib/src/pigeon/messages.pigeon.dart',
+    dartOut: '../firebase_core/lib/src/pigeon/messages.pigeon.dart',
+    dartPackageName: 'firebase_core',
     // We export in the lib folder to expose the class to other packages.
-    dartTestOut: 'lib/src/pigeon/test_api.dart',
+    dartTestOut: '../firebase_core/lib/src/pigeon/test_api.dart',
     javaOut:
         '../firebase_core/android/src/main/java/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.java',
     javaOptions: JavaOptions(

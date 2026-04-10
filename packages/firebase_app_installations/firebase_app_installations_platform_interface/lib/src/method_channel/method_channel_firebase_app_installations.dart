@@ -4,12 +4,12 @@
 
 import 'dart:async';
 
-import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_installations_platform_interface/firebase_app_installations_platform_interface.dart';
 import 'package:flutter/services.dart';
 
 import 'utils/exception.dart';
+import 'utils/event_channel.dart';
 
 class MethodChannelFirebaseAppInstallations
     extends FirebaseAppInstallationsPlatform {

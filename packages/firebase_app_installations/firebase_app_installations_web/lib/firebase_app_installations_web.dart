@@ -70,6 +70,6 @@ class FirebaseAppInstallationsWeb extends FirebaseAppInstallationsPlatform {
 
   @override
   Stream<String> get onIdChange {
-    return convertWebExceptions(() => _delegate.onIdChange);
+    return convertWebStreamExceptions(() => _delegate.onIdChange);
   }
 }
