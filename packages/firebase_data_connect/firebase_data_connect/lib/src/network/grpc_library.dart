@@ -22,6 +22,6 @@ import 'package:grpc/grpc.dart';
 import '../common/common_library.dart';
 import '../dataconnect_version.dart';
 import '../generated/connector_service.pbgrpc.dart';
-import '../generated/google/protobuf/struct.pb.dart';
+import 'package:protobuf/well_known_types/google/protobuf/struct.pb.dart';
 
 part 'grpc_transport.dart';

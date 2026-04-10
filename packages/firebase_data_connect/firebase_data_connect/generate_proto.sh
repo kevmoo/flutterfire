@@ -2,7 +2,7 @@
 
 # Uses dart protoc_plugin version 21.1.2. There are compilation issues with newer plugin versions.
 # https://github.com/google/protobuf.dart/releases/tag/protoc_plugin-v21.1.2
-# Run `pub global activate protoc_plugin 21.1.2`
+# Run `dart pub global activate protoc_plugin 21.1.2`
 
 rm -rf lib/src/generated
 mkdir lib/src/generated
