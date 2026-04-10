@@ -19,8 +19,7 @@ abstract class QueryDocumentSnapshot<T extends Object?>
 
 class _JsonQueryDocumentSnapshot extends _JsonDocumentSnapshot
     implements QueryDocumentSnapshot<Map<String, dynamic>> {
-  _JsonQueryDocumentSnapshot(FirebaseFirestore firestore, delegate)
-    : super(firestore, delegate);
+  _JsonQueryDocumentSnapshot(super.firestore, super.delegate);
 
   @override
   bool get exists => true;

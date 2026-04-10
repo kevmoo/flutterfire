@@ -83,11 +83,11 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   Stream<MessagePayload> _createOnMessageStream(
     StreamController<MessagePayload>? controller,
   ) {
-    StreamController<MessagePayload>? _controller = controller;
-    if (_controller == null) {
-      _controller = StreamController.broadcast(sync: true);
+    StreamController<MessagePayload>? controller0 = controller;
+    if (controller0 == null) {
+      controller0 = StreamController.broadcast(sync: true);
       void nextWrapper(JSAny payload) {
-        _controller!.add(
+        controller0!.add(
           MessagePayload._fromJsObject(
             payload as messaging_interop.MessagePayloadJsImpl,
           ),
@@ -95,7 +95,7 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
       }
 
       void errorWrapper(JSError e) {
-        _controller!.addError(e);
+        controller0!.addError(e);
       }
 
       messaging_interop.onMessage(
@@ -106,7 +106,7 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
         ),
       );
     }
-    return _controller.stream;
+    return controller0.stream;
   }
 }
 

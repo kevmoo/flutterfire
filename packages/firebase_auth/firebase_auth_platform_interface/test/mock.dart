@@ -13,7 +13,7 @@ typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
 typedef Callback = void Function(MethodCall call);
 
 // mock values
-const String TEST_PHONE_NUMBER = '5555555555';
+const String testPhoneNumber = '5555555555';
 
 int mockHandleId = 0;
 int get nextMockHandleId => mockHandleId++;

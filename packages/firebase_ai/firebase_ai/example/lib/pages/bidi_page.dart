@@ -479,7 +479,7 @@ class _BidiPageState extends State<BidiPage> {
         await _handleLiveServerContent(message);
       }
 
-      int? _handleTranscription(
+      int? handleTranscription(
         Transcription? transcription,
         int? messageIndex,
         String prefix,
@@ -513,13 +513,13 @@ class _BidiPageState extends State<BidiPage> {
         return currentIndex;
       }
 
-      _inputTranscriptionMessageIndex = _handleTranscription(
+      _inputTranscriptionMessageIndex = handleTranscription(
         message.inputTranscription,
         _inputTranscriptionMessageIndex,
         'Input transcription: ',
         true,
       );
-      _outputTranscriptionMessageIndex = _handleTranscription(
+      _outputTranscriptionMessageIndex = handleTranscription(
         message.outputTranscription,
         _outputTranscriptionMessageIndex,
         'Output transcription: ',

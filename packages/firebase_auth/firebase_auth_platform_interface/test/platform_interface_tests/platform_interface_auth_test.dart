@@ -292,7 +292,7 @@ void main() {
     test('throws if signInWithPhoneNumber()', () async {
       await expectLater(
         () => firebaseAuthPlatform.signInWithPhoneNumber(
-          TEST_PHONE_NUMBER,
+          testPhoneNumber,
           FakeRecaptchaVerifierFactoryPlatform(),
         ),
         throwsUnimplementedError,

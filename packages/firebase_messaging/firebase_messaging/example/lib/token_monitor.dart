@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// ignore_for_file: require_trailing_commas
+// ignore_for_file: avoid_print, require_trailing_commas
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 /// Also monitors token refreshes and updates state.
 class TokenMonitor extends StatefulWidget {
   // ignore: public_member_api_docs
-  const TokenMonitor(this._builder);
+  const TokenMonitor(this._builder, {super.key});
 
   final Widget Function(String? token) _builder;
 

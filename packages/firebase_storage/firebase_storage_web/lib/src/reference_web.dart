@@ -154,7 +154,10 @@ class ReferenceWeb extends ReferencePlatform {
   /// Optionally, you can also set metadata onto the uploaded object.
   @override
   TaskPlatform putBlob(dynamic data, [SettableMetadata? metadata]) {
-    assert(data is web.Blob, 'data must be a package:web Blob object.');
+    assert(
+      (data as JSAny).isA<web.Blob>(),
+      'data must be a package:web Blob object.',
+    );
 
     return TaskWeb(
       this,

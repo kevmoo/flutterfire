@@ -556,17 +556,17 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       Map<String, dynamic>? data;
       if (multiFactorSession != null) {
-        final _webMultiFactorSession =
+        final webMultiFactorSession =
             multiFactorSession as MultiFactorSessionWeb;
         if (multiFactorInfo != null) {
           data = {
             'multiFactorUid': multiFactorInfo.uid,
-            'session': _webMultiFactorSession.webSession.jsObject,
+            'session': webMultiFactorSession.webSession.jsObject,
           };
         } else {
           data = {
             'phoneNumber': phoneNumber,
-            'session': _webMultiFactorSession.webSession.jsObject,
+            'session': webMultiFactorSession.webSession.jsObject,
           };
         }
       }
