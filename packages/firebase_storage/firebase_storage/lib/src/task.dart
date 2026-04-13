@@ -1,9 +1,8 @@
+part of firebase_storage;
 // ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
-part of firebase_storage;
 
 /// A class representing an on-going storage task that additionally delegates to a [Future].
 abstract class Task implements Future<TaskSnapshot> {

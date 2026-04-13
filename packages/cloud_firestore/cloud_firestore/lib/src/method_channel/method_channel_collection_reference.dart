@@ -1,14 +1,8 @@
+part of cloud_firestore;
 // ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
-
-import 'method_channel_document_reference.dart';
-import 'method_channel_query.dart';
-import 'utils/auto_id_generator.dart';
 
 /// A `CollectionReference` object can be used for adding documents, getting
 /// document references, and querying for documents (using the methods
@@ -21,11 +15,15 @@ import 'utils/auto_id_generator.dart';
 /// errors, now you know why.
 class MethodChannelCollectionReference extends MethodChannelQuery
     implements
-        // ignore: avoid_implementing_value_types
+// ignore: avoid_implementing_value_types
         CollectionReferencePlatform {
   /// Create a [MethodChannelCollectionReference] instance.
-  MethodChannelCollectionReference(super.firestore, super.path, super.pigeonApp)
-      : _pointer = Pointer(path);
+  MethodChannelCollectionReference(
+    FirebaseFirestorePlatform firestore,
+    String path,
+    FirestorePigeonFirebaseApp pigeonApp,
+  )   : _pointer = Pointer(path),
+        super(firestore, path, pigeonApp);
 
   final Pointer _pointer;
 

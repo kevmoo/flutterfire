@@ -1,1 +1,1 @@
-part of firebase_auth;
+part of '../firebase_auth.dart';

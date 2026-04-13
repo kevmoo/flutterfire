@@ -1,34 +1,25 @@
+part of cloud_firestore;
 // ignore_for_file: require_trailing_commas, unnecessary_lambdas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
 
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
-import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_query.dart'
     as query;
-import 'package:collection/collection.dart';
 
-import 'method_channel_aggregate_query.dart';
-import 'method_channel_firestore.dart';
-import 'method_channel_query_snapshot.dart';
-import 'utils/exception.dart';
-import 'utils/event_channel.dart';
 
 /// An implementation of [QueryPlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
 class MethodChannelQuery extends QueryPlatform {
   /// Create a [MethodChannelQuery] from a [path] and optional [parameters]
   MethodChannelQuery(
-    FirebaseFirestorePlatform firestore,
+    FirebaseFirestorePlatform _firestore,
     String path,
     this.pigeonApp, {
     Map<String, dynamic>? parameters,
     this.isCollectionGroupQuery = false,
   })  : _pointer = Pointer(path),
-        super(firestore, parameters);
+        super(_firestore, parameters);
 
   /// Flags whether the current query is for a collection group.
   @override
@@ -92,9 +83,7 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   QueryPlatform endBeforeDocument(
-    Iterable<dynamic> orders,
-    Iterable<dynamic> values,
-  ) {
+      Iterable<dynamic> orders, Iterable<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
       'endAt': null,
@@ -112,9 +101,8 @@ class MethodChannelQuery extends QueryPlatform {
 
   /// Fetch the documents for this query
   @override
-  Future<QuerySnapshotPlatform> get([
-    GetOptions options = const GetOptions(),
-  ]) async {
+  Future<QuerySnapshotPlatform> get(
+      [GetOptions options = const GetOptions()]) async {
     try {
       final PigeonQuerySnapshot result =
           await MethodChannelFirebaseFirestore.pigeonChannel.queryGet(
@@ -185,24 +173,27 @@ class MethodChannelQuery extends QueryPlatform {
                 .receiveGuardedBroadcastStream(
           onError: convertPlatformException,
         )
-                .listen((snapshot) {
-          final snapshotList = snapshot as List<Object?>;
-          // We force the types here of list because they are not automatically
-          // decoded by the pigeon generated code.
-          final List<PigeonDocumentSnapshot> documents =
-              (snapshotList[0]! as List)
-                  .map((e) => PigeonDocumentSnapshot.decode(e))
-                  .toList()
-                  .cast<PigeonDocumentSnapshot>();
-          final List<PigeonDocumentChange> changes = (snapshotList[1]! as List)
-              .map((e) => PigeonDocumentChange.decode(e))
-              .toList()
-              .cast<PigeonDocumentChange>();
-          final PigeonQuerySnapshot result = PigeonQuerySnapshot.decode(
-            [documents, changes, snapshotList[2]],
-          );
-          controller.add(MethodChannelQuerySnapshot(firestore, result));
-        }, onError: controller.addError);
+                .listen(
+          (snapshot) {
+            final snapshotList = snapshot as List<Object?>;
+            // We force the types here of list because they are not automatically
+            // decoded by the pigeon generated code.
+            final List<PigeonDocumentSnapshot> documents =
+                (snapshotList[0]! as List)
+                    .map((e) => PigeonDocumentSnapshot.decode(e))
+                    .toList()
+                    .cast<PigeonDocumentSnapshot>();
+            final List<PigeonDocumentChange> changes =
+                (snapshotList[1]! as List)
+                    .map((e) => PigeonDocumentChange.decode(e))
+                    .toList()
+                    .cast<PigeonDocumentChange>();
+            final PigeonQuerySnapshot result = PigeonQuerySnapshot.decode(
+                [documents, changes, snapshotList[2]]);
+            controller.add(MethodChannelQuerySnapshot(firestore, result));
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
         snapshotStreamSubscription?.cancel();
@@ -214,7 +205,9 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   QueryPlatform orderBy(Iterable<List<dynamic>> orders) {
-    return _copyWithParameters(<String, dynamic>{'orderBy': orders});
+    return _copyWithParameters(<String, dynamic>{
+      'orderBy': orders,
+    });
   }
 
   @override
@@ -236,9 +229,7 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   QueryPlatform startAtDocument(
-    Iterable<dynamic> orders,
-    Iterable<dynamic> values,
-  ) {
+      Iterable<dynamic> orders, Iterable<dynamic> values) {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
       'startAt': values,
@@ -256,12 +247,16 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   QueryPlatform where(Iterable<List<dynamic>> conditions) {
-    return _copyWithParameters(<String, dynamic>{'where': conditions});
+    return _copyWithParameters(<String, dynamic>{
+      'where': conditions,
+    });
   }
 
   @override
   QueryPlatform whereFilter(FilterPlatformInterface filter) {
-    return _copyWithParameters(<String, dynamic>{'filters': filter.toJson()});
+    return _copyWithParameters(<String, dynamic>{
+      'filters': filter.toJson(),
+    });
   }
 
   @override
@@ -271,7 +266,11 @@ class MethodChannelQuery extends QueryPlatform {
       _pigeonParameters,
       _pointer.path,
       pigeonApp,
-      [AggregateQuery(type: AggregateType.count)],
+      [
+        AggregateQuery(
+          type: AggregateType.count,
+        )
+      ],
       isCollectionGroupQuery,
     );
   }
@@ -346,17 +345,28 @@ class MethodChannelQuery extends QueryPlatform {
       _pigeonParameters,
       _pointer.path,
       pigeonApp,
-      fields.map((e) {
-        if (e is query.count) {
-          return AggregateQuery(type: AggregateType.count);
-        } else if (e is query.sum) {
-          return AggregateQuery(type: AggregateType.sum, field: e.field);
-        } else if (e is query.average) {
-          return AggregateQuery(type: AggregateType.average, field: e.field);
-        } else {
-          throw ArgumentError('Unsupported aggregate method ${e.runtimeType}');
-        }
-      }).toList(),
+      fields.map(
+        (e) {
+          if (e is query.count) {
+            return AggregateQuery(
+              type: AggregateType.count,
+            );
+          } else if (e is query.sum) {
+            return AggregateQuery(
+              type: AggregateType.sum,
+              field: e.field,
+            );
+          } else if (e is query.average) {
+            return AggregateQuery(
+              type: AggregateType.average,
+              field: e.field,
+            );
+          } else {
+            throw ArgumentError(
+                'Unsupported aggregate method ${e.runtimeType}');
+          }
+        },
+      ).toList(),
       isCollectionGroupQuery,
     );
   }
@@ -369,7 +379,12 @@ class MethodChannelQuery extends QueryPlatform {
       _pigeonParameters,
       _pointer.path,
       pigeonApp,
-      [AggregateQuery(type: AggregateType.sum, field: field)],
+      [
+        AggregateQuery(
+          type: AggregateType.sum,
+          field: field,
+        )
+      ],
       isCollectionGroupQuery,
     );
   }
@@ -382,7 +397,12 @@ class MethodChannelQuery extends QueryPlatform {
       _pigeonParameters,
       _pointer.path,
       pigeonApp,
-      [AggregateQuery(type: AggregateType.average, field: field)],
+      [
+        AggregateQuery(
+          type: AggregateType.average,
+          field: field,
+        )
+      ],
       isCollectionGroupQuery,
     );
   }

@@ -1,13 +1,8 @@
+part of cloud_functions;
 // ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-import 'package:cloud_functions_platform_interface/src/pigeon/messages.pigeon.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-import '../../cloud_functions_platform_interface.dart';
-import 'method_channel_https_callable.dart';
 
 /// Method Channel delegate for [FirebaseFunctionsPlatform].
 class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
@@ -36,28 +31,20 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
   static final pigeonChannel = CloudFunctionsHostApi();
 
   @override
-  FirebaseFunctionsPlatform delegateFor({
-    FirebaseApp? app,
-    required String region,
-  }) {
+  FirebaseFunctionsPlatform delegateFor(
+      {FirebaseApp? app, required String region}) {
     return MethodChannelFirebaseFunctions(app: app, region: region);
   }
 
   @override
   HttpsCallablePlatform httpsCallable(
-    String? origin,
-    String name,
-    HttpsCallableOptions options,
-  ) {
+      String? origin, String name, HttpsCallableOptions options) {
     return MethodChannelHttpsCallable(this, origin, name, options, null);
   }
 
   @override
   HttpsCallablePlatform httpsCallableWithUri(
-    String? origin,
-    Uri uri,
-    HttpsCallableOptions options,
-  ) {
+      String? origin, Uri uri, HttpsCallableOptions options) {
     return MethodChannelHttpsCallable(this, origin, null, options, uri);
   }
 }

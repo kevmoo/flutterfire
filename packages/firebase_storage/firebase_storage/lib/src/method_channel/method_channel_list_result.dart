@@ -1,10 +1,8 @@
+part of firebase_storage;
 // ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
-import '../../firebase_storage_platform_interface.dart';
-import 'method_channel_reference.dart';
 
 /// Implementation for a [ListResultPlatform].
 class MethodChannelListResult extends ListResultPlatform {
@@ -18,9 +16,9 @@ class MethodChannelListResult extends ListResultPlatform {
         _prefixes = prefixes ?? [],
         super(storage, nextPageToken);
 
-  final List<String> _items;
+  List<String> _items;
 
-  final List<String> _prefixes;
+  List<String> _prefixes;
 
   @override
   List<ReferencePlatform> get items {

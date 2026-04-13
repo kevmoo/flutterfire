@@ -1,24 +1,19 @@
+part of firebase_database;
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
-import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
-    hide DatabaseReferencePlatform;
-
-import 'method_channel_data_snapshot.dart';
-import 'method_channel_database.dart';
-import 'method_channel_database_event.dart';
-import 'method_channel_database_reference.dart';
-import 'utils/exception.dart';
-import 'utils/event_channel.dart';
+hide DatabaseReferencePlatform;
 
 final _api = FirebaseDatabaseHostApi();
 
 /// Represents a query over the data at a particular location.
 class MethodChannelQuery extends QueryPlatform {
   /// Create a [MethodChannelQuery] from [pathComponents]
-  MethodChannelQuery({required super.database, required this.pathComponents});
+  MethodChannelQuery({
+    required DatabasePlatform database,
+    required this.pathComponents,
+  }) : super(database: database);
 
   static Map<String, Stream<DatabaseEventPlatform>> observers = {};
 
@@ -48,13 +43,14 @@ class MethodChannelQuery extends QueryPlatform {
     // Create the EventChannel on native using Pigeon.
     final channelName = await _api.queryObserve(
       _pigeonApp,
-      QueryRequest(path: path, modifiers: modifierList),
+      QueryRequest(
+        path: path,
+        modifiers: modifierList,
+      ),
     );
 
     yield* EventChannel(channelName).receiveGuardedBroadcastStream(
-      arguments: <String, Object?>{
-        'eventType': eventTypeToString(eventType),
-      },
+      arguments: <String, Object?>{'eventType': eventTypeToString(eventType)},
       onError: convertPlatformException,
     ).map(
       (event) =>
@@ -68,16 +64,22 @@ class MethodChannelQuery extends QueryPlatform {
     try {
       final result = await _api.queryGet(
         _pigeonApp,
-        QueryRequest(path: path, modifiers: modifiers.toList()),
+        QueryRequest(
+          path: path,
+          modifiers: modifiers.toList(),
+        ),
       );
       final snapshotData = result['snapshot'];
       if (snapshotData == null) {
-        return MethodChannelDataSnapshot(ref, <String, dynamic>{
-          'key': ref.key,
-          'value': null,
-          'priority': null,
-          'childKeys': [],
-        });
+        return MethodChannelDataSnapshot(
+          ref,
+          <String, dynamic>{
+            'key': ref.key,
+            'value': null,
+            'priority': null,
+            'childKeys': [],
+          },
+        );
       }
       return MethodChannelDataSnapshot(
         ref,
@@ -106,7 +108,11 @@ class MethodChannelQuery extends QueryPlatform {
     try {
       await _api.queryKeepSynced(
         _pigeonApp,
-        QueryRequest(path: path, modifiers: modifiers.toList(), value: value),
+        QueryRequest(
+          path: path,
+          modifiers: modifiers.toList(),
+          value: value,
+        ),
       );
     } catch (e, s) {
       convertPlatformException(e, s);

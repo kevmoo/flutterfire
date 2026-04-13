@@ -8,9 +8,16 @@ import 'package:pigeon/pigeon.dart';
 
 @Configure(
   Options(
-    dartOut: 'lib/src/pigeon/messages.pigeon.dart',
+    dartPackageName: 'firebase_auth',
+    dartOptions: DartOptions(
+      extraImports: [
+        'package:flutter/foundation.dart',
+        'package:flutter/services.dart',
+      ],
+    ),
+    dartOut: '../firebase_auth/lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
-    dartTestOut: 'test/pigeon/test_api.dart',
+    dartTestOut: '../firebase_auth/lib/src/pigeon/test_api.dart',
     javaOut:
         '../firebase_auth/android/src/main/java/io/flutter/plugins/firebase/auth/GeneratedAndroidFirebaseAuth.java',
     javaOptions: JavaOptions(

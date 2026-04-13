@@ -1,21 +1,14 @@
+part of firebase_analytics;
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-import 'dart:async';
-
-import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
-import 'package:firebase_analytics_platform_interface/src/pigeon/messages.pigeon.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-import 'utils/exception.dart';
 
 /// The method channel implementation of [FirebaseAnalyticsPlatform].
 class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   /// Creates a new [MethodChannelFirebaseAnalytics] instance with an [app] and/or
   /// [region].
   MethodChannelFirebaseAnalytics({required FirebaseApp app})
-    : super(appInstance: app);
+      : super(appInstance: app);
 
   /// Internal stub class initializer.
   ///
@@ -30,9 +23,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     return MethodChannelFirebaseAnalytics._();
   }
 
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_analytics',
-  );
+  static const MethodChannel channel =
+      MethodChannel('plugins.flutter.io/firebase_analytics');
 
   @override
   FirebaseAnalyticsPlatform delegateFor({
@@ -85,11 +77,15 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }) async {
     try {
       return _api.setConsent(<String, bool?>{
-        'adStorageConsentGranted': ?adStorageConsentGranted,
-        'analyticsStorageConsentGranted': ?analyticsStorageConsentGranted,
-        'adPersonalizationSignalsConsentGranted':
-            ?adPersonalizationSignalsConsentGranted,
-        'adUserDataConsentGranted': ?adUserDataConsentGranted,
+        if (adStorageConsentGranted != null)
+          'adStorageConsentGranted': adStorageConsentGranted,
+        if (analyticsStorageConsentGranted != null)
+          'analyticsStorageConsentGranted': analyticsStorageConsentGranted,
+        if (adPersonalizationSignalsConsentGranted != null)
+          'adPersonalizationSignalsConsentGranted':
+              adPersonalizationSignalsConsentGranted,
+        if (adUserDataConsentGranted != null)
+          'adUserDataConsentGranted': adUserDataConsentGranted,
       });
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -117,7 +113,10 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  Future<void> setUserId({String? id, AnalyticsCallOptions? callOptions}) {
+  Future<void> setUserId({
+    String? id,
+    AnalyticsCallOptions? callOptions,
+  }) {
     try {
       return _api.setUserId(id);
     } catch (e, s) {
@@ -175,19 +174,23 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     String? hashedPhoneNumber,
   }) {
     try {
-      return _api.initiateOnDeviceConversionMeasurement(<String, String?>{
-        'emailAddress': emailAddress,
-        'phoneNumber': phoneNumber,
-        'hashedEmailAddress': hashedEmailAddress,
-        'hashedPhoneNumber': hashedPhoneNumber,
-      });
+      return _api.initiateOnDeviceConversionMeasurement(
+        <String, String?>{
+          'emailAddress': emailAddress,
+          'phoneNumber': phoneNumber,
+          'hashedEmailAddress': hashedEmailAddress,
+          'hashedPhoneNumber': hashedPhoneNumber,
+        },
+      );
     } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
 
   @override
-  Future<void> logTransaction({required String transactionId}) {
+  Future<void> logTransaction({
+    required String transactionId,
+  }) {
     try {
       return _api.logTransaction(transactionId);
     } catch (e, s) {

@@ -1,9 +1,8 @@
+part of firebase_app_check;
 // ignore_for_file: require_trailing_commas
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-part of '../firebase_app_check.dart';
 
 class FirebaseAppCheck extends FirebasePluginPlatform {
   static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};

@@ -1,3 +1,4 @@
+part of cloud_firestore;
 // ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
@@ -5,16 +6,9 @@
 
 // TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
 // ignore: unnecessary_import
-import 'dart:core';
 
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_field_value.dart';
-import 'package:firebase_core/firebase_core.dart';
 // TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
 // ignore: unnecessary_import
-
-import '../method_channel_firestore.dart';
-import '../method_channel_query.dart';
 
 /// The codec utilized to encode data back and forth between
 /// the Dart application and the native platform.
@@ -148,9 +142,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         final FirebaseApp app = Firebase.app(appName);
         final FirebaseFirestorePlatform firestore =
             FirebaseFirestorePlatform.instanceFor(
-          app: app,
-          databaseId: databaseId,
-        );
+                app: app, databaseId: databaseId);
         return firestore.doc(path);
       case _kVectorValue:
         final List<Object?> vector = (readValue(buffer)!) as List<Object?>;

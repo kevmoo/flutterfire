@@ -33,30 +33,36 @@ FlutterError CreateConnectionError(const std::string channel_name) {
 
 // AnalyticsEvent
 
-AnalyticsEvent::AnalyticsEvent(const std::string& name) : name_(name) {}
+AnalyticsEvent::AnalyticsEvent(const std::string& name)
+ : name_(name) {}
 
-AnalyticsEvent::AnalyticsEvent(const std::string& name,
-                               const EncodableMap* parameters)
-    : name_(name),
-      parameters_(parameters ? std::optional<EncodableMap>(*parameters)
-                             : std::nullopt) {}
+AnalyticsEvent::AnalyticsEvent(
+  const std::string& name,
+  const EncodableMap* parameters)
+ : name_(name),
+    parameters_(parameters ? std::optional<EncodableMap>(*parameters) : std::nullopt) {}
 
-const std::string& AnalyticsEvent::name() const { return name_; }
+const std::string& AnalyticsEvent::name() const {
+  return name_;
+}
 
-void AnalyticsEvent::set_name(std::string_view value_arg) { name_ = value_arg; }
+void AnalyticsEvent::set_name(std::string_view value_arg) {
+  name_ = value_arg;
+}
+
 
 const EncodableMap* AnalyticsEvent::parameters() const {
   return parameters_ ? &(*parameters_) : nullptr;
 }
 
 void AnalyticsEvent::set_parameters(const EncodableMap* value_arg) {
-  parameters_ =
-      value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
+  parameters_ = value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
 }
 
 void AnalyticsEvent::set_parameters(const EncodableMap& value_arg) {
   parameters_ = value_arg;
 }
+
 
 EncodableList AnalyticsEvent::ToEncodableList() const {
   EncodableList list;
@@ -67,7 +73,8 @@ EncodableList AnalyticsEvent::ToEncodableList() const {
 }
 
 AnalyticsEvent AnalyticsEvent::FromEncodableList(const EncodableList& list) {
-  AnalyticsEvent decoded(std::get<std::string>(list[0]));
+  AnalyticsEvent decoded(
+    std::get<std::string>(list[0]));
   auto& encodable_parameters = list[1];
   if (!encodable_parameters.IsNull()) {
     decoded.set_parameters(std::get<EncodableMap>(encodable_parameters));
@@ -75,30 +82,28 @@ AnalyticsEvent AnalyticsEvent::FromEncodableList(const EncodableList& list) {
   return decoded;
 }
 
+
 PigeonInternalCodecSerializer::PigeonInternalCodecSerializer() {}
 
 EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
-    uint8_t type, flutter::ByteStreamReader* stream) const {
+  uint8_t type,
+  flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 129: {
-      return CustomEncodableValue(AnalyticsEvent::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(AnalyticsEvent::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     default:
       return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
-  }
+    }
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
-    const EncodableValue& value, flutter::ByteStreamWriter* stream) const {
-  if (const CustomEncodableValue* custom_value =
-          std::get_if<CustomEncodableValue>(&value)) {
+  const EncodableValue& value,
+  flutter::ByteStreamWriter* stream) const {
+  if (const CustomEncodableValue* custom_value = std::get_if<CustomEncodableValue>(&value)) {
     if (custom_value->type() == typeid(AnalyticsEvent)) {
       stream->WriteByte(129);
-      WriteValue(
-          EncodableValue(
-              std::any_cast<AnalyticsEvent>(*custom_value).ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<AnalyticsEvent>(*custom_value).ToEncodableList()), stream);
       return;
     }
   }
@@ -107,476 +112,368 @@ void PigeonInternalCodecSerializer::WriteValue(
 
 /// The codec used by FirebaseAnalyticsHostApi.
 const flutter::StandardMessageCodec& FirebaseAnalyticsHostApi::GetCodec() {
-  return flutter::StandardMessageCodec::GetInstance(
-      &PigeonInternalCodecSerializer::GetInstance());
+  return flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `FirebaseAnalyticsHostApi` to handle messages through
-// the `binary_messenger`.
-void FirebaseAnalyticsHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
-                                     FirebaseAnalyticsHostApi* api) {
+// Sets up an instance of `FirebaseAnalyticsHostApi` to handle messages through the `binary_messenger`.
+void FirebaseAnalyticsHostApi::SetUp(
+  flutter::BinaryMessenger* binary_messenger,
+  FirebaseAnalyticsHostApi* api) {
   FirebaseAnalyticsHostApi::SetUp(binary_messenger, api, "");
 }
 
 void FirebaseAnalyticsHostApi::SetUp(
-    flutter::BinaryMessenger* binary_messenger, FirebaseAnalyticsHostApi* api,
-    const std::string& message_channel_suffix) {
-  const std::string prepended_suffix =
-      message_channel_suffix.length() > 0
-          ? std::string(".") + message_channel_suffix
-          : "";
+  flutter::BinaryMessenger* binary_messenger,
+  FirebaseAnalyticsHostApi* api,
+  const std::string& message_channel_suffix) {
+  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.logEvent" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logEvent" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_event_arg = args.at(0);
-              if (encodable_event_arg.IsNull()) {
-                reply(WrapError("event_arg unexpectedly null."));
-                return;
-              }
-              const auto& event_arg =
-                  std::get<EncodableMap>(encodable_event_arg);
-              api->LogEvent(event_arg,
-                            [reply](std::optional<FlutterError>&& output) {
-                              if (output.has_value()) {
-                                reply(WrapError(output.value()));
-                                return;
-                              }
-                              EncodableList wrapped;
-                              wrapped.push_back(EncodableValue());
-                              reply(EncodableValue(std::move(wrapped)));
-                            });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_event_arg = args.at(0);
+          if (encodable_event_arg.IsNull()) {
+            reply(WrapError("event_arg unexpectedly null."));
+            return;
+          }
+          const auto& event_arg = std::get<EncodableMap>(encodable_event_arg);
+          api->LogEvent(event_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.setUserId" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserId" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_user_id_arg = args.at(0);
-              const auto* user_id_arg =
-                  std::get_if<std::string>(&encodable_user_id_arg);
-              api->SetUserId(user_id_arg,
-                             [reply](std::optional<FlutterError>&& output) {
-                               if (output.has_value()) {
-                                 reply(WrapError(output.value()));
-                                 return;
-                               }
-                               EncodableList wrapped;
-                               wrapped.push_back(EncodableValue());
-                               reply(EncodableValue(std::move(wrapped)));
-                             });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_user_id_arg = args.at(0);
+          const auto* user_id_arg = std::get_if<std::string>(&encodable_user_id_arg);
+          api->SetUserId(user_id_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.setUserProperty" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserProperty" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_name_arg = args.at(0);
-              if (encodable_name_arg.IsNull()) {
-                reply(WrapError("name_arg unexpectedly null."));
-                return;
-              }
-              const auto& name_arg = std::get<std::string>(encodable_name_arg);
-              const auto& encodable_value_arg = args.at(1);
-              const auto* value_arg =
-                  std::get_if<std::string>(&encodable_value_arg);
-              api->SetUserProperty(
-                  name_arg, value_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_name_arg = args.at(0);
+          if (encodable_name_arg.IsNull()) {
+            reply(WrapError("name_arg unexpectedly null."));
+            return;
+          }
+          const auto& name_arg = std::get<std::string>(encodable_name_arg);
+          const auto& encodable_value_arg = args.at(1);
+          const auto* value_arg = std::get_if<std::string>(&encodable_value_arg);
+          api->SetUserProperty(name_arg, value_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.setAnalyticsCollectionEnabled" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setAnalyticsCollectionEnabled" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_enabled_arg = args.at(0);
-              if (encodable_enabled_arg.IsNull()) {
-                reply(WrapError("enabled_arg unexpectedly null."));
-                return;
-              }
-              const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
-              api->SetAnalyticsCollectionEnabled(
-                  enabled_arg, [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_enabled_arg = args.at(0);
+          if (encodable_enabled_arg.IsNull()) {
+            reply(WrapError("enabled_arg unexpectedly null."));
+            return;
+          }
+          const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
+          api->SetAnalyticsCollectionEnabled(enabled_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.resetAnalyticsData" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.resetAnalyticsData" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              api->ResetAnalyticsData(
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          api->ResetAnalyticsData([reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.setSessionTimeoutDuration" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setSessionTimeoutDuration" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_timeout_arg = args.at(0);
-              if (encodable_timeout_arg.IsNull()) {
-                reply(WrapError("timeout_arg unexpectedly null."));
-                return;
-              }
-              const int64_t timeout_arg = encodable_timeout_arg.LongValue();
-              api->SetSessionTimeoutDuration(
-                  timeout_arg, [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_timeout_arg = args.at(0);
+          if (encodable_timeout_arg.IsNull()) {
+            reply(WrapError("timeout_arg unexpectedly null."));
+            return;
+          }
+          const int64_t timeout_arg = encodable_timeout_arg.LongValue();
+          api->SetSessionTimeoutDuration(timeout_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.setConsent" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setConsent" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_consent_arg = args.at(0);
-              if (encodable_consent_arg.IsNull()) {
-                reply(WrapError("consent_arg unexpectedly null."));
-                return;
-              }
-              const auto& consent_arg =
-                  std::get<EncodableMap>(encodable_consent_arg);
-              api->SetConsent(consent_arg,
-                              [reply](std::optional<FlutterError>&& output) {
-                                if (output.has_value()) {
-                                  reply(WrapError(output.value()));
-                                  return;
-                                }
-                                EncodableList wrapped;
-                                wrapped.push_back(EncodableValue());
-                                reply(EncodableValue(std::move(wrapped)));
-                              });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_consent_arg = args.at(0);
+          if (encodable_consent_arg.IsNull()) {
+            reply(WrapError("consent_arg unexpectedly null."));
+            return;
+          }
+          const auto& consent_arg = std::get<EncodableMap>(encodable_consent_arg);
+          api->SetConsent(consent_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.setDefaultEventParameters" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setDefaultEventParameters" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_parameters_arg = args.at(0);
-              const auto* parameters_arg =
-                  std::get_if<EncodableMap>(&encodable_parameters_arg);
-              api->SetDefaultEventParameters(
-                  parameters_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_parameters_arg = args.at(0);
+          const auto* parameters_arg = std::get_if<EncodableMap>(&encodable_parameters_arg);
+          api->SetDefaultEventParameters(parameters_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.getAppInstanceId" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getAppInstanceId" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              api->GetAppInstanceId(
-                  [reply](ErrorOr<std::optional<std::string>>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    auto output_optional = std::move(output).TakeValue();
-                    if (output_optional) {
-                      wrapped.push_back(
-                          EncodableValue(std::move(output_optional).value()));
-                    } else {
-                      wrapped.push_back(EncodableValue());
-                    }
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          api->GetAppInstanceId([reply](ErrorOr<std::optional<std::string>>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            auto output_optional = std::move(output).TakeValue();
+            if (output_optional) {
+              wrapped.push_back(EncodableValue(std::move(output_optional).value()));
+            } else {
+              wrapped.push_back(EncodableValue());
+            }
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.getSessionId" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getSessionId" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              api->GetSessionId(
-                  [reply](ErrorOr<std::optional<int64_t>>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    auto output_optional = std::move(output).TakeValue();
-                    if (output_optional) {
-                      wrapped.push_back(
-                          EncodableValue(std::move(output_optional).value()));
-                    } else {
-                      wrapped.push_back(EncodableValue());
-                    }
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          api->GetSessionId([reply](ErrorOr<std::optional<int64_t>>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            auto output_optional = std::move(output).TakeValue();
+            if (output_optional) {
+              wrapped.push_back(EncodableValue(std::move(output_optional).value()));
+            } else {
+              wrapped.push_back(EncodableValue());
+            }
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurement" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurement" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_arguments_arg = args.at(0);
-              if (encodable_arguments_arg.IsNull()) {
-                reply(WrapError("arguments_arg unexpectedly null."));
-                return;
-              }
-              const auto& arguments_arg =
-                  std::get<EncodableMap>(encodable_arguments_arg);
-              api->InitiateOnDeviceConversionMeasurement(
-                  arguments_arg, [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_arguments_arg = args.at(0);
+          if (encodable_arguments_arg.IsNull()) {
+            reply(WrapError("arguments_arg unexpectedly null."));
+            return;
+          }
+          const auto& arguments_arg = std::get<EncodableMap>(encodable_arguments_arg);
+          api->InitiateOnDeviceConversionMeasurement(arguments_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_analytics_platform_interface."
-        "FirebaseAnalyticsHostApi.logTransaction" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_transaction_id_arg = args.at(0);
-              if (encodable_transaction_id_arg.IsNull()) {
-                reply(WrapError("transaction_id_arg unexpectedly null."));
-                return;
-              }
-              const auto& transaction_id_arg =
-                  std::get<std::string>(encodable_transaction_id_arg);
-              api->LogTransaction(
-                  transaction_id_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_transaction_id_arg = args.at(0);
+          if (encodable_transaction_id_arg.IsNull()) {
+            reply(WrapError("transaction_id_arg unexpectedly null."));
+            return;
+          }
+          const auto& transaction_id_arg = std::get<std::string>(encodable_transaction_id_arg);
+          api->LogTransaction(transaction_id_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
 }
 
-EncodableValue FirebaseAnalyticsHostApi::WrapError(
-    std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
+EncodableValue FirebaseAnalyticsHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
 }
 
 EncodableValue FirebaseAnalyticsHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
 }
 
 }  // namespace firebase_analytics_windows

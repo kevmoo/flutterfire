@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of firebase_core;
+part of '../firebase_core.dart';
 
 /// Extension for [FirebaseOptions] to handle Pigeon-specific logic.
 extension FirebaseOptionsExtension on FirebaseOptions {

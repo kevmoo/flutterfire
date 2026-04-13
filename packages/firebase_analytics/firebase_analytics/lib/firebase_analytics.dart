@@ -2,16 +2,23 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+library firebase_analytics;
+
+import 'dart:async';
+
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    show FirebasePluginPlatform;
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 export 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart'
     show AnalyticsEventItem, AnalyticsCallOptions;
-
-export 'observer.dart';
+export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show FirebaseException;
 
 part 'src/firebase_analytics.dart';
+part 'src/method_channel/method_channel_firebase_analytics.dart';
+part 'src/method_channel/utils/exception.dart';
+part 'src/pigeon/messages.pigeon.dart';
+part 'src/pigeon/test_api.dart';

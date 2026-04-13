@@ -6,8 +6,8 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: 'lib/src/pigeon/messages.pigeon.dart',
-    dartTestOut: 'test/pigeon/test_api.dart',
+    dartOut: '../firebase_database/lib/src/pigeon/messages.pigeon.dart',
+    dartTestOut: '../firebase_database/lib/src/pigeon/test_api.dart',
     dartPackageName: 'firebase_database_platform_interface',
     kotlinOut:
         '../firebase_database/android/src/main/kotlin/io/flutter/plugins/firebase/database/GeneratedAndroidFirebaseDatabase.g.kt',

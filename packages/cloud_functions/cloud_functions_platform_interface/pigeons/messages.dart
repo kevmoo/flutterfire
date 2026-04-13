@@ -6,8 +6,8 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: 'lib/src/pigeon/messages.pigeon.dart',
-    dartTestOut: 'test/pigeon/test_api.dart',
+    dartOut: '../cloud_functions/lib/src/pigeon/messages.pigeon.dart',
+    dartTestOut: '../cloud_functions/lib/src/pigeon/test_api.dart',
     dartPackageName: 'cloud_functions_platform_interface',
     kotlinOut:
         '../cloud_functions/android/src/main/kotlin/io/flutter/plugins/firebase/functions/GeneratedAndroidCloudFunctions.g.kt',

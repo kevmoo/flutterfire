@@ -27,12 +27,13 @@ final class PigeonError: Error {
   }
 
   var localizedDescription: String {
-    "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
+    return
+      "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
   }
 }
 
 private func wrapResult(_ result: Any?) -> [Any?] {
-  [result]
+  return [result]
 }
 
 private func wrapError(_ error: Any) -> [Any?] {
@@ -58,7 +59,7 @@ private func wrapError(_ error: Any) -> [Any?] {
 }
 
 private func isNullish(_ value: Any?) -> Bool {
-  value is NSNull || value == nil
+  return value is NSNull || value == nil
 }
 
 private func nilOrValue<T>(_ value: Any?) -> T? {
@@ -102,22 +103,19 @@ func deepEqualsFirebaseAnalyticsMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
     return true
 
   default:
-    // Any other type shouldn't be able to be used with pigeon. File an issue if you find this to be
-    // untrue.
+    // Any other type shouldn't be able to be used with pigeon. File an issue if you find this to be untrue.
     return false
   }
 }
 
 func deepHashFirebaseAnalyticsMessages(value: Any?, hasher: inout Hasher) {
   if let valueList = value as? [AnyHashable] {
-    for item in valueList {
-      deepHashFirebaseAnalyticsMessages(value: item, hasher: &hasher)
-    }
-    return
+     for item in valueList { deepHashFirebaseAnalyticsMessages(value: item, hasher: &hasher) }
+     return
   }
 
   if let valueDict = value as? [AnyHashable: AnyHashable] {
-    for key in valueDict.keys {
+    for key in valueDict.keys { 
       hasher.combine(key)
       deepHashFirebaseAnalyticsMessages(value: valueDict[key]!, hasher: &hasher)
     }
@@ -131,10 +129,13 @@ func deepHashFirebaseAnalyticsMessages(value: Any?, hasher: inout Hasher) {
   return hasher.combine(String(describing: value))
 }
 
+    
+
 /// Generated class from Pigeon that represents data sent in messages.
 struct AnalyticsEvent: Hashable {
   var name: String
-  var parameters: [String?: Any?]?
+  var parameters: [String?: Any?]? = nil
+
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> AnalyticsEvent? {
@@ -146,18 +147,14 @@ struct AnalyticsEvent: Hashable {
       parameters: parameters
     )
   }
-
   func toList() -> [Any?] {
-    [
+    return [
       name,
       parameters,
     ]
   }
-
   static func == (lhs: AnalyticsEvent, rhs: AnalyticsEvent) -> Bool {
-    deepEqualsFirebaseAnalyticsMessages(lhs.toList(), rhs.toList())
-  }
-
+    return deepEqualsFirebaseAnalyticsMessages(lhs.toList(), rhs.toList())  }
   func hash(into hasher: inout Hasher) {
     deepHashFirebaseAnalyticsMessages(value: toList(), hasher: &hasher)
   }
@@ -167,7 +164,7 @@ private class FirebaseAnalyticsMessagesPigeonCodecReader: FlutterStandardReader 
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
     case 129:
-      return AnalyticsEvent.fromList(readValue() as! [Any?])
+      return AnalyticsEvent.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -187,59 +184,43 @@ private class FirebaseAnalyticsMessagesPigeonCodecWriter: FlutterStandardWriter 
 
 private class FirebaseAnalyticsMessagesPigeonCodecReaderWriter: FlutterStandardReaderWriter {
   override func reader(with data: Data) -> FlutterStandardReader {
-    FirebaseAnalyticsMessagesPigeonCodecReader(data: data)
+    return FirebaseAnalyticsMessagesPigeonCodecReader(data: data)
   }
 
   override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-    FirebaseAnalyticsMessagesPigeonCodecWriter(data: data)
+    return FirebaseAnalyticsMessagesPigeonCodecWriter(data: data)
   }
 }
 
 class FirebaseAnalyticsMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
-  static let shared =
-    FirebaseAnalyticsMessagesPigeonCodec(
-      readerWriter: FirebaseAnalyticsMessagesPigeonCodecReaderWriter()
-    )
+  static let shared = FirebaseAnalyticsMessagesPigeonCodec(readerWriter: FirebaseAnalyticsMessagesPigeonCodecReaderWriter())
 }
+
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseAnalyticsHostApi {
   func logEvent(event: [String: Any?], completion: @escaping (Result<Void, Error>) -> Void)
   func setUserId(userId: String?, completion: @escaping (Result<Void, Error>) -> Void)
-  func setUserProperty(name: String, value: String?,
-                       completion: @escaping (Result<Void, Error>) -> Void)
-  func setAnalyticsCollectionEnabled(enabled: Bool,
-                                     completion: @escaping (Result<Void, Error>) -> Void)
+  func setUserProperty(name: String, value: String?, completion: @escaping (Result<Void, Error>) -> Void)
+  func setAnalyticsCollectionEnabled(enabled: Bool, completion: @escaping (Result<Void, Error>) -> Void)
   func resetAnalyticsData(completion: @escaping (Result<Void, Error>) -> Void)
-  func setSessionTimeoutDuration(timeout: Int64,
-                                 completion: @escaping (Result<Void, Error>) -> Void)
+  func setSessionTimeoutDuration(timeout: Int64, completion: @escaping (Result<Void, Error>) -> Void)
   func setConsent(consent: [String: Bool?], completion: @escaping (Result<Void, Error>) -> Void)
-  func setDefaultEventParameters(parameters: [String: Any?]?,
-                                 completion: @escaping (Result<Void, Error>) -> Void)
+  func setDefaultEventParameters(parameters: [String: Any?]?, completion: @escaping (Result<Void, Error>) -> Void)
   func getAppInstanceId(completion: @escaping (Result<String?, Error>) -> Void)
   func getSessionId(completion: @escaping (Result<Int64?, Error>) -> Void)
-  func initiateOnDeviceConversionMeasurement(arguments: [String: String?],
-                                             completion: @escaping (Result<Void, Error>) -> Void)
+  func initiateOnDeviceConversionMeasurement(arguments: [String: String?], completion: @escaping (Result<Void, Error>) -> Void)
   func logTransaction(transactionId: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseAnalyticsHostApiSetup {
-  static var codec: FlutterStandardMessageCodec {
-    FirebaseAnalyticsMessagesPigeonCodec.shared
-  }
-
-  /// Sets up an instance of `FirebaseAnalyticsHostApi` to handle messages through the
-  /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAnalyticsHostApi?,
-                    messageChannelSuffix: String = "") {
+  static var codec: FlutterStandardMessageCodec { FirebaseAnalyticsMessagesPigeonCodec.shared }
+  /// Sets up an instance of `FirebaseAnalyticsHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseAnalyticsHostApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let logEventChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logEvent\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let logEventChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logEvent\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       logEventChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let eventArg = args[0] as! [String: Any?]
@@ -247,7 +228,7 @@ class FirebaseAnalyticsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -255,12 +236,8 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       logEventChannel.setMessageHandler(nil)
     }
-    let setUserIdChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserId\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let setUserIdChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserId\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       setUserIdChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let userIdArg: String? = nilOrValue(args[0])
@@ -268,7 +245,7 @@ class FirebaseAnalyticsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -276,12 +253,8 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       setUserIdChannel.setMessageHandler(nil)
     }
-    let setUserPropertyChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserProperty\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let setUserPropertyChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setUserProperty\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       setUserPropertyChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let nameArg = args[0] as! String
@@ -290,7 +263,7 @@ class FirebaseAnalyticsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -298,12 +271,8 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       setUserPropertyChannel.setMessageHandler(nil)
     }
-    let setAnalyticsCollectionEnabledChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setAnalyticsCollectionEnabled\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let setAnalyticsCollectionEnabledChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setAnalyticsCollectionEnabled\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       setAnalyticsCollectionEnabledChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let enabledArg = args[0] as! Bool
@@ -311,7 +280,7 @@ class FirebaseAnalyticsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -319,18 +288,14 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       setAnalyticsCollectionEnabledChannel.setMessageHandler(nil)
     }
-    let resetAnalyticsDataChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.resetAnalyticsData\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let resetAnalyticsDataChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.resetAnalyticsData\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       resetAnalyticsDataChannel.setMessageHandler { _, reply in
         api.resetAnalyticsData { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -338,12 +303,8 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       resetAnalyticsDataChannel.setMessageHandler(nil)
     }
-    let setSessionTimeoutDurationChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setSessionTimeoutDuration\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let setSessionTimeoutDurationChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setSessionTimeoutDuration\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       setSessionTimeoutDurationChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let timeoutArg = args[0] as! Int64
@@ -351,7 +312,7 @@ class FirebaseAnalyticsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -359,12 +320,8 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       setSessionTimeoutDurationChannel.setMessageHandler(nil)
     }
-    let setConsentChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setConsent\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let setConsentChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setConsent\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       setConsentChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let consentArg = args[0] as! [String: Bool?]
@@ -372,7 +329,7 @@ class FirebaseAnalyticsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -380,12 +337,8 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       setConsentChannel.setMessageHandler(nil)
     }
-    let setDefaultEventParametersChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setDefaultEventParameters\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let setDefaultEventParametersChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.setDefaultEventParameters\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       setDefaultEventParametersChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let parametersArg: [String: Any?]? = nilOrValue(args[0])
@@ -393,7 +346,7 @@ class FirebaseAnalyticsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -401,18 +354,14 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       setDefaultEventParametersChannel.setMessageHandler(nil)
     }
-    let getAppInstanceIdChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getAppInstanceId\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let getAppInstanceIdChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getAppInstanceId\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       getAppInstanceIdChannel.setMessageHandler { _, reply in
         api.getAppInstanceId { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -420,18 +369,14 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       getAppInstanceIdChannel.setMessageHandler(nil)
     }
-    let getSessionIdChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getSessionId\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let getSessionIdChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.getSessionId\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       getSessionIdChannel.setMessageHandler { _, reply in
         api.getSessionId { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -439,12 +384,8 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       getSessionIdChannel.setMessageHandler(nil)
     }
-    let initiateOnDeviceConversionMeasurementChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurement\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let initiateOnDeviceConversionMeasurementChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.initiateOnDeviceConversionMeasurement\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       initiateOnDeviceConversionMeasurementChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let argumentsArg = args[0] as! [String: String?]
@@ -452,7 +393,7 @@ class FirebaseAnalyticsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -460,12 +401,8 @@ class FirebaseAnalyticsHostApiSetup {
     } else {
       initiateOnDeviceConversionMeasurementChannel.setMessageHandler(nil)
     }
-    let logTransactionChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let logTransactionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_analytics_platform_interface.FirebaseAnalyticsHostApi.logTransaction\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       logTransactionChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let transactionIdArg = args[0] as! String
@@ -473,7 +410,7 @@ class FirebaseAnalyticsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }

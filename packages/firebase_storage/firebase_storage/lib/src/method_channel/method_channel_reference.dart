@@ -1,24 +1,15 @@
+part of firebase_storage;
 // ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
-
-import '../../firebase_storage_platform_interface.dart';
-import '../pigeon/messages.pigeon.dart';
-import 'method_channel_firebase_storage.dart';
-import 'method_channel_list_result.dart';
-import 'method_channel_task.dart';
-import 'utils/exception.dart';
-
 /// An implementation of [ReferencePlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
 class MethodChannelReference extends ReferencePlatform {
   /// Creates a [ReferencePlatform] that is implemented using [MethodChannel].
-  MethodChannelReference(super.storage, super.path);
+  MethodChannelReference(FirebaseStoragePlatform storage, String path)
+      : super(storage, path);
 
   /// FirebaseApp pigeon instance
   PigeonStorageFirebaseApp get pigeonFirebaseApp {
@@ -40,10 +31,8 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<void> delete() async {
     try {
-      await MethodChannelFirebaseStorage.pigeonChannel.referenceDelete(
-        pigeonFirebaseApp,
-        pigeonReference,
-      );
+      await MethodChannelFirebaseStorage.pigeonChannel
+          .referenceDelete(pigeonFirebaseApp, pigeonReference);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -62,13 +51,13 @@ class MethodChannelReference extends ReferencePlatform {
 
   /// Convert a [PigeonFullMetaData] to [FullMetadata]
   static FullMetadata convertMetadata(PigeonFullMetaData pigeonMetadata) {
-    Map<String, dynamic> metadata = <String, dynamic>{};
+    Map<String, dynamic> _metadata = <String, dynamic>{};
     pigeonMetadata.metadata?.forEach((key, value) {
       if (key != null) {
-        metadata[key] = value;
+        _metadata[key] = value;
       }
     });
-    return FullMetadata(metadata);
+    return FullMetadata(_metadata);
   }
 
   @override
@@ -96,8 +85,7 @@ class MethodChannelReference extends ReferencePlatform {
 
   /// Convert a [PigeonListResult] to [ListResultPlatform]
   ListResultPlatform convertListReference(
-    PigeonListResult pigeonReferenceList,
-  ) {
+      PigeonListResult pigeonReferenceList) {
     List<String> referencePaths = [];
     for (final reference in pigeonReferenceList.items) {
       referencePaths.add(reference!.fullPath);
@@ -142,11 +130,8 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<Uint8List?> getData(int maxSize) async {
     try {
-      return await MethodChannelFirebaseStorage.pigeonChannel.referenceGetData(
-        pigeonFirebaseApp,
-        pigeonReference,
-        maxSize,
-      );
+      return await MethodChannelFirebaseStorage.pigeonChannel
+          .referenceGetData(pigeonFirebaseApp, pigeonReference, maxSize);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -161,8 +146,7 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   TaskPlatform putBlob(dynamic data, [SettableMetadata? metadata]) {
     throw UnimplementedError(
-      'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.',
-    );
+        'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.');
   }
 
   @override
@@ -172,20 +156,11 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  TaskPlatform putString(
-    String data,
-    PutStringFormat format, [
-    SettableMetadata? metadata,
-  ]) {
+  TaskPlatform putString(String data, PutStringFormat format,
+      [SettableMetadata? metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
     return MethodChannelPutStringTask(
-      handle,
-      storage,
-      fullPath,
-      data,
-      format,
-      metadata,
-    );
+        handle, storage, fullPath, data, format, metadata);
   }
 
   /// Convert a [SettableMetadata] to [PigeonSettableMetadata]
@@ -205,11 +180,8 @@ class MethodChannelReference extends ReferencePlatform {
     try {
       PigeonFullMetaData updatedMetaData = await MethodChannelFirebaseStorage
           .pigeonChannel
-          .referenceUpdateMetadata(
-        pigeonFirebaseApp,
-        pigeonReference,
-        convertToPigeonMetaData(metadata),
-      );
+          .referenceUpdateMetadata(pigeonFirebaseApp, pigeonReference,
+              convertToPigeonMetaData(metadata));
       return convertMetadata(updatedMetaData);
     } catch (e, stack) {
       convertPlatformException(e, stack);

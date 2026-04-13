@@ -6,8 +6,8 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: 'lib/src/pigeon/messages.pigeon.dart',
-    dartTestOut: 'test/pigeon/test_api.dart',
+    dartOut: '../firebase_analytics/lib/src/pigeon/messages.pigeon.dart',
+    dartTestOut: '../firebase_analytics/lib/src/pigeon/test_api.dart',
     dartPackageName: 'firebase_analytics_platform_interface',
     kotlinOut:
         '../firebase_analytics/android/src/main/kotlin/io/flutter/plugins/firebase/analytics/GeneratedAndroidFirebaseAnalytics.g.kt',

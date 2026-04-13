@@ -33,15 +33,20 @@ FlutterError CreateConnectionError(const std::string channel_name) {
 
 // HttpMetricOptions
 
-HttpMetricOptions::HttpMetricOptions(const std::string& url,
-                                     const HttpMethod& http_method)
-    : url_(url), http_method_(http_method) {}
+HttpMetricOptions::HttpMetricOptions(
+  const std::string& url,
+  const HttpMethod& http_method)
+ : url_(url),
+    http_method_(http_method) {}
 
-const std::string& HttpMetricOptions::url() const { return url_; }
+const std::string& HttpMetricOptions::url() const {
+  return url_;
+}
 
 void HttpMetricOptions::set_url(std::string_view value_arg) {
   url_ = value_arg;
 }
+
 
 const HttpMethod& HttpMetricOptions::http_method() const {
   return http_method_;
@@ -51,6 +56,7 @@ void HttpMetricOptions::set_http_method(const HttpMethod& value_arg) {
   http_method_ = value_arg;
 }
 
+
 EncodableList HttpMetricOptions::ToEncodableList() const {
   EncodableList list;
   list.reserve(2);
@@ -59,11 +65,10 @@ EncodableList HttpMetricOptions::ToEncodableList() const {
   return list;
 }
 
-HttpMetricOptions HttpMetricOptions::FromEncodableList(
-    const EncodableList& list) {
-  HttpMetricOptions decoded(std::get<std::string>(list[0]),
-                            std::any_cast<const HttpMethod&>(
-                                std::get<CustomEncodableValue>(list[1])));
+HttpMetricOptions HttpMetricOptions::FromEncodableList(const EncodableList& list) {
+  HttpMetricOptions decoded(
+    std::get<std::string>(list[0]),
+    std::any_cast<const HttpMethod&>(std::get<CustomEncodableValue>(list[1])));
   return decoded;
 }
 
@@ -72,130 +77,110 @@ HttpMetricOptions HttpMetricOptions::FromEncodableList(
 HttpMetricAttributes::HttpMetricAttributes() {}
 
 HttpMetricAttributes::HttpMetricAttributes(
-    const int64_t* http_response_code, const int64_t* request_payload_size,
-    const int64_t* response_payload_size,
-    const std::string* response_content_type, const EncodableMap* attributes)
-    : http_response_code_(http_response_code
-                              ? std::optional<int64_t>(*http_response_code)
-                              : std::nullopt),
-      request_payload_size_(request_payload_size
-                                ? std::optional<int64_t>(*request_payload_size)
-                                : std::nullopt),
-      response_payload_size_(
-          response_payload_size ? std::optional<int64_t>(*response_payload_size)
-                                : std::nullopt),
-      response_content_type_(response_content_type ? std::optional<std::string>(
-                                                         *response_content_type)
-                                                   : std::nullopt),
-      attributes_(attributes ? std::optional<EncodableMap>(*attributes)
-                             : std::nullopt) {}
+  const int64_t* http_response_code,
+  const int64_t* request_payload_size,
+  const int64_t* response_payload_size,
+  const std::string* response_content_type,
+  const EncodableMap* attributes)
+ : http_response_code_(http_response_code ? std::optional<int64_t>(*http_response_code) : std::nullopt),
+    request_payload_size_(request_payload_size ? std::optional<int64_t>(*request_payload_size) : std::nullopt),
+    response_payload_size_(response_payload_size ? std::optional<int64_t>(*response_payload_size) : std::nullopt),
+    response_content_type_(response_content_type ? std::optional<std::string>(*response_content_type) : std::nullopt),
+    attributes_(attributes ? std::optional<EncodableMap>(*attributes) : std::nullopt) {}
 
 const int64_t* HttpMetricAttributes::http_response_code() const {
   return http_response_code_ ? &(*http_response_code_) : nullptr;
 }
 
 void HttpMetricAttributes::set_http_response_code(const int64_t* value_arg) {
-  http_response_code_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  http_response_code_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void HttpMetricAttributes::set_http_response_code(int64_t value_arg) {
   http_response_code_ = value_arg;
 }
 
+
 const int64_t* HttpMetricAttributes::request_payload_size() const {
   return request_payload_size_ ? &(*request_payload_size_) : nullptr;
 }
 
 void HttpMetricAttributes::set_request_payload_size(const int64_t* value_arg) {
-  request_payload_size_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  request_payload_size_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void HttpMetricAttributes::set_request_payload_size(int64_t value_arg) {
   request_payload_size_ = value_arg;
 }
 
+
 const int64_t* HttpMetricAttributes::response_payload_size() const {
   return response_payload_size_ ? &(*response_payload_size_) : nullptr;
 }
 
 void HttpMetricAttributes::set_response_payload_size(const int64_t* value_arg) {
-  response_payload_size_ =
-      value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
+  response_payload_size_ = value_arg ? std::optional<int64_t>(*value_arg) : std::nullopt;
 }
 
 void HttpMetricAttributes::set_response_payload_size(int64_t value_arg) {
   response_payload_size_ = value_arg;
 }
 
+
 const std::string* HttpMetricAttributes::response_content_type() const {
   return response_content_type_ ? &(*response_content_type_) : nullptr;
 }
 
-void HttpMetricAttributes::set_response_content_type(
-    const std::string_view* value_arg) {
-  response_content_type_ =
-      value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
+void HttpMetricAttributes::set_response_content_type(const std::string_view* value_arg) {
+  response_content_type_ = value_arg ? std::optional<std::string>(*value_arg) : std::nullopt;
 }
 
-void HttpMetricAttributes::set_response_content_type(
-    std::string_view value_arg) {
+void HttpMetricAttributes::set_response_content_type(std::string_view value_arg) {
   response_content_type_ = value_arg;
 }
+
 
 const EncodableMap* HttpMetricAttributes::attributes() const {
   return attributes_ ? &(*attributes_) : nullptr;
 }
 
 void HttpMetricAttributes::set_attributes(const EncodableMap* value_arg) {
-  attributes_ =
-      value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
+  attributes_ = value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
 }
 
 void HttpMetricAttributes::set_attributes(const EncodableMap& value_arg) {
   attributes_ = value_arg;
 }
 
+
 EncodableList HttpMetricAttributes::ToEncodableList() const {
   EncodableList list;
   list.reserve(5);
-  list.push_back(http_response_code_ ? EncodableValue(*http_response_code_)
-                                     : EncodableValue());
-  list.push_back(request_payload_size_ ? EncodableValue(*request_payload_size_)
-                                       : EncodableValue());
-  list.push_back(response_payload_size_
-                     ? EncodableValue(*response_payload_size_)
-                     : EncodableValue());
-  list.push_back(response_content_type_
-                     ? EncodableValue(*response_content_type_)
-                     : EncodableValue());
+  list.push_back(http_response_code_ ? EncodableValue(*http_response_code_) : EncodableValue());
+  list.push_back(request_payload_size_ ? EncodableValue(*request_payload_size_) : EncodableValue());
+  list.push_back(response_payload_size_ ? EncodableValue(*response_payload_size_) : EncodableValue());
+  list.push_back(response_content_type_ ? EncodableValue(*response_content_type_) : EncodableValue());
   list.push_back(attributes_ ? EncodableValue(*attributes_) : EncodableValue());
   return list;
 }
 
-HttpMetricAttributes HttpMetricAttributes::FromEncodableList(
-    const EncodableList& list) {
+HttpMetricAttributes HttpMetricAttributes::FromEncodableList(const EncodableList& list) {
   HttpMetricAttributes decoded;
   auto& encodable_http_response_code = list[0];
   if (!encodable_http_response_code.IsNull()) {
-    decoded.set_http_response_code(
-        std::get<int64_t>(encodable_http_response_code));
+    decoded.set_http_response_code(std::get<int64_t>(encodable_http_response_code));
   }
   auto& encodable_request_payload_size = list[1];
   if (!encodable_request_payload_size.IsNull()) {
-    decoded.set_request_payload_size(
-        std::get<int64_t>(encodable_request_payload_size));
+    decoded.set_request_payload_size(std::get<int64_t>(encodable_request_payload_size));
   }
   auto& encodable_response_payload_size = list[2];
   if (!encodable_response_payload_size.IsNull()) {
-    decoded.set_response_payload_size(
-        std::get<int64_t>(encodable_response_payload_size));
+    decoded.set_response_payload_size(std::get<int64_t>(encodable_response_payload_size));
   }
   auto& encodable_response_content_type = list[3];
   if (!encodable_response_content_type.IsNull()) {
-    decoded.set_response_content_type(
-        std::get<std::string>(encodable_response_content_type));
+    decoded.set_response_content_type(std::get<std::string>(encodable_response_content_type));
   }
   auto& encodable_attributes = list[4];
   if (!encodable_attributes.IsNull()) {
@@ -208,11 +193,11 @@ HttpMetricAttributes HttpMetricAttributes::FromEncodableList(
 
 TraceAttributes::TraceAttributes() {}
 
-TraceAttributes::TraceAttributes(const EncodableMap* metrics,
-                                 const EncodableMap* attributes)
-    : metrics_(metrics ? std::optional<EncodableMap>(*metrics) : std::nullopt),
-      attributes_(attributes ? std::optional<EncodableMap>(*attributes)
-                             : std::nullopt) {}
+TraceAttributes::TraceAttributes(
+  const EncodableMap* metrics,
+  const EncodableMap* attributes)
+ : metrics_(metrics ? std::optional<EncodableMap>(*metrics) : std::nullopt),
+    attributes_(attributes ? std::optional<EncodableMap>(*attributes) : std::nullopt) {}
 
 const EncodableMap* TraceAttributes::metrics() const {
   return metrics_ ? &(*metrics_) : nullptr;
@@ -226,18 +211,19 @@ void TraceAttributes::set_metrics(const EncodableMap& value_arg) {
   metrics_ = value_arg;
 }
 
+
 const EncodableMap* TraceAttributes::attributes() const {
   return attributes_ ? &(*attributes_) : nullptr;
 }
 
 void TraceAttributes::set_attributes(const EncodableMap* value_arg) {
-  attributes_ =
-      value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
+  attributes_ = value_arg ? std::optional<EncodableMap>(*value_arg) : std::nullopt;
 }
 
 void TraceAttributes::set_attributes(const EncodableMap& value_arg) {
   attributes_ = value_arg;
 }
+
 
 EncodableList TraceAttributes::ToEncodableList() const {
   EncodableList list;
@@ -260,69 +246,54 @@ TraceAttributes TraceAttributes::FromEncodableList(const EncodableList& list) {
   return decoded;
 }
 
+
 PigeonInternalCodecSerializer::PigeonInternalCodecSerializer() {}
 
 EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
-    uint8_t type, flutter::ByteStreamReader* stream) const {
+  uint8_t type,
+  flutter::ByteStreamReader* stream) const {
   switch (type) {
     case 129: {
-      const auto& encodable_enum_arg = ReadValue(stream);
-      const int64_t enum_arg_value =
-          encodable_enum_arg.IsNull() ? 0 : encodable_enum_arg.LongValue();
-      return encodable_enum_arg.IsNull()
-                 ? EncodableValue()
-                 : CustomEncodableValue(
-                       static_cast<HttpMethod>(enum_arg_value));
-    }
+        const auto& encodable_enum_arg = ReadValue(stream);
+        const int64_t enum_arg_value = encodable_enum_arg.IsNull() ? 0 : encodable_enum_arg.LongValue();
+        return encodable_enum_arg.IsNull() ? EncodableValue() : CustomEncodableValue(static_cast<HttpMethod>(enum_arg_value));
+      }
     case 130: {
-      return CustomEncodableValue(HttpMetricOptions::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(HttpMetricOptions::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 131: {
-      return CustomEncodableValue(HttpMetricAttributes::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(HttpMetricAttributes::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     case 132: {
-      return CustomEncodableValue(TraceAttributes::FromEncodableList(
-          std::get<EncodableList>(ReadValue(stream))));
-    }
+        return CustomEncodableValue(TraceAttributes::FromEncodableList(std::get<EncodableList>(ReadValue(stream))));
+      }
     default:
       return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
-  }
+    }
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
-    const EncodableValue& value, flutter::ByteStreamWriter* stream) const {
-  if (const CustomEncodableValue* custom_value =
-          std::get_if<CustomEncodableValue>(&value)) {
+  const EncodableValue& value,
+  flutter::ByteStreamWriter* stream) const {
+  if (const CustomEncodableValue* custom_value = std::get_if<CustomEncodableValue>(&value)) {
     if (custom_value->type() == typeid(HttpMethod)) {
       stream->WriteByte(129);
-      WriteValue(EncodableValue(static_cast<int>(
-                     std::any_cast<HttpMethod>(*custom_value))),
-                 stream);
+      WriteValue(EncodableValue(static_cast<int>(std::any_cast<HttpMethod>(*custom_value))), stream);
       return;
     }
     if (custom_value->type() == typeid(HttpMetricOptions)) {
       stream->WriteByte(130);
-      WriteValue(EncodableValue(std::any_cast<HttpMetricOptions>(*custom_value)
-                                    .ToEncodableList()),
-                 stream);
+      WriteValue(EncodableValue(std::any_cast<HttpMetricOptions>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(HttpMetricAttributes)) {
       stream->WriteByte(131);
-      WriteValue(
-          EncodableValue(std::any_cast<HttpMetricAttributes>(*custom_value)
-                             .ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<HttpMetricAttributes>(*custom_value).ToEncodableList()), stream);
       return;
     }
     if (custom_value->type() == typeid(TraceAttributes)) {
       stream->WriteByte(132);
-      WriteValue(
-          EncodableValue(
-              std::any_cast<TraceAttributes>(*custom_value).ToEncodableList()),
-          stream);
+      WriteValue(EncodableValue(std::any_cast<TraceAttributes>(*custom_value).ToEncodableList()), stream);
       return;
     }
   }
@@ -331,274 +302,216 @@ void PigeonInternalCodecSerializer::WriteValue(
 
 /// The codec used by FirebasePerformanceHostApi.
 const flutter::StandardMessageCodec& FirebasePerformanceHostApi::GetCodec() {
-  return flutter::StandardMessageCodec::GetInstance(
-      &PigeonInternalCodecSerializer::GetInstance());
+  return flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `FirebasePerformanceHostApi` to handle messages
-// through the `binary_messenger`.
+// Sets up an instance of `FirebasePerformanceHostApi` to handle messages through the `binary_messenger`.
 void FirebasePerformanceHostApi::SetUp(
-    flutter::BinaryMessenger* binary_messenger,
-    FirebasePerformanceHostApi* api) {
+  flutter::BinaryMessenger* binary_messenger,
+  FirebasePerformanceHostApi* api) {
   FirebasePerformanceHostApi::SetUp(binary_messenger, api, "");
 }
 
 void FirebasePerformanceHostApi::SetUp(
-    flutter::BinaryMessenger* binary_messenger, FirebasePerformanceHostApi* api,
-    const std::string& message_channel_suffix) {
-  const std::string prepended_suffix =
-      message_channel_suffix.length() > 0
-          ? std::string(".") + message_channel_suffix
-          : "";
+  flutter::BinaryMessenger* binary_messenger,
+  FirebasePerformanceHostApi* api,
+  const std::string& message_channel_suffix) {
+  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_performance_platform_interface."
-        "FirebasePerformanceHostApi.setPerformanceCollectionEnabled" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.setPerformanceCollectionEnabled" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_enabled_arg = args.at(0);
-              if (encodable_enabled_arg.IsNull()) {
-                reply(WrapError("enabled_arg unexpectedly null."));
-                return;
-              }
-              const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
-              api->SetPerformanceCollectionEnabled(
-                  enabled_arg, [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_enabled_arg = args.at(0);
+          if (encodable_enabled_arg.IsNull()) {
+            reply(WrapError("enabled_arg unexpectedly null."));
+            return;
+          }
+          const auto& enabled_arg = std::get<bool>(encodable_enabled_arg);
+          api->SetPerformanceCollectionEnabled(enabled_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_performance_platform_interface."
-        "FirebasePerformanceHostApi.isPerformanceCollectionEnabled" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.isPerformanceCollectionEnabled" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              api->IsPerformanceCollectionEnabled(
-                  [reply](ErrorOr<bool>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          api->IsPerformanceCollectionEnabled([reply](ErrorOr<bool>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_performance_platform_interface."
-        "FirebasePerformanceHostApi.startTrace" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startTrace" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_name_arg = args.at(0);
-              if (encodable_name_arg.IsNull()) {
-                reply(WrapError("name_arg unexpectedly null."));
-                return;
-              }
-              const auto& name_arg = std::get<std::string>(encodable_name_arg);
-              api->StartTrace(name_arg, [reply](ErrorOr<int64_t>&& output) {
-                if (output.has_error()) {
-                  reply(WrapError(output.error()));
-                  return;
-                }
-                EncodableList wrapped;
-                wrapped.push_back(
-                    EncodableValue(std::move(output).TakeValue()));
-                reply(EncodableValue(std::move(wrapped)));
-              });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_name_arg = args.at(0);
+          if (encodable_name_arg.IsNull()) {
+            reply(WrapError("name_arg unexpectedly null."));
+            return;
+          }
+          const auto& name_arg = std::get<std::string>(encodable_name_arg);
+          api->StartTrace(name_arg, [reply](ErrorOr<int64_t>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_performance_platform_interface."
-        "FirebasePerformanceHostApi.stopTrace" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopTrace" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_handle_arg = args.at(0);
-              if (encodable_handle_arg.IsNull()) {
-                reply(WrapError("handle_arg unexpectedly null."));
-                return;
-              }
-              const int64_t handle_arg = encodable_handle_arg.LongValue();
-              const auto& encodable_attributes_arg = args.at(1);
-              if (encodable_attributes_arg.IsNull()) {
-                reply(WrapError("attributes_arg unexpectedly null."));
-                return;
-              }
-              const auto& attributes_arg =
-                  std::any_cast<const TraceAttributes&>(
-                      std::get<CustomEncodableValue>(encodable_attributes_arg));
-              api->StopTrace(handle_arg, attributes_arg,
-                             [reply](std::optional<FlutterError>&& output) {
-                               if (output.has_value()) {
-                                 reply(WrapError(output.value()));
-                                 return;
-                               }
-                               EncodableList wrapped;
-                               wrapped.push_back(EncodableValue());
-                               reply(EncodableValue(std::move(wrapped)));
-                             });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_handle_arg = args.at(0);
+          if (encodable_handle_arg.IsNull()) {
+            reply(WrapError("handle_arg unexpectedly null."));
+            return;
+          }
+          const int64_t handle_arg = encodable_handle_arg.LongValue();
+          const auto& encodable_attributes_arg = args.at(1);
+          if (encodable_attributes_arg.IsNull()) {
+            reply(WrapError("attributes_arg unexpectedly null."));
+            return;
+          }
+          const auto& attributes_arg = std::any_cast<const TraceAttributes&>(std::get<CustomEncodableValue>(encodable_attributes_arg));
+          api->StopTrace(handle_arg, attributes_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_performance_platform_interface."
-        "FirebasePerformanceHostApi.startHttpMetric" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.startHttpMetric" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_options_arg = args.at(0);
-              if (encodable_options_arg.IsNull()) {
-                reply(WrapError("options_arg unexpectedly null."));
-                return;
-              }
-              const auto& options_arg = std::any_cast<const HttpMetricOptions&>(
-                  std::get<CustomEncodableValue>(encodable_options_arg));
-              api->StartHttpMetric(
-                  options_arg, [reply](ErrorOr<int64_t>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(
-                        EncodableValue(std::move(output).TakeValue()));
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_options_arg = args.at(0);
+          if (encodable_options_arg.IsNull()) {
+            reply(WrapError("options_arg unexpectedly null."));
+            return;
+          }
+          const auto& options_arg = std::any_cast<const HttpMetricOptions&>(std::get<CustomEncodableValue>(encodable_options_arg));
+          api->StartHttpMetric(options_arg, [reply](ErrorOr<int64_t>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue(std::move(output).TakeValue()));
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.firebase_performance_platform_interface."
-        "FirebasePerformanceHostApi.stopHttpMetric" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.firebase_performance_platform_interface.FirebasePerformanceHostApi.stopHttpMetric" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_handle_arg = args.at(0);
-              if (encodable_handle_arg.IsNull()) {
-                reply(WrapError("handle_arg unexpectedly null."));
-                return;
-              }
-              const int64_t handle_arg = encodable_handle_arg.LongValue();
-              const auto& encodable_attributes_arg = args.at(1);
-              if (encodable_attributes_arg.IsNull()) {
-                reply(WrapError("attributes_arg unexpectedly null."));
-                return;
-              }
-              const auto& attributes_arg =
-                  std::any_cast<const HttpMetricAttributes&>(
-                      std::get<CustomEncodableValue>(encodable_attributes_arg));
-              api->StopHttpMetric(
-                  handle_arg, attributes_arg,
-                  [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_handle_arg = args.at(0);
+          if (encodable_handle_arg.IsNull()) {
+            reply(WrapError("handle_arg unexpectedly null."));
+            return;
+          }
+          const int64_t handle_arg = encodable_handle_arg.LongValue();
+          const auto& encodable_attributes_arg = args.at(1);
+          if (encodable_attributes_arg.IsNull()) {
+            reply(WrapError("attributes_arg unexpectedly null."));
+            return;
+          }
+          const auto& attributes_arg = std::any_cast<const HttpMetricAttributes&>(std::get<CustomEncodableValue>(encodable_attributes_arg));
+          api->StopHttpMetric(handle_arg, attributes_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
 }
 
-EncodableValue FirebasePerformanceHostApi::WrapError(
-    std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
+EncodableValue FirebasePerformanceHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
 }
 
-EncodableValue FirebasePerformanceHostApi::WrapError(
-    const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
+EncodableValue FirebasePerformanceHostApi::WrapError(const FlutterError& error) {
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
 }
 
 }  // namespace firebase_performance_windows

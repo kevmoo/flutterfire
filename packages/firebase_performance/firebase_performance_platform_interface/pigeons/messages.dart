@@ -6,8 +6,8 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: 'lib/src/pigeon/messages.pigeon.dart',
-    dartTestOut: 'test/pigeon/test_api.dart',
+    dartOut: '../firebase_performance/lib/src/pigeon/messages.pigeon.dart',
+    dartTestOut: '../firebase_performance/lib/src/pigeon/test_api.dart',
     dartPackageName: 'firebase_performance_platform_interface',
     kotlinOut:
         '../firebase_performance/android/src/main/kotlin/io/flutter/plugins/firebase/performance/GeneratedAndroidFirebasePerformance.g.kt',

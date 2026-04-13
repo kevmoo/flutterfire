@@ -27,12 +27,13 @@ final class PigeonError: Error {
   }
 
   var localizedDescription: String {
-    "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
+    return
+      "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
   }
 }
 
 private func wrapResult(_ result: Any?) -> [Any?] {
-  [result]
+  return [result]
 }
 
 private func wrapError(_ error: Any) -> [Any?] {
@@ -58,7 +59,7 @@ private func wrapError(_ error: Any) -> [Any?] {
 }
 
 private func isNullish(_ value: Any?) -> Bool {
-  value is NSNull || value == nil
+  return value is NSNull || value == nil
 }
 
 private func nilOrValue<T>(_ value: Any?) -> T? {
@@ -66,57 +67,50 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   return value as! T?
 }
 
-private class CloudFunctionsMessagesPigeonCodecReader: FlutterStandardReader {}
 
-private class CloudFunctionsMessagesPigeonCodecWriter: FlutterStandardWriter {}
+private class CloudFunctionsMessagesPigeonCodecReader: FlutterStandardReader {
+}
+
+private class CloudFunctionsMessagesPigeonCodecWriter: FlutterStandardWriter {
+}
 
 private class CloudFunctionsMessagesPigeonCodecReaderWriter: FlutterStandardReaderWriter {
   override func reader(with data: Data) -> FlutterStandardReader {
-    CloudFunctionsMessagesPigeonCodecReader(data: data)
+    return CloudFunctionsMessagesPigeonCodecReader(data: data)
   }
 
   override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-    CloudFunctionsMessagesPigeonCodecWriter(data: data)
+    return CloudFunctionsMessagesPigeonCodecWriter(data: data)
   }
 }
 
 class CloudFunctionsMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
-  static let shared =
-    CloudFunctionsMessagesPigeonCodec(readerWriter: CloudFunctionsMessagesPigeonCodecReaderWriter())
+  static let shared = CloudFunctionsMessagesPigeonCodec(readerWriter: CloudFunctionsMessagesPigeonCodecReaderWriter())
 }
+
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol CloudFunctionsHostApi {
   func call(arguments: [String: Any?], completion: @escaping (Result<Any?, Error>) -> Void)
-  func registerEventChannel(arguments: [String: Any],
-                            completion: @escaping (Result<Void, Error>) -> Void)
+  func registerEventChannel(arguments: [String: Any], completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class CloudFunctionsHostApiSetup {
-  static var codec: FlutterStandardMessageCodec {
-    CloudFunctionsMessagesPigeonCodec.shared
-  }
-
-  /// Sets up an instance of `CloudFunctionsHostApi` to handle messages through the
-  /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: CloudFunctionsHostApi?,
-                    messageChannelSuffix: String = "") {
+  static var codec: FlutterStandardMessageCodec { CloudFunctionsMessagesPigeonCodec.shared }
+  /// Sets up an instance of `CloudFunctionsHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: CloudFunctionsHostApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let callChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let callChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       callChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let argumentsArg = args[0] as! [String: Any?]
         api.call(arguments: argumentsArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -124,12 +118,8 @@ class CloudFunctionsHostApiSetup {
     } else {
       callChannel.setMessageHandler(nil)
     }
-    let registerEventChannelChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let registerEventChannelChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       registerEventChannelChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let argumentsArg = args[0] as! [String: Any]
@@ -137,7 +127,7 @@ class CloudFunctionsHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }

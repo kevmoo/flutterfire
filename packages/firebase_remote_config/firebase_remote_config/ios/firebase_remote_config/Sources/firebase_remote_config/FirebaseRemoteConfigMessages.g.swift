@@ -27,12 +27,13 @@ final class PigeonError: Error {
   }
 
   var localizedDescription: String {
-    "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
+    return
+      "PigeonError(code: \(code), message: \(message ?? "<nil>"), details: \(details ?? "<nil>")"
   }
 }
 
 private func wrapResult(_ result: Any?) -> [Any?] {
-  [result]
+  return [result]
 }
 
 private func wrapError(_ error: Any) -> [Any?] {
@@ -58,7 +59,7 @@ private func wrapError(_ error: Any) -> [Any?] {
 }
 
 private func isNullish(_ value: Any?) -> Bool {
-  value is NSNull || value == nil
+  return value is NSNull || value == nil
 }
 
 private func nilOrValue<T>(_ value: Any?) -> T? {
@@ -102,22 +103,19 @@ func deepEqualsFirebaseRemoteConfigMessages(_ lhs: Any?, _ rhs: Any?) -> Bool {
     return true
 
   default:
-    // Any other type shouldn't be able to be used with pigeon. File an issue if you find this to be
-    // untrue.
+    // Any other type shouldn't be able to be used with pigeon. File an issue if you find this to be untrue.
     return false
   }
 }
 
 func deepHashFirebaseRemoteConfigMessages(value: Any?, hasher: inout Hasher) {
   if let valueList = value as? [AnyHashable] {
-    for item in valueList {
-      deepHashFirebaseRemoteConfigMessages(value: item, hasher: &hasher)
-    }
-    return
+     for item in valueList { deepHashFirebaseRemoteConfigMessages(value: item, hasher: &hasher) }
+     return
   }
 
   if let valueDict = value as? [AnyHashable: AnyHashable] {
-    for key in valueDict.keys {
+    for key in valueDict.keys { 
       hasher.combine(key)
       deepHashFirebaseRemoteConfigMessages(value: valueDict[key]!, hasher: &hasher)
     }
@@ -131,10 +129,13 @@ func deepHashFirebaseRemoteConfigMessages(value: Any?, hasher: inout Hasher) {
   return hasher.combine(String(describing: value))
 }
 
+    
+
 /// Generated class from Pigeon that represents data sent in messages.
 struct RemoteConfigPigeonSettings: Hashable {
   var fetchTimeoutSeconds: Int64
   var minimumFetchIntervalSeconds: Int64
+
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> RemoteConfigPigeonSettings? {
@@ -146,18 +147,14 @@ struct RemoteConfigPigeonSettings: Hashable {
       minimumFetchIntervalSeconds: minimumFetchIntervalSeconds
     )
   }
-
   func toList() -> [Any?] {
-    [
+    return [
       fetchTimeoutSeconds,
       minimumFetchIntervalSeconds,
     ]
   }
-
   static func == (lhs: RemoteConfigPigeonSettings, rhs: RemoteConfigPigeonSettings) -> Bool {
-    deepEqualsFirebaseRemoteConfigMessages(lhs.toList(), rhs.toList())
-  }
-
+    return deepEqualsFirebaseRemoteConfigMessages(lhs.toList(), rhs.toList())  }
   func hash(into hasher: inout Hasher) {
     deepHashFirebaseRemoteConfigMessages(value: toList(), hasher: &hasher)
   }
@@ -167,7 +164,7 @@ private class FirebaseRemoteConfigMessagesPigeonCodecReader: FlutterStandardRead
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
     case 129:
-      return RemoteConfigPigeonSettings.fromList(readValue() as! [Any?])
+      return RemoteConfigPigeonSettings.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -187,54 +184,40 @@ private class FirebaseRemoteConfigMessagesPigeonCodecWriter: FlutterStandardWrit
 
 private class FirebaseRemoteConfigMessagesPigeonCodecReaderWriter: FlutterStandardReaderWriter {
   override func reader(with data: Data) -> FlutterStandardReader {
-    FirebaseRemoteConfigMessagesPigeonCodecReader(data: data)
+    return FirebaseRemoteConfigMessagesPigeonCodecReader(data: data)
   }
 
   override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-    FirebaseRemoteConfigMessagesPigeonCodecWriter(data: data)
+    return FirebaseRemoteConfigMessagesPigeonCodecWriter(data: data)
   }
 }
 
 class FirebaseRemoteConfigMessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
-  static let shared =
-    FirebaseRemoteConfigMessagesPigeonCodec(
-      readerWriter: FirebaseRemoteConfigMessagesPigeonCodecReaderWriter()
-    )
+  static let shared = FirebaseRemoteConfigMessagesPigeonCodec(readerWriter: FirebaseRemoteConfigMessagesPigeonCodecReaderWriter())
 }
+
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FirebaseRemoteConfigHostApi {
   func fetch(appName: String, completion: @escaping (Result<Void, Error>) -> Void)
   func fetchAndActivate(appName: String, completion: @escaping (Result<Bool, Error>) -> Void)
   func activate(appName: String, completion: @escaping (Result<Bool, Error>) -> Void)
-  func setConfigSettings(appName: String, settings: RemoteConfigPigeonSettings,
-                         completion: @escaping (Result<Void, Error>) -> Void)
-  func setDefaults(appName: String, defaultParameters: [String: Any?],
-                   completion: @escaping (Result<Void, Error>) -> Void)
+  func setConfigSettings(appName: String, settings: RemoteConfigPigeonSettings, completion: @escaping (Result<Void, Error>) -> Void)
+  func setDefaults(appName: String, defaultParameters: [String: Any?], completion: @escaping (Result<Void, Error>) -> Void)
   func ensureInitialized(appName: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func setCustomSignals(appName: String, customSignals: [String: Any?],
-                        completion: @escaping (Result<Void, Error>) -> Void)
+  func setCustomSignals(appName: String, customSignals: [String: Any?], completion: @escaping (Result<Void, Error>) -> Void)
   func getAll(appName: String, completion: @escaping (Result<[String: Any?], Error>) -> Void)
   func getProperties(appName: String, completion: @escaping (Result<[String: Any], Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FirebaseRemoteConfigHostApiSetup {
-  static var codec: FlutterStandardMessageCodec {
-    FirebaseRemoteConfigMessagesPigeonCodec.shared
-  }
-
-  /// Sets up an instance of `FirebaseRemoteConfigHostApi` to handle messages through the
-  /// `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseRemoteConfigHostApi?,
-                    messageChannelSuffix: String = "") {
+  static var codec: FlutterStandardMessageCodec { FirebaseRemoteConfigMessagesPigeonCodec.shared }
+  /// Sets up an instance of `FirebaseRemoteConfigHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FirebaseRemoteConfigHostApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    let fetchChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetch\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let fetchChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetch\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       fetchChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
@@ -242,7 +225,7 @@ class FirebaseRemoteConfigHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -250,20 +233,16 @@ class FirebaseRemoteConfigHostApiSetup {
     } else {
       fetchChannel.setMessageHandler(nil)
     }
-    let fetchAndActivateChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetchAndActivate\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let fetchAndActivateChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.fetchAndActivate\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       fetchAndActivateChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
         api.fetchAndActivate(appName: appNameArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -271,20 +250,16 @@ class FirebaseRemoteConfigHostApiSetup {
     } else {
       fetchAndActivateChannel.setMessageHandler(nil)
     }
-    let activateChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.activate\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let activateChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.activate\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       activateChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
         api.activate(appName: appNameArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -292,12 +267,8 @@ class FirebaseRemoteConfigHostApiSetup {
     } else {
       activateChannel.setMessageHandler(nil)
     }
-    let setConfigSettingsChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setConfigSettings\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let setConfigSettingsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setConfigSettings\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       setConfigSettingsChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
@@ -306,7 +277,7 @@ class FirebaseRemoteConfigHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -314,12 +285,8 @@ class FirebaseRemoteConfigHostApiSetup {
     } else {
       setConfigSettingsChannel.setMessageHandler(nil)
     }
-    let setDefaultsChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setDefaults\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let setDefaultsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setDefaults\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       setDefaultsChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
@@ -328,7 +295,7 @@ class FirebaseRemoteConfigHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -336,12 +303,8 @@ class FirebaseRemoteConfigHostApiSetup {
     } else {
       setDefaultsChannel.setMessageHandler(nil)
     }
-    let ensureInitializedChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.ensureInitialized\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let ensureInitializedChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.ensureInitialized\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       ensureInitializedChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
@@ -349,7 +312,7 @@ class FirebaseRemoteConfigHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -357,12 +320,8 @@ class FirebaseRemoteConfigHostApiSetup {
     } else {
       ensureInitializedChannel.setMessageHandler(nil)
     }
-    let setCustomSignalsChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setCustomSignals\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let setCustomSignalsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.setCustomSignals\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       setCustomSignalsChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
@@ -371,7 +330,7 @@ class FirebaseRemoteConfigHostApiSetup {
           switch result {
           case .success:
             reply(wrapResult(nil))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -379,20 +338,16 @@ class FirebaseRemoteConfigHostApiSetup {
     } else {
       setCustomSignalsChannel.setMessageHandler(nil)
     }
-    let getAllChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getAll\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let getAllChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getAll\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       getAllChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
         api.getAll(appName: appNameArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }
@@ -400,20 +355,16 @@ class FirebaseRemoteConfigHostApiSetup {
     } else {
       getAllChannel.setMessageHandler(nil)
     }
-    let getPropertiesChannel = FlutterBasicMessageChannel(
-      name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getProperties\(channelSuffix)",
-      binaryMessenger: binaryMessenger,
-      codec: codec
-    )
-    if let api {
+    let getPropertiesChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.firebase_remote_config_platform_interface.FirebaseRemoteConfigHostApi.getProperties\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
       getPropertiesChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let appNameArg = args[0] as! String
         api.getProperties(appName: appNameArg) { result in
           switch result {
-          case let .success(res):
+          case .success(let res):
             reply(wrapResult(res))
-          case let .failure(error):
+          case .failure(let error):
             reply(wrapError(error))
           }
         }

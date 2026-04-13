@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import '../../test.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 
 class MockFirebaseApp implements TestFirebaseCoreHostApi {
   @override
@@ -18,19 +18,8 @@ class MockFirebaseApp implements TestFirebaseCoreHostApi {
         projectId: '123',
         appId: '123',
         messagingSenderId: '123',
-        authDomain: null,
-        measurementId: null,
-        trackingId: null,
-        databaseURL: null,
-        storageBucket: null,
-        deepLinkURLScheme: null,
-        androidClientId: null,
-        iosClientId: null,
-        iosBundleId: null,
-        appGroupId: null,
       ),
       pluginConstants: {},
-      isAutomaticDataCollectionEnabled: null,
     );
   }
 
@@ -44,19 +33,8 @@ class MockFirebaseApp implements TestFirebaseCoreHostApi {
           projectId: '123',
           appId: '123',
           messagingSenderId: '123',
-          authDomain: null,
-          measurementId: null,
-          trackingId: null,
-          databaseURL: null,
-          storageBucket: null,
-          deepLinkURLScheme: null,
-          androidClientId: null,
-          iosClientId: null,
-          iosBundleId: null,
-          appGroupId: null,
         ),
         pluginConstants: {},
-        isAutomaticDataCollectionEnabled: null,
       ),
     ];
   }
@@ -68,16 +46,6 @@ class MockFirebaseApp implements TestFirebaseCoreHostApi {
       projectId: '123',
       appId: '123',
       messagingSenderId: '123',
-      authDomain: null,
-      measurementId: null,
-      trackingId: null,
-      databaseURL: null,
-      storageBucket: null,
-      deepLinkURLScheme: null,
-      androidClientId: null,
-      iosClientId: null,
-      iosBundleId: null,
-      appGroupId: null,
     );
   }
 }

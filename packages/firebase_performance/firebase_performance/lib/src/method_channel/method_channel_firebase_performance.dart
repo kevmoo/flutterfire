@@ -1,23 +1,17 @@
+part of firebase_performance;
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_trace.dart';
-import 'package:firebase_performance_platform_interface/src/pigeon/messages.pigeon.dart'
     as pigeon;
 
-import '../../firebase_performance_platform_interface.dart';
-import 'method_channel_http_metric.dart';
-import 'utils/exception.dart';
 
 /// The method channel implementation of [FirebasePerformancePlatform].
 class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   MethodChannelFirebasePerformance({required FirebaseApp app})
       : super(appInstance: app);
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_performance',
-  );
+  static const MethodChannel channel =
+      MethodChannel('plugins.flutter.io/firebase_performance');
 
   /// Internal stub class initializer.
   ///

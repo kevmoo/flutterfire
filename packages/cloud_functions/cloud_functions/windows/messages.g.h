@@ -17,16 +17,17 @@
 
 namespace cloud_functions_windows {
 
+
 // Generated class from Pigeon.
 
 class FlutterError {
  public:
-  explicit FlutterError(const std::string& code) : code_(code) {}
+  explicit FlutterError(const std::string& code)
+    : code_(code) {}
   explicit FlutterError(const std::string& code, const std::string& message)
-      : code_(code), message_(message) {}
-  explicit FlutterError(const std::string& code, const std::string& message,
-                        const flutter::EncodableValue& details)
-      : code_(code), message_(message), details_(details) {}
+    : code_(code), message_(message) {}
+  explicit FlutterError(const std::string& code, const std::string& message, const flutter::EncodableValue& details)
+    : code_(code), message_(message), details_(details) {}
 
   const std::string& code() const { return code_; }
   const std::string& message() const { return message_; }
@@ -38,8 +39,7 @@ class FlutterError {
   flutter::EncodableValue details_;
 };
 
-template <class T>
-class ErrorOr {
+template<class T> class ErrorOr {
  public:
   ErrorOr(const T& rhs) : v_(rhs) {}
   ErrorOr(const T&& rhs) : v_(std::move(rhs)) {}
@@ -58,6 +58,8 @@ class ErrorOr {
   std::variant<T, FlutterError> v_;
 };
 
+
+
 class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
  public:
   PigeonInternalCodecSerializer();
@@ -66,41 +68,40 @@ class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
     return sInstance;
   }
 
-  void WriteValue(const flutter::EncodableValue& value,
-                  flutter::ByteStreamWriter* stream) const override;
-
+  void WriteValue(
+    const flutter::EncodableValue& value,
+    flutter::ByteStreamWriter* stream) const override;
  protected:
   flutter::EncodableValue ReadValueOfType(
-      uint8_t type, flutter::ByteStreamReader* stream) const override;
+    uint8_t type,
+    flutter::ByteStreamReader* stream) const override;
 };
 
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class CloudFunctionsHostApi {
  public:
   CloudFunctionsHostApi(const CloudFunctionsHostApi&) = delete;
   CloudFunctionsHostApi& operator=(const CloudFunctionsHostApi&) = delete;
   virtual ~CloudFunctionsHostApi() {}
   virtual void Call(
-      const flutter::EncodableMap& arguments,
-      std::function<void(ErrorOr<std::optional<flutter::EncodableValue>> reply)>
-          result) = 0;
+    const flutter::EncodableMap& arguments,
+    std::function<void(ErrorOr<std::optional<flutter::EncodableValue>> reply)> result) = 0;
   virtual void RegisterEventChannel(
-      const flutter::EncodableMap& arguments,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    const flutter::EncodableMap& arguments,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by CloudFunctionsHostApi.
   static const flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `CloudFunctionsHostApi` to handle messages through
-  // the `binary_messenger`.
-  static void SetUp(flutter::BinaryMessenger* binary_messenger,
-                    CloudFunctionsHostApi* api);
-  static void SetUp(flutter::BinaryMessenger* binary_messenger,
-                    CloudFunctionsHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `CloudFunctionsHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    flutter::BinaryMessenger* binary_messenger,
+    CloudFunctionsHostApi* api);
+  static void SetUp(
+    flutter::BinaryMessenger* binary_messenger,
+    CloudFunctionsHostApi* api,
+    const std::string& message_channel_suffix);
   static flutter::EncodableValue WrapError(std::string_view error_message);
   static flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   CloudFunctionsHostApi() = default;
 };

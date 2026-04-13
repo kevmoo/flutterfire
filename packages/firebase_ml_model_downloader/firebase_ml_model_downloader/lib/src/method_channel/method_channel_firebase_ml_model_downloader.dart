@@ -1,13 +1,7 @@
+part of firebase_ml_model_downloader;
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
-
-import './utils/exception.dart';
-import '../../firebase_ml_model_downloader_platform_interface.dart';
 
 class MethodChannelFirebaseModelDownloader
     extends FirebaseModelDownloaderPlatform {
@@ -47,14 +41,12 @@ class MethodChannelFirebaseModelDownloader
   ) async {
     try {
       final result = await channel.invokeMapMethod<String, dynamic>(
-        'FirebaseModelDownloader#getModel',
-        {
-          'appName': app.name,
-          'modelName': modelName,
-          'downloadType': _downloadTypeToString(downloadType),
-          'conditions': conditions.toMap(),
-        },
-      );
+          'FirebaseModelDownloader#getModel', {
+        'appName': app.name,
+        'modelName': modelName,
+        'downloadType': _downloadTypeToString(downloadType),
+        'conditions': conditions.toMap(),
+      });
 
       return _resultToFirebaseCustomModel(result!);
     } catch (e, s) {
@@ -66,9 +58,9 @@ class MethodChannelFirebaseModelDownloader
   Future<List<FirebaseCustomModel>> listDownloadedModels() async {
     try {
       final result = await channel.invokeListMethod<Map>(
-        'FirebaseModelDownloader#listDownloadedModels',
-        {'appName': app.name},
-      );
+          'FirebaseModelDownloader#listDownloadedModels', {
+        'appName': app.name,
+      });
 
       return result!.map(_resultToFirebaseCustomModel).toList(growable: false);
     } catch (e, s) {
@@ -79,16 +71,19 @@ class MethodChannelFirebaseModelDownloader
   @override
   Future<void> deleteDownloadedModel(String modelName) async {
     try {
-      await channel.invokeMethod<void>(
-        'FirebaseModelDownloader#deleteDownloadedModel',
-        {'appName': app.name, 'modelName': modelName},
-      );
+      await channel
+          .invokeMethod<void>('FirebaseModelDownloader#deleteDownloadedModel', {
+        'appName': app.name,
+        'modelName': modelName,
+      });
     } catch (e, s) {
       convertPlatformException(e, s);
     }
   }
 
-  FirebaseCustomModel _resultToFirebaseCustomModel(Map result) {
+  FirebaseCustomModel _resultToFirebaseCustomModel(
+    Map result,
+  ) {
     return FirebaseCustomModel(
       file: File(result['filePath']),
       size: result['size'],

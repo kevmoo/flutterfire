@@ -1,14 +1,7 @@
+part of firebase_app_installations;
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-import 'dart:async';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_app_installations_platform_interface/firebase_app_installations_platform_interface.dart';
-
-import 'utils/exception.dart';
-import 'utils/event_channel.dart';
 
 class MethodChannelFirebaseAppInstallations
     extends FirebaseAppInstallationsPlatform {
@@ -33,9 +26,9 @@ class MethodChannelFirebaseAppInstallations
         StreamController<String>.broadcast();
 
     channel.invokeMethod<String>(
-      'FirebaseInstallations#registerIdChangeListener',
-      {'appName': app.name},
-    ).then((channelName) {
+        'FirebaseInstallations#registerIdChangeListener', {
+      'appName': app.name,
+    }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
 
       events

@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of '../cloud_firestore.dart';
+part of cloud_firestore;
 
 class PersistentCacheIndexManager {
   PersistentCacheIndexManager._(this._delegate) {

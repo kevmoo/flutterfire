@@ -6,7 +6,7 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: 'lib/src/pigeon/messages.pigeon.dart',
+    dartOut: '../firebase_app_check/lib/src/pigeon/messages.pigeon.dart',
     dartPackageName: 'firebase_app_check_platform_interface',
     kotlinOut:
         '../firebase_app_check/android/src/main/kotlin/io/flutter/plugins/firebase/appcheck/GeneratedAndroidFirebaseAppCheck.g.kt',

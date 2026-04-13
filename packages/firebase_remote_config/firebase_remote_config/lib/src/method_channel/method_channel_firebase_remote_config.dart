@@ -1,15 +1,9 @@
+part of firebase_remote_config;
 // Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 // ignore_for_file: require_trailing_commas
-import 'dart:async';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_remote_config_platform_interface/src/pigeon/messages.pigeon.dart';
-
-import '../../firebase_remote_config_platform_interface.dart';
-import 'utils/exception.dart';
 
 /// Method Channel delegate for [FirebaseRemoteConfigPlatform].
 class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
@@ -30,11 +24,10 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   static int get nextMethodChannelHandleId => _methodChannelHandleId++;
 
   /// The [MethodChannelRemoteConfig] method channel.
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_remote_config',
-  );
+  static const MethodChannel channel =
+      MethodChannel('plugins.flutter.io/firebase_remote_config');
 
-  static final Map<String, MethodChannelFirebaseRemoteConfig>
+  static Map<String, MethodChannelFirebaseRemoteConfig>
       _methodChannelFirebaseRemoteConfigInstances =
       <String, MethodChannelFirebaseRemoteConfig>{};
 
@@ -67,12 +60,10 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   FirebaseRemoteConfigPlatform setInitialValues({
     required Map<dynamic, dynamic> remoteConfigValues,
   }) {
-    final fetchTimeout = Duration(
-      seconds: remoteConfigValues['fetchTimeout'] ?? 60,
-    );
-    final minimumFetchInterval = Duration(
-      seconds: remoteConfigValues['minimumFetchInterval'] ?? 43200,
-    );
+    final fetchTimeout =
+        Duration(seconds: remoteConfigValues['fetchTimeout'] ?? 60);
+    final minimumFetchInterval =
+        Duration(seconds: remoteConfigValues['minimumFetchInterval'] ?? 43200);
     final lastFetchMillis = remoteConfigValues['lastFetchTime'] ?? 0;
     final lastFetchStatus = remoteConfigValues['lastFetchStatus'];
 
@@ -82,9 +73,8 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     );
     _lastFetchTime = DateTime.fromMillisecondsSinceEpoch(lastFetchMillis);
     _lastFetchStatus = _parseFetchStatus(lastFetchStatus);
-    _activeParameters = _parseParameters(
-      remoteConfigValues['parameters'] ?? {},
-    );
+    _activeParameters =
+        _parseParameters(remoteConfigValues['parameters'] ?? {});
     return this;
   }
 
@@ -240,9 +230,8 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   Future<void> _updateConfigProperties() async {
     Map<dynamic, dynamic> properties = await _api.getProperties(app.name);
     final fetchTimeout = Duration(seconds: properties['fetchTimeout']);
-    final minimumFetchInterval = Duration(
-      seconds: properties['minimumFetchInterval'],
-    );
+    final minimumFetchInterval =
+        Duration(seconds: properties['minimumFetchInterval']);
     final lastFetchMillis = properties['lastFetchTime'];
     final lastFetchStatus = properties['lastFetchStatus'];
 
@@ -255,15 +244,12 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   }
 
   Map<String, RemoteConfigValue> _parseParameters(
-    Map<dynamic, dynamic> rawParameters,
-  ) {
+      Map<dynamic, dynamic> rawParameters) {
     var parameters = <String, RemoteConfigValue>{};
     for (final key in rawParameters.keys) {
       final rawValue = rawParameters[key];
       parameters[key] = RemoteConfigValue(
-        rawValue['value'],
-        _parseValueSource(rawValue['source']),
-      );
+          rawValue['value'], _parseValueSource(rawValue['source']));
     }
     return parameters;
   }
@@ -281,17 +267,17 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     }
   }
 
-  static const EventChannel _eventChannelConfigUpdated = EventChannel(
-    'plugins.flutter.io/firebase_remote_config_updated',
-  );
+  static const EventChannel _eventChannelConfigUpdated =
+      EventChannel('plugins.flutter.io/firebase_remote_config_updated');
 
   Stream<RemoteConfigUpdate>? _onConfigUpdatedStream;
 
   @override
   Stream<RemoteConfigUpdate> get onConfigUpdated {
-    _onConfigUpdatedStream ??= _eventChannelConfigUpdated
-        .receiveBroadcastStream(<String, dynamic>{'appName': app.name}).map(
-            (event) {
+    _onConfigUpdatedStream ??=
+        _eventChannelConfigUpdated.receiveBroadcastStream(<String, dynamic>{
+      'appName': app.name,
+    }).map((event) {
       final updatedKeys = Set<String>.from(event);
       return RemoteConfigUpdate(updatedKeys);
     });

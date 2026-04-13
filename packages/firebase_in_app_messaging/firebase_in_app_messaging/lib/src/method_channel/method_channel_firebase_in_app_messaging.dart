@@ -1,11 +1,7 @@
+part of firebase_in_app_messaging;
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart';
-
-import 'utils/exception.dart';
 
 class MethodChannelFirebaseInAppMessaging
     extends FirebaseInAppMessagingPlatform {
@@ -36,10 +32,11 @@ class MethodChannelFirebaseInAppMessaging
   @override
   Future<void> triggerEvent(String eventName) async {
     try {
-      await channel.invokeMethod(
-        'FirebaseInAppMessaging#triggerEvent',
-        <String, String>{'appName': app!.name, 'eventName': eventName},
-      );
+      await channel
+          .invokeMethod('FirebaseInAppMessaging#triggerEvent', <String, String>{
+        'appName': app!.name,
+        'eventName': eventName,
+      });
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -49,9 +46,10 @@ class MethodChannelFirebaseInAppMessaging
   Future<void> setMessagesSuppressed(bool suppress) async {
     try {
       await channel.invokeMethod(
-        'FirebaseInAppMessaging#setMessagesSuppressed',
-        <String, dynamic>{'appName': app!.name, 'suppress': suppress},
-      );
+          'FirebaseInAppMessaging#setMessagesSuppressed', <String, dynamic>{
+        'appName': app!.name,
+        'suppress': suppress,
+      });
     } catch (e, s) {
       convertPlatformException(e, s);
     }
@@ -61,9 +59,11 @@ class MethodChannelFirebaseInAppMessaging
   Future<void> setAutomaticDataCollectionEnabled(bool enabled) async {
     try {
       await channel.invokeMethod(
-        'FirebaseInAppMessaging#setAutomaticDataCollectionEnabled',
-        <String, dynamic>{'appName': app!.name, 'enabled': enabled},
-      );
+          'FirebaseInAppMessaging#setAutomaticDataCollectionEnabled',
+          <String, dynamic>{
+            'appName': app!.name,
+            'enabled': enabled,
+          });
     } catch (e, s) {
       convertPlatformException(e, s);
     }

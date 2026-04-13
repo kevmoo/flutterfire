@@ -1,18 +1,9 @@
+part of firebase_database;
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
-import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
-import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
-    hide DatabaseReferencePlatform;
-
-import 'method_channel_database.dart';
-import 'method_channel_on_disconnect.dart';
-import 'method_channel_query.dart';
-import 'method_channel_transaction_result.dart';
-import 'utils/exception.dart';
-import 'utils/push_id_generator.dart';
+hide DatabaseReferencePlatform;
 
 final _api = FirebaseDatabaseHostApi();
 
@@ -28,9 +19,12 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     implements DatabaseReferencePlatform {
   /// Create a [MethodChannelDatabaseReference] from [pathComponents]
   MethodChannelDatabaseReference({
-    required super.database,
-    required super.pathComponents,
-  });
+    required DatabasePlatform database,
+    required List<String> pathComponents,
+  }) : super(
+          database: database,
+          pathComponents: pathComponents,
+        );
 
   /// Gets the Pigeon app object from the database
   DatabasePigeonFirebaseApp get _pigeonApp {
@@ -130,7 +124,10 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     try {
       await _api.databaseReferenceSetPriority(
         _pigeonApp,
-        DatabaseReferenceRequest(path: path, priority: priority),
+        DatabaseReferenceRequest(
+          path: path,
+          priority: priority,
+        ),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -191,6 +188,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
 
   @override
   OnDisconnectPlatform onDisconnect() {
-    return MethodChannelOnDisconnect(database: database, ref: this);
+    return MethodChannelOnDisconnect(
+      database: database,
+      ref: this,
+    );
   }
 }

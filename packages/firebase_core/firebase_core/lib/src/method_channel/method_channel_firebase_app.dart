@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_core;
+part of '../../firebase_core_platform_interface.dart';
 
 /// The entry point for accessing a Firebase app instance.
 ///
@@ -16,11 +16,12 @@ part of firebase_core;
 class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   // ignore: public_member_api_docs
   MethodChannelFirebaseApp(
-    super.name,
-    super.options, {
+    String name,
+    FirebaseOptions options, {
     bool? isAutomaticDataCollectionEnabled,
-  }) : _isAutomaticDataCollectionEnabled =
-            isAutomaticDataCollectionEnabled ?? false;
+  })  : _isAutomaticDataCollectionEnabled =
+            isAutomaticDataCollectionEnabled ?? false,
+        super(name, options);
 
   /// Keeps track of whether this app has been deleted by the user.
   bool _isDeleted = false;
@@ -40,7 +41,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   /// The default app cannot be deleted.
   @override
   Future<void> delete() async {
-    if (isDefault) {
+    if (_isDefault) {
       throw noDefaultAppDelete();
     }
 
@@ -51,7 +52,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
     await _api.delete(name);
 
     MethodChannelFirebase.appInstances.remove(name);
-    FirebasePluginPlatform.constantsForPluginApps.remove(name);
+    FirebasePluginPlatform._constantsForPluginApps.remove(name);
     _isDeleted = true;
   }
 

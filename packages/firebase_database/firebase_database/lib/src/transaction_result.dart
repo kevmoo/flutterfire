@@ -1,8 +1,7 @@
+part of firebase_database;
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-part of '../firebase_database.dart';
 
 /// Instances of this class represent the outcome of a transaction.
 class TransactionResult {

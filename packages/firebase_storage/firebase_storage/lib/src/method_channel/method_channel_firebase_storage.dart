@@ -1,25 +1,16 @@
+part of firebase_storage;
 // ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
-
-import 'package:firebase_core/firebase_core.dart';
-
-import '../../firebase_storage_platform_interface.dart';
-import '../pigeon/messages.pigeon.dart';
-import './utils/exception.dart';
-import 'method_channel_reference.dart';
-
 /// Method Channel delegate for [FirebaseStoragePlatform].
 class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// Creates a new [MethodChannelFirebaseStorage] instance with an [app] and/or
   /// [bucket].
-  MethodChannelFirebaseStorage({
-    required FirebaseApp app,
-    required super.bucket,
-  }) : super(appInstance: app);
+  MethodChannelFirebaseStorage(
+      {required FirebaseApp app, required String bucket})
+      : super(appInstance: app, bucket: bucket);
 
   /// Internal stub class initializer.
   ///
@@ -44,7 +35,10 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// FirebaseApp pigeon instance
   PigeonStorageFirebaseApp get pigeonFirebaseApp {
-    return PigeonStorageFirebaseApp(appName: app.name, bucket: bucket);
+    return PigeonStorageFirebaseApp(
+      appName: app.name,
+      bucket: bucket,
+    );
   }
 
   /// Returns a unique key to identify the instance by [FirebaseApp] name and
@@ -54,9 +48,11 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   }
 
   /// The [MethodChannelFirebaseStorage] method channel.
-  static const MethodChannel channel = MethodChannel(storageMethodChannelName);
+  static const MethodChannel channel = MethodChannel(
+    storageMethodChannelName,
+  );
 
-  static final Map<String, MethodChannelFirebaseStorage>
+  static Map<String, MethodChannelFirebaseStorage>
       _methodChannelFirebaseStorageInstances =
       <String, MethodChannelFirebaseStorage>{};
 
@@ -68,37 +64,32 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// Return an instance of a [PigeonStorageReference]
   static PigeonStorageReference getPigeonReference(
-    String bucket,
-    String fullPath,
-    String name,
-  ) {
+      String bucket, String fullPath, String name) {
     return PigeonStorageReference(
-      bucket: bucket,
-      fullPath: fullPath,
-      name: name,
-    );
+        bucket: bucket, fullPath: fullPath, name: name);
   }
 
   /// Return an instance of a [PigeonStorageFirebaseApp]
   PigeonStorageFirebaseApp getPigeonFirebaseApp(String appName) {
-    return PigeonStorageFirebaseApp(appName: appName, bucket: bucket);
+    return PigeonStorageFirebaseApp(
+      appName: appName,
+      bucket: bucket,
+    );
   }
 
   /// Convert a [SettableMetadata] to [PigeonSettableMetadata]
   static PigeonSettableMetadata getPigeonSettableMetaData(
-    SettableMetadata? metaData,
-  ) {
+      SettableMetadata? metaData) {
     if (metaData == null) {
       return PigeonSettableMetadata();
     }
     return PigeonSettableMetadata(
-      cacheControl: metaData.cacheControl,
-      contentDisposition: metaData.contentDisposition,
-      contentEncoding: metaData.contentEncoding,
-      contentLanguage: metaData.contentLanguage,
-      contentType: metaData.contentType,
-      customMetadata: metaData.customMetadata,
-    );
+        cacheControl: metaData.cacheControl,
+        contentDisposition: metaData.contentDisposition,
+        contentEncoding: metaData.contentEncoding,
+        contentLanguage: metaData.contentLanguage,
+        contentType: metaData.contentType,
+        customMetadata: metaData.customMetadata);
   }
 
   static int _methodChannelHandleId = 0;
@@ -116,10 +107,8 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   int maxDownloadRetryTime = const Duration(minutes: 10).inMilliseconds;
 
   @override
-  FirebaseStoragePlatform delegateFor({
-    required FirebaseApp app,
-    required String bucket,
-  }) {
+  FirebaseStoragePlatform delegateFor(
+      {required FirebaseApp app, required String bucket}) {
     String key = _getInstanceKey(app.name, bucket);
 
     return _methodChannelFirebaseStorageInstances[key] ??=
@@ -137,10 +126,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     emulatorPort = port;
     try {
       return await pigeonChannel.useStorageEmulator(
-        pigeonFirebaseApp,
-        host,
-        port,
-      );
+          pigeonFirebaseApp, host, port);
     } catch (e, s) {
       convertPlatformException(e, s);
     }

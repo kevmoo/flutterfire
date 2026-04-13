@@ -1,16 +1,7 @@
+part of firebase_app_check;
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-import 'dart:async';
-
-import 'package:firebase_core/firebase_core.dart';
-
-import '../../firebase_app_check_platform_interface.dart';
-import '../pigeon/messages.pigeon.dart';
-import 'utils/exception.dart';
-import 'utils/event_channel.dart';
-import 'utils/provider_to_string.dart';
 
 class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// Create an instance of [MethodChannelFirebaseAppCheck].
@@ -22,13 +13,15 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       final events = EventChannel(channelName);
       events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen((arguments) {
-        // ignore: close_sinks
-        StreamController<String?> controller =
-            _tokenChangesListeners[app.name]!;
-        Map<dynamic, dynamic> result = arguments;
-        controller.add(result['token'] as String?);
-      });
+          .listen(
+        (arguments) {
+          // ignore: close_sinks
+          StreamController<String?> controller =
+              _tokenChangesListeners[app.name]!;
+          Map<dynamic, dynamic> result = arguments;
+          controller.add(result['token'] as String?);
+        },
+      );
       // ignore: avoid_catches_without_on_clauses
     }).catchError((_) {
       // Silently ignore errors during token listener registration.
@@ -39,7 +32,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   static final Map<String, StreamController<String?>> _tokenChangesListeners =
       {};
 
-  static final Map<String, MethodChannelFirebaseAppCheck>
+  static Map<String, MethodChannelFirebaseAppCheck>
       _methodChannelFirebaseAppCheckInstances =
       <String, MethodChannelFirebaseAppCheck>{};
 

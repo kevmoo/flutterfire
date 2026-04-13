@@ -1,8 +1,7 @@
+part of firebase_performance;
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-part of '../firebase_performance.dart';
 
 /// [Trace] allows you to set the beginning and end of a custom trace in your app.
 ///

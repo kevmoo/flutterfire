@@ -1,16 +1,8 @@
+part of cloud_firestore;
 // ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
-import 'dart:async';
-
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
-
-import 'method_channel_firestore.dart';
-import 'utils/exception.dart';
-import 'utils/event_channel.dart';
 
 /// An implementation of [DocumentReferencePlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
@@ -54,7 +46,10 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       await MethodChannelFirebaseFirestore.pigeonChannel
           .documentReferenceUpdate(
         pigeonApp,
-        DocumentReferenceRequest(path: _pointer.path, data: data),
+        DocumentReferenceRequest(
+          path: _pointer.path,
+          data: data,
+        ),
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -62,9 +57,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   }
 
   @override
-  Future<DocumentSnapshotPlatform> get([
-    GetOptions options = const GetOptions(),
-  ]) async {
+  Future<DocumentSnapshotPlatform> get(
+      [GetOptions options = const GetOptions()]) async {
     try {
       final result = await MethodChannelFirebaseFirestore.pigeonChannel
           .documentReferenceGet(
@@ -93,7 +87,9 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       await MethodChannelFirebaseFirestore.pigeonChannel
           .documentReferenceDelete(
         pigeonApp,
-        DocumentReferenceRequest(path: _pointer.path),
+        DocumentReferenceRequest(
+          path: _pointer.path,
+        ),
       );
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -130,18 +126,21 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
                 .receiveGuardedBroadcastStream(
           onError: convertPlatformException,
         )
-                .listen((snapshot) {
-          final PigeonDocumentSnapshot result =
-              PigeonDocumentSnapshot.decode(snapshot);
-          controller.add(
-            DocumentSnapshotPlatform(
-              firestore,
-              result.path,
-              result.data,
-              result.metadata,
-            ),
-          );
-        }, onError: controller.addError);
+                .listen(
+          (snapshot) {
+            final PigeonDocumentSnapshot result =
+                PigeonDocumentSnapshot.decode(snapshot);
+            controller.add(
+              DocumentSnapshotPlatform(
+                firestore,
+                result.path,
+                result.data,
+                result.metadata,
+              ),
+            );
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
         snapshotStreamSubscription?.cancel();

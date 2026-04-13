@@ -31,133 +31,117 @@ FlutterError CreateConnectionError(const std::string channel_name) {
       EncodableValue(""));
 }
 
+
 PigeonInternalCodecSerializer::PigeonInternalCodecSerializer() {}
 
 EncodableValue PigeonInternalCodecSerializer::ReadValueOfType(
-    uint8_t type, flutter::ByteStreamReader* stream) const {
+  uint8_t type,
+  flutter::ByteStreamReader* stream) const {
   return flutter::StandardCodecSerializer::ReadValueOfType(type, stream);
 }
 
 void PigeonInternalCodecSerializer::WriteValue(
-    const EncodableValue& value, flutter::ByteStreamWriter* stream) const {
+  const EncodableValue& value,
+  flutter::ByteStreamWriter* stream) const {
   flutter::StandardCodecSerializer::WriteValue(value, stream);
 }
 
 /// The codec used by CloudFunctionsHostApi.
 const flutter::StandardMessageCodec& CloudFunctionsHostApi::GetCodec() {
-  return flutter::StandardMessageCodec::GetInstance(
-      &PigeonInternalCodecSerializer::GetInstance());
+  return flutter::StandardMessageCodec::GetInstance(&PigeonInternalCodecSerializer::GetInstance());
 }
 
-// Sets up an instance of `CloudFunctionsHostApi` to handle messages through the
-// `binary_messenger`.
-void CloudFunctionsHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
-                                  CloudFunctionsHostApi* api) {
+// Sets up an instance of `CloudFunctionsHostApi` to handle messages through the `binary_messenger`.
+void CloudFunctionsHostApi::SetUp(
+  flutter::BinaryMessenger* binary_messenger,
+  CloudFunctionsHostApi* api) {
   CloudFunctionsHostApi::SetUp(binary_messenger, api, "");
 }
 
-void CloudFunctionsHostApi::SetUp(flutter::BinaryMessenger* binary_messenger,
-                                  CloudFunctionsHostApi* api,
-                                  const std::string& message_channel_suffix) {
-  const std::string prepended_suffix =
-      message_channel_suffix.length() > 0
-          ? std::string(".") + message_channel_suffix
-          : "";
+void CloudFunctionsHostApi::SetUp(
+  flutter::BinaryMessenger* binary_messenger,
+  CloudFunctionsHostApi* api,
+  const std::string& message_channel_suffix) {
+  const std::string prepended_suffix = message_channel_suffix.length() > 0 ? std::string(".") + message_channel_suffix : "";
   {
-    BasicMessageChannel<> channel(binary_messenger,
-                                  "dev.flutter.pigeon.cloud_functions_platform_"
-                                  "interface.CloudFunctionsHostApi.call" +
-                                      prepended_suffix,
-                                  &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_arguments_arg = args.at(0);
-              if (encodable_arguments_arg.IsNull()) {
-                reply(WrapError("arguments_arg unexpectedly null."));
-                return;
-              }
-              const auto& arguments_arg =
-                  std::get<EncodableMap>(encodable_arguments_arg);
-              api->Call(
-                  arguments_arg,
-                  [reply](ErrorOr<std::optional<EncodableValue>>&& output) {
-                    if (output.has_error()) {
-                      reply(WrapError(output.error()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    auto output_optional = std::move(output).TakeValue();
-                    if (output_optional) {
-                      wrapped.push_back(
-                          EncodableValue(std::move(output_optional).value()));
-                    } else {
-                      wrapped.push_back(EncodableValue());
-                    }
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_arguments_arg = args.at(0);
+          if (encodable_arguments_arg.IsNull()) {
+            reply(WrapError("arguments_arg unexpectedly null."));
+            return;
+          }
+          const auto& arguments_arg = std::get<EncodableMap>(encodable_arguments_arg);
+          api->Call(arguments_arg, [reply](ErrorOr<std::optional<EncodableValue>>&& output) {
+            if (output.has_error()) {
+              reply(WrapError(output.error()));
+              return;
             }
+            EncodableList wrapped;
+            auto output_optional = std::move(output).TakeValue();
+            if (output_optional) {
+              wrapped.push_back(EncodableValue(std::move(output_optional).value()));
+            } else {
+              wrapped.push_back(EncodableValue());
+            }
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
   {
-    BasicMessageChannel<> channel(
-        binary_messenger,
-        "dev.flutter.pigeon.cloud_functions_platform_interface."
-        "CloudFunctionsHostApi.registerEventChannel" +
-            prepended_suffix,
-        &GetCodec());
+    BasicMessageChannel<> channel(binary_messenger, "dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel" + prepended_suffix, &GetCodec());
     if (api != nullptr) {
-      channel.SetMessageHandler(
-          [api](const EncodableValue& message,
-                const flutter::MessageReply<EncodableValue>& reply) {
-            try {
-              const auto& args = std::get<EncodableList>(message);
-              const auto& encodable_arguments_arg = args.at(0);
-              if (encodable_arguments_arg.IsNull()) {
-                reply(WrapError("arguments_arg unexpectedly null."));
-                return;
-              }
-              const auto& arguments_arg =
-                  std::get<EncodableMap>(encodable_arguments_arg);
-              api->RegisterEventChannel(
-                  arguments_arg, [reply](std::optional<FlutterError>&& output) {
-                    if (output.has_value()) {
-                      reply(WrapError(output.value()));
-                      return;
-                    }
-                    EncodableList wrapped;
-                    wrapped.push_back(EncodableValue());
-                    reply(EncodableValue(std::move(wrapped)));
-                  });
-            } catch (const std::exception& exception) {
-              reply(WrapError(exception.what()));
+      channel.SetMessageHandler([api](const EncodableValue& message, const flutter::MessageReply<EncodableValue>& reply) {
+        try {
+          const auto& args = std::get<EncodableList>(message);
+          const auto& encodable_arguments_arg = args.at(0);
+          if (encodable_arguments_arg.IsNull()) {
+            reply(WrapError("arguments_arg unexpectedly null."));
+            return;
+          }
+          const auto& arguments_arg = std::get<EncodableMap>(encodable_arguments_arg);
+          api->RegisterEventChannel(arguments_arg, [reply](std::optional<FlutterError>&& output) {
+            if (output.has_value()) {
+              reply(WrapError(output.value()));
+              return;
             }
+            EncodableList wrapped;
+            wrapped.push_back(EncodableValue());
+            reply(EncodableValue(std::move(wrapped)));
           });
+        } catch (const std::exception& exception) {
+          reply(WrapError(exception.what()));
+        }
+      });
     } else {
       channel.SetMessageHandler(nullptr);
     }
   }
 }
 
-EncodableValue CloudFunctionsHostApi::WrapError(
-    std::string_view error_message) {
-  return EncodableValue(
-      EncodableList{EncodableValue(std::string(error_message)),
-                    EncodableValue("Error"), EncodableValue()});
+EncodableValue CloudFunctionsHostApi::WrapError(std::string_view error_message) {
+  return EncodableValue(EncodableList{
+    EncodableValue(std::string(error_message)),
+    EncodableValue("Error"),
+    EncodableValue()
+  });
 }
 
 EncodableValue CloudFunctionsHostApi::WrapError(const FlutterError& error) {
-  return EncodableValue(EncodableList{EncodableValue(error.code()),
-                                      EncodableValue(error.message()),
-                                      error.details()});
+  return EncodableValue(EncodableList{
+    EncodableValue(error.code()),
+    EncodableValue(error.message()),
+    error.details()
+  });
 }
 
 }  // namespace cloud_functions_windows

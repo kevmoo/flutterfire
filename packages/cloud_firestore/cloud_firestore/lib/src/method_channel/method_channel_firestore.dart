@@ -1,24 +1,8 @@
+part of cloud_firestore;
 // ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
-import 'dart:async';
-
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_persistent_cache_index_manager.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/utils/event_channel.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-import 'method_channel_collection_reference.dart';
-import 'method_channel_document_reference.dart';
-import 'method_channel_query.dart';
-import 'method_channel_transaction.dart';
-import 'method_channel_write_batch.dart';
-import 'utils/exception.dart';
-import 'utils/firestore_message_codec.dart';
 
 /// The entry point for accessing a Firestore.
 ///
@@ -214,10 +198,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     Duration timeout = const Duration(seconds: 30),
     int maxAttempts = 5,
   }) async {
-    assert(
-      timeout.inMilliseconds > 0,
-      'Transaction timeout must be more than 0 milliseconds',
-    );
+    assert(timeout.inMilliseconds > 0,
+        'Transaction timeout must be more than 0 milliseconds');
 
     final String transactionId = await pigeonChannel.transactionCreate(
       pigeonApp,
@@ -243,55 +225,57 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         'maxAttempts': maxAttempts,
       },
       onError: convertPlatformException,
-    ).listen((event) async {
-      if (event['error'] != null) {
-        completer.completeError(
-          FirebaseException(
-            plugin: 'cloud_firestore',
-            code: event['error']['code'],
-            message: event['error']['message'],
-          ),
+    ).listen(
+      (event) async {
+        if (event['error'] != null) {
+          completer.completeError(
+            FirebaseException(
+              plugin: 'cloud_firestore',
+              code: event['error']['code'],
+              message: event['error']['message'],
+            ),
+          );
+          return;
+        } else if (event['complete'] == true) {
+          completer.complete(result);
+          return;
+        }
+
+        final TransactionPlatform transaction = MethodChannelTransaction(
+          transactionId,
+          event['appName'],
+          pigeonApp,
+          databaseId,
         );
-        return;
-      } else if (event['complete'] == true) {
-        completer.complete(result);
-        return;
-      }
 
-      final TransactionPlatform transaction = MethodChannelTransaction(
-        transactionId,
-        event['appName'],
-        pigeonApp,
-        databaseId,
-      );
+        // If the transaction fails on Dart side, then forward the error
+        // right away and only inform native side of the error.
+        try {
+          result = await transactionHandler(transaction) as T;
+        } catch (error, stack) {
+          // Signal native that a user error occurred, and finish the
+          // transaction
+          await pigeonChannel.transactionStoreResult(
+            transactionId,
+            PigeonTransactionResult.failure,
+            null,
+          );
 
-      // If the transaction fails on Dart side, then forward the error
-      // right away and only inform native side of the error.
-      try {
-        result = await transactionHandler(transaction) as T;
-      } catch (error, stack) {
-        // Signal native that a user error occurred, and finish the
-        // transaction
+          // Allow the [runTransaction] method to listen to an error.
+
+          completer.completeError(error, stack);
+
+          return;
+        }
+
+        // Send the transaction commands to Dart.
         await pigeonChannel.transactionStoreResult(
           transactionId,
-          PigeonTransactionResult.failure,
-          null,
+          PigeonTransactionResult.success,
+          transaction.commands,
         );
-
-        // Allow the [runTransaction] method to listen to an error.
-
-        completer.completeError(error, stack);
-
-        return;
-      }
-
-      // Send the transaction commands to Dart.
-      await pigeonChannel.transactionStoreResult(
-        transactionId,
-        PigeonTransactionResult.success,
-        transaction.commands,
-      );
-    });
+      },
+    );
 
     return completer.future.whenComplete(snapshotStreamSubscription.cancel);
   }
@@ -320,7 +304,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> setIndexConfiguration(String indexConfiguration) async {
     try {
-      await pigeonChannel.setIndexConfiguration(pigeonApp, indexConfiguration);
+      await pigeonChannel.setIndexConfiguration(
+        pigeonApp,
+        indexConfiguration,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -330,13 +317,18 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   PersistentCacheIndexManagerPlatform? persistentCacheIndexManager() {
     // Persistence is enabled by default, if the user has disabled it, return null.
     if (settings.persistenceEnabled == false) return null;
-    return MethodChannelPersistentCacheIndexManager(pigeonChannel, pigeonApp);
+    return MethodChannelPersistentCacheIndexManager(
+      pigeonChannel,
+      pigeonApp,
+    );
   }
 
   @override
   Future<void> setLoggingEnabled(bool enabled) async {
     try {
-      await pigeonChannel.setLoggingEnabled(enabled);
+      await pigeonChannel.setLoggingEnabled(
+        enabled,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

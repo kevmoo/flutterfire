@@ -17,16 +17,17 @@
 
 namespace firebase_performance_windows {
 
+
 // Generated class from Pigeon.
 
 class FlutterError {
  public:
-  explicit FlutterError(const std::string& code) : code_(code) {}
+  explicit FlutterError(const std::string& code)
+    : code_(code) {}
   explicit FlutterError(const std::string& code, const std::string& message)
-      : code_(code), message_(message) {}
-  explicit FlutterError(const std::string& code, const std::string& message,
-                        const flutter::EncodableValue& details)
-      : code_(code), message_(message), details_(details) {}
+    : code_(code), message_(message) {}
+  explicit FlutterError(const std::string& code, const std::string& message, const flutter::EncodableValue& details)
+    : code_(code), message_(message), details_(details) {}
 
   const std::string& code() const { return code_; }
   const std::string& message() const { return message_; }
@@ -38,8 +39,7 @@ class FlutterError {
   flutter::EncodableValue details_;
 };
 
-template <class T>
-class ErrorOr {
+template<class T> class ErrorOr {
  public:
   ErrorOr(const T& rhs) : v_(rhs) {}
   ErrorOr(const T&& rhs) : v_(std::move(rhs)) {}
@@ -58,6 +58,7 @@ class ErrorOr {
   std::variant<T, FlutterError> v_;
 };
 
+
 enum class HttpMethod {
   kConnect = 0,
   kDelete = 1,
@@ -70,12 +71,14 @@ enum class HttpMethod {
   kTrace = 8
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class HttpMetricOptions {
  public:
   // Constructs an object setting all fields.
-  explicit HttpMetricOptions(const std::string& url,
-                             const HttpMethod& http_method);
+  explicit HttpMetricOptions(
+    const std::string& url,
+    const HttpMethod& http_method);
 
   const std::string& url() const;
   void set_url(std::string_view value_arg);
@@ -84,14 +87,14 @@ class HttpMetricOptions {
   void set_http_method(const HttpMethod& value_arg);
 
  private:
-  static HttpMetricOptions FromEncodableList(
-      const flutter::EncodableList& list);
+  static HttpMetricOptions FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebasePerformanceHostApi;
   friend class PigeonInternalCodecSerializer;
   std::string url_;
   HttpMethod http_method_;
 };
+
 
 // Generated class from Pigeon that represents data sent in messages.
 class HttpMetricAttributes {
@@ -100,11 +103,12 @@ class HttpMetricAttributes {
   HttpMetricAttributes();
 
   // Constructs an object setting all fields.
-  explicit HttpMetricAttributes(const int64_t* http_response_code,
-                                const int64_t* request_payload_size,
-                                const int64_t* response_payload_size,
-                                const std::string* response_content_type,
-                                const flutter::EncodableMap* attributes);
+  explicit HttpMetricAttributes(
+    const int64_t* http_response_code,
+    const int64_t* request_payload_size,
+    const int64_t* response_payload_size,
+    const std::string* response_content_type,
+    const flutter::EncodableMap* attributes);
 
   const int64_t* http_response_code() const;
   void set_http_response_code(const int64_t* value_arg);
@@ -127,8 +131,7 @@ class HttpMetricAttributes {
   void set_attributes(const flutter::EncodableMap& value_arg);
 
  private:
-  static HttpMetricAttributes FromEncodableList(
-      const flutter::EncodableList& list);
+  static HttpMetricAttributes FromEncodableList(const flutter::EncodableList& list);
   flutter::EncodableList ToEncodableList() const;
   friend class FirebasePerformanceHostApi;
   friend class PigeonInternalCodecSerializer;
@@ -139,6 +142,7 @@ class HttpMetricAttributes {
   std::optional<flutter::EncodableMap> attributes_;
 };
 
+
 // Generated class from Pigeon that represents data sent in messages.
 class TraceAttributes {
  public:
@@ -146,8 +150,9 @@ class TraceAttributes {
   TraceAttributes();
 
   // Constructs an object setting all fields.
-  explicit TraceAttributes(const flutter::EncodableMap* metrics,
-                           const flutter::EncodableMap* attributes);
+  explicit TraceAttributes(
+    const flutter::EncodableMap* metrics,
+    const flutter::EncodableMap* attributes);
 
   const flutter::EncodableMap* metrics() const;
   void set_metrics(const flutter::EncodableMap* value_arg);
@@ -166,6 +171,7 @@ class TraceAttributes {
   std::optional<flutter::EncodableMap> attributes_;
 };
 
+
 class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
  public:
   PigeonInternalCodecSerializer();
@@ -174,52 +180,52 @@ class PigeonInternalCodecSerializer : public flutter::StandardCodecSerializer {
     return sInstance;
   }
 
-  void WriteValue(const flutter::EncodableValue& value,
-                  flutter::ByteStreamWriter* stream) const override;
-
+  void WriteValue(
+    const flutter::EncodableValue& value,
+    flutter::ByteStreamWriter* stream) const override;
  protected:
   flutter::EncodableValue ReadValueOfType(
-      uint8_t type, flutter::ByteStreamReader* stream) const override;
+    uint8_t type,
+    flutter::ByteStreamReader* stream) const override;
 };
 
-// Generated interface from Pigeon that represents a handler of messages from
-// Flutter.
+// Generated interface from Pigeon that represents a handler of messages from Flutter.
 class FirebasePerformanceHostApi {
  public:
   FirebasePerformanceHostApi(const FirebasePerformanceHostApi&) = delete;
-  FirebasePerformanceHostApi& operator=(const FirebasePerformanceHostApi&) =
-      delete;
+  FirebasePerformanceHostApi& operator=(const FirebasePerformanceHostApi&) = delete;
   virtual ~FirebasePerformanceHostApi() {}
   virtual void SetPerformanceCollectionEnabled(
-      bool enabled,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
-  virtual void IsPerformanceCollectionEnabled(
-      std::function<void(ErrorOr<bool> reply)> result) = 0;
+    bool enabled,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
+  virtual void IsPerformanceCollectionEnabled(std::function<void(ErrorOr<bool> reply)> result) = 0;
   virtual void StartTrace(
-      const std::string& name,
-      std::function<void(ErrorOr<int64_t> reply)> result) = 0;
+    const std::string& name,
+    std::function<void(ErrorOr<int64_t> reply)> result) = 0;
   virtual void StopTrace(
-      int64_t handle, const TraceAttributes& attributes,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    int64_t handle,
+    const TraceAttributes& attributes,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
   virtual void StartHttpMetric(
-      const HttpMetricOptions& options,
-      std::function<void(ErrorOr<int64_t> reply)> result) = 0;
+    const HttpMetricOptions& options,
+    std::function<void(ErrorOr<int64_t> reply)> result) = 0;
   virtual void StopHttpMetric(
-      int64_t handle, const HttpMetricAttributes& attributes,
-      std::function<void(std::optional<FlutterError> reply)> result) = 0;
+    int64_t handle,
+    const HttpMetricAttributes& attributes,
+    std::function<void(std::optional<FlutterError> reply)> result) = 0;
 
   // The codec used by FirebasePerformanceHostApi.
   static const flutter::StandardMessageCodec& GetCodec();
-  // Sets up an instance of `FirebasePerformanceHostApi` to handle messages
-  // through the `binary_messenger`.
-  static void SetUp(flutter::BinaryMessenger* binary_messenger,
-                    FirebasePerformanceHostApi* api);
-  static void SetUp(flutter::BinaryMessenger* binary_messenger,
-                    FirebasePerformanceHostApi* api,
-                    const std::string& message_channel_suffix);
+  // Sets up an instance of `FirebasePerformanceHostApi` to handle messages through the `binary_messenger`.
+  static void SetUp(
+    flutter::BinaryMessenger* binary_messenger,
+    FirebasePerformanceHostApi* api);
+  static void SetUp(
+    flutter::BinaryMessenger* binary_messenger,
+    FirebasePerformanceHostApi* api,
+    const std::string& message_channel_suffix);
   static flutter::EncodableValue WrapError(std::string_view error_message);
   static flutter::EncodableValue WrapError(const FlutterError& error);
-
  protected:
   FirebasePerformanceHostApi() = default;
 };

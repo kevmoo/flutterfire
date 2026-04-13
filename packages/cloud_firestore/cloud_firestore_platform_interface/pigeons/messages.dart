@@ -5,11 +5,18 @@
 
 import 'package:pigeon/pigeon.dart';
 
-@ConfigurePigeon(
-  PigeonOptions(
-    dartOut: 'lib/src/pigeon/messages.pigeon.dart',
+@Configure(
+  Options(
+    dartPackageName: 'cloud_firestore',
+    dartOptions: DartOptions(
+      extraImports: [
+        'package:flutter/foundation.dart',
+        'package:flutter/services.dart',
+      ],
+    ),
+    dartOut: '../cloud_firestore/lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
-    dartTestOut: 'test/pigeon/test_api.dart',
+    dartTestOut: '../cloud_firestore/lib/src/pigeon/test_api.dart',
     javaOut:
         '../cloud_firestore/android/src/main/java/io/flutter/plugins/firebase/firestore/GeneratedAndroidFirebaseFirestore.java',
     javaOptions: JavaOptions(
@@ -26,8 +33,8 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-class PigeonFirebaseSettings {
-  const PigeonFirebaseSettings({
+class FirebaseSettings {
+  const FirebaseSettings({
     required this.persistenceEnabled,
     required this.host,
     required this.sslEnabled,
@@ -44,20 +51,20 @@ class PigeonFirebaseSettings {
 
 // We prefix the class name with `Auth` to avoid a conflict with
 // other classes in other packages.
-class FirestorePigeonFirebaseApp {
-  const FirestorePigeonFirebaseApp({
+class FirestoreFirebaseApp {
+  const FirestoreFirebaseApp({
     required this.appName,
     required this.settings,
     required this.databaseURL,
   });
 
   final String appName;
-  final PigeonFirebaseSettings settings;
+  final FirebaseSettings settings;
   final String databaseURL;
 }
 
-class PigeonSnapshotMetadata {
-  const PigeonSnapshotMetadata({
+class SnapshotMetadata {
+  const SnapshotMetadata({
     required this.hasPendingWrites,
     required this.isFromCache,
   });
@@ -66,8 +73,8 @@ class PigeonSnapshotMetadata {
   final bool isFromCache;
 }
 
-class PigeonDocumentSnapshot {
-  const PigeonDocumentSnapshot({
+class DocumentSnapshot {
+  const DocumentSnapshot({
     required this.path,
     required this.data,
     required this.metadata,
@@ -75,7 +82,7 @@ class PigeonDocumentSnapshot {
 
   final String path;
   final Map<String?, Object?>? data;
-  final PigeonSnapshotMetadata metadata;
+  final SnapshotMetadata metadata;
 }
 
 /// An enumeration of document change types.
@@ -92,8 +99,8 @@ enum DocumentChangeType {
   removed,
 }
 
-class PigeonDocumentChange {
-  const PigeonDocumentChange({
+class DocumentChange {
+  const DocumentChange({
     required this.type,
     required this.document,
     required this.oldIndex,
@@ -101,21 +108,21 @@ class PigeonDocumentChange {
   });
 
   final DocumentChangeType type;
-  final PigeonDocumentSnapshot document;
+  final DocumentSnapshot document;
   final int oldIndex;
   final int newIndex;
 }
 
-class PigeonQuerySnapshot {
-  const PigeonQuerySnapshot({
+class QuerySnapshot {
+  const QuerySnapshot({
     required this.documents,
     required this.documentChanges,
     required this.metadata,
   });
 
-  final List<PigeonDocumentSnapshot?> documents;
-  final List<PigeonDocumentChange?> documentChanges;
-  final PigeonSnapshotMetadata metadata;
+  final List<DocumentSnapshot?> documents;
+  final List<DocumentChange?> documentChanges;
+  final SnapshotMetadata metadata;
 }
 
 /// An enumeration of firestore source types.
@@ -178,8 +185,8 @@ enum PersistenceCacheIndexManagerRequest {
   deleteAllIndexes
 }
 
-class PigeonGetOptions {
-  const PigeonGetOptions({
+class GetOptions {
+  const GetOptions({
     required this.source,
     required this.serverTimestampBehavior,
   });
@@ -188,12 +195,12 @@ class PigeonGetOptions {
   final ServerTimestampBehavior serverTimestampBehavior;
 }
 
-enum PigeonTransactionResult {
+enum TransactionResult {
   success,
   failure,
 }
 
-enum PigeonTransactionType {
+enum TransactionType {
   get,
   update,
   set,
@@ -201,8 +208,8 @@ enum PigeonTransactionType {
   deleteType,
 }
 
-class PigeonDocumentOption {
-  const PigeonDocumentOption({
+class DocumentOption {
+  const DocumentOption({
     required this.merge,
     required this.mergeFields,
   });
@@ -211,18 +218,18 @@ class PigeonDocumentOption {
   final List<List<String?>?>? mergeFields;
 }
 
-class PigeonTransactionCommand {
-  const PigeonTransactionCommand({
+class TransactionCommand {
+  const TransactionCommand({
     required this.type,
     required this.path,
     required this.data,
     this.option,
   });
 
-  final PigeonTransactionType type;
+  final TransactionType type;
   final String path;
   final Map<Object?, Object?>? data;
-  final PigeonDocumentOption? option;
+  final DocumentOption? option;
 }
 
 class DocumentReferenceRequest {
@@ -235,13 +242,13 @@ class DocumentReferenceRequest {
   });
   final String path;
   final Map<Object?, Object?>? data;
-  final PigeonDocumentOption? option;
+  final DocumentOption? option;
   final Source? source;
   final ServerTimestampBehavior? serverTimestampBehavior;
 }
 
-class PigeonQueryParameters {
-  const PigeonQueryParameters({
+class QueryParameters {
+  const QueryParameters({
     this.where,
     this.orderBy,
     this.limit,
@@ -296,45 +303,45 @@ class AggregateQueryResponse {
 abstract class FirebaseFirestoreHostApi {
   @async
   String loadBundle(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
     Uint8List bundle,
   );
 
   @async
-  PigeonQuerySnapshot namedQueryGet(
-    FirestorePigeonFirebaseApp app,
+  QuerySnapshot namedQueryGet(
+    FirestoreFirebaseApp app,
     String name,
-    PigeonGetOptions options,
+    GetOptions options,
   );
 
   @async
   void clearPersistence(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
   );
 
   @async
   void disableNetwork(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
   );
 
   @async
   void enableNetwork(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
   );
 
   @async
   void terminate(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
   );
 
   @async
   void waitForPendingWrites(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
   );
 
   @async
   void setIndexConfiguration(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
     String indexConfiguration,
   );
 
@@ -345,12 +352,12 @@ abstract class FirebaseFirestoreHostApi {
 
   @async
   String snapshotsInSyncSetup(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
   );
 
   @async
   String transactionCreate(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
     int timeout,
     int maxAttempts,
   );
@@ -358,55 +365,55 @@ abstract class FirebaseFirestoreHostApi {
   @async
   void transactionStoreResult(
     String transactionId,
-    PigeonTransactionResult resultType,
-    List<PigeonTransactionCommand?>? commands,
+    TransactionResult resultType,
+    List<TransactionCommand?>? commands,
   );
 
   @async
-  PigeonDocumentSnapshot transactionGet(
-    FirestorePigeonFirebaseApp app,
+  DocumentSnapshot transactionGet(
+    FirestoreFirebaseApp app,
     String transactionId,
     String path,
   );
 
   @async
   void documentReferenceSet(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   @async
   void documentReferenceUpdate(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   @async
-  PigeonDocumentSnapshot documentReferenceGet(
-    FirestorePigeonFirebaseApp app,
+  DocumentSnapshot documentReferenceGet(
+    FirestoreFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   @async
   void documentReferenceDelete(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
   @async
-  PigeonQuerySnapshot queryGet(
-    FirestorePigeonFirebaseApp app,
+  QuerySnapshot queryGet(
+    FirestoreFirebaseApp app,
     String path,
     bool isCollectionGroup,
-    PigeonQueryParameters parameters,
-    PigeonGetOptions options,
+    QueryParameters parameters,
+    GetOptions options,
   );
 
   @async
   List<AggregateQueryResponse?> aggregateQuery(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
     String path,
-    PigeonQueryParameters parameters,
+    QueryParameters parameters,
     AggregateSource source,
     List<AggregateQuery?> queries,
     bool isCollectionGroup,
@@ -414,24 +421,24 @@ abstract class FirebaseFirestoreHostApi {
 
   @async
   void writeBatchCommit(
-    FirestorePigeonFirebaseApp app,
-    List<PigeonTransactionCommand?> writes,
+    FirestoreFirebaseApp app,
+    List<TransactionCommand?> writes,
   );
 
   @async
   String querySnapshot(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
     String path,
     bool isCollectionGroup,
-    PigeonQueryParameters parameters,
-    PigeonGetOptions options,
+    QueryParameters parameters,
+    GetOptions options,
     bool includeMetadataChanges,
     ListenSource source,
   );
 
   @async
   String documentReferenceSnapshot(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
     DocumentReferenceRequest parameters,
     bool includeMetadataChanges,
     ListenSource source,
@@ -439,7 +446,7 @@ abstract class FirebaseFirestoreHostApi {
 
   @async
   void persistenceCacheIndexManagerRequest(
-    FirestorePigeonFirebaseApp app,
+    FirestoreFirebaseApp app,
     PersistenceCacheIndexManagerRequest request,
   );
 }

@@ -1,12 +1,8 @@
+part of cloud_firestore;
 // ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
-import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart' show immutable;
-
-import '../platform_interface/platform_interface_field_value.dart';
 
 /// Sentinel values that can be used when writing document fields with set() or
 /// update().
@@ -34,7 +30,7 @@ enum FieldValueType {
 @immutable
 class MethodChannelFieldValue {
   /// Constructor.
-  const MethodChannelFieldValue(this.type, this.value);
+  MethodChannelFieldValue(this.type, this.value);
 
   /// The type of the field value.
   final FieldValueType type;

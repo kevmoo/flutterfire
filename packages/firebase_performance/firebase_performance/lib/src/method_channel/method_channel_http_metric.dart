@@ -1,15 +1,15 @@
+part of firebase_performance;
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_performance_platform_interface/src/pigeon/messages.pigeon.dart'
     as pigeon;
-import '../../firebase_performance_platform_interface.dart';
-import 'method_channel_firebase_performance.dart';
-import 'utils/exception.dart';
 
 class MethodChannelHttpMetric extends HttpMetricPlatform {
-  MethodChannelHttpMetric(this._url, this._httpMethod) : super();
+  MethodChannelHttpMetric(
+    this._url,
+    this._httpMethod,
+  ) : super();
 
   int? _httpMetricHandle;
   final String _url;
@@ -81,10 +81,8 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
         responseContentType: _responseContentType,
         attributes: _attributes,
       );
-      await MethodChannelFirebasePerformance.pigeonChannel.stopHttpMetric(
-        _httpMetricHandle!,
-        attributes,
-      );
+      await MethodChannelFirebasePerformance.pigeonChannel
+          .stopHttpMetric(_httpMetricHandle!, attributes);
       _hasStopped = true;
     } catch (e, s) {
       convertPlatformException(e, s);

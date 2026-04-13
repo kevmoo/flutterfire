@@ -1,15 +1,9 @@
+part of firebase_database;
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
-import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
-import 'package:firebase_database_platform_interface/src/pigeon/messages.pigeon.dart'
-    hide DatabaseReferencePlatform;
-
-import 'method_channel_database_reference.dart';
-import 'utils/exception.dart';
+hide DatabaseReferencePlatform;
 
 class MethodChannelArguments {
   MethodChannelArguments(this.app);
@@ -76,7 +70,8 @@ class MethodChannelDatabase extends DatabasePlatform {
     );
   }
 
-  MethodChannelDatabase({super.app, super.databaseURL}) {
+  MethodChannelDatabase({FirebaseApp? app, String? databaseURL})
+      : super(app: app, databaseURL: databaseURL) {
     if (_initialized) return;
 
     // Set up the Pigeon FlutterApi for transaction handler callbacks
@@ -121,9 +116,8 @@ class MethodChannelDatabase extends DatabasePlatform {
 
   /// The [MethodChannel] used to communicate with the native plugin
   /// This is kept for backward compatibility with query operations
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_database',
-  );
+  static const MethodChannel channel =
+      MethodChannel('plugins.flutter.io/firebase_database');
 
   @override
   void useDatabaseEmulator(String host, int port) {
