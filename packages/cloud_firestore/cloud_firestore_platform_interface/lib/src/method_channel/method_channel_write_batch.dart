@@ -24,7 +24,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   final FirestorePigeonFirebaseApp pigeonApp;
 
   /// Keeps track of all batch writes in order.
-  final List<PigeonTransactionCommand> _writes = [];
+  List<PigeonTransactionCommand> _writes = [];
 
   /// The committed state of this batch.
   ///
@@ -42,10 +42,8 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
     }
 
     try {
-      await MethodChannelFirebaseFirestore.pigeonChannel.writeBatchCommit(
-        pigeonApp,
-        _writes,
-      );
+      await MethodChannelFirebaseFirestore.pigeonChannel
+          .writeBatchCommit(pigeonApp, _writes);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -54,52 +52,45 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
   @override
   void delete(String documentPath) {
     _assertNotCommitted();
-    _writes.add(
-      PigeonTransactionCommand(
-        path: documentPath,
-        type: PigeonTransactionType.deleteType,
-      ),
-    );
+    _writes.add(PigeonTransactionCommand(
+      path: documentPath,
+      type: PigeonTransactionType.deleteType,
+    ));
   }
 
   @override
-  void set(
+  void set(String documentPath, Map<String, dynamic> data,
+      [SetOptions? options]) {
+    _assertNotCommitted();
+    _writes.add(PigeonTransactionCommand(
+      path: documentPath,
+      type: PigeonTransactionType.set,
+      data: data,
+      option: PigeonDocumentOption(
+        merge: options?.merge,
+        mergeFields: options?.mergeFields?.map((e) => e.components).toList(),
+      ),
+    ));
+  }
+
+  @override
+  void update(
     String documentPath,
-    Map<String, dynamic> data, [
-    SetOptions? options,
-  ]) {
+    Map<FieldPath, dynamic> data,
+  ) {
     _assertNotCommitted();
-    _writes.add(
-      PigeonTransactionCommand(
-        path: documentPath,
-        type: PigeonTransactionType.set,
-        data: data,
-        option: PigeonDocumentOption(
-          merge: options?.merge,
-          mergeFields: options?.mergeFields?.map((e) => e.components).toList(),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void update(String documentPath, Map<FieldPath, dynamic> data) {
-    _assertNotCommitted();
-    _writes.add(
-      PigeonTransactionCommand(
-        path: documentPath,
-        type: PigeonTransactionType.update,
-        data: data,
-      ),
-    );
+    _writes.add(PigeonTransactionCommand(
+      path: documentPath,
+      type: PigeonTransactionType.update,
+      data: data,
+    ));
   }
 
   /// Ensures that once a batch has been committed, it can not be modified again.
   void _assertNotCommitted() {
     if (_committed) {
       throw StateError(
-        'This batch has already been committed and can no longer be changed.',
-      );
+          'This batch has already been committed and can no longer be changed.');
     }
   }
 }

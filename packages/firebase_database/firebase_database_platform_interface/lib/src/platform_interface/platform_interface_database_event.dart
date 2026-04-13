@@ -60,7 +60,7 @@ abstract class DatabaseEventPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  final Map<String, dynamic> _data;
+  Map<String, dynamic> _data;
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [DatabaseEventPlatform].

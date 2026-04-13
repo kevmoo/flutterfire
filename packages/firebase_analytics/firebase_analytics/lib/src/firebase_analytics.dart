@@ -2,16 +2,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: constant_identifier_names
-
 part of '../firebase_analytics.dart';
 
 /// Firebase Analytics API.
 class FirebaseAnalytics extends FirebasePluginPlatform {
-  FirebaseAnalytics._({required this.app, this.webOptions})
-    : super(app.name, 'plugins.flutter.io/firebase_analytics');
+  FirebaseAnalytics._({
+    required this.app,
+    this.webOptions,
+  }) : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
-  static final Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
+  static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
 
   final Map<String, dynamic>? webOptions;
 
@@ -21,10 +21,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalyticsPlatform? _delegatePackingProperty;
 
   FirebaseAnalyticsPlatform get _delegate {
-    return _delegatePackingProperty ??= FirebaseAnalyticsPlatform.instanceFor(
-      app: app,
-      webOptions: webOptions,
-    );
+    return _delegatePackingProperty ??=
+        FirebaseAnalyticsPlatform.instanceFor(app: app, webOptions: webOptions);
   }
 
   /// Returns an instance using a specified [FirebaseApp].
@@ -114,7 +112,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     if (items != null) {
       effectiveParameters = filterOutNulls(<String, Object?>{
         _ITEMS: _marshalItems(items),
-        ...?parameters,
+        if (parameters != null) ...parameters,
       });
     } else {
       effectiveParameters = parameters;
@@ -274,7 +272,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _PAYMENT_TYPE: paymentType,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -306,7 +304,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _SHIPPING_TIER: shippingTier,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -337,7 +335,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _ITEMS: _marshalItems(items),
         _VALUE: value,
         _CURRENCY: currency,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -369,7 +367,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _ITEMS: _marshalItems(items),
         _VALUE: value,
         _CURRENCY: currency,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -405,7 +403,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _AD_UNIT_NAME: adUnitName,
         _VALUE: value,
         _CURRENCY: currency,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -454,7 +452,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _CURRENCY: currency,
         _ITEMS: _marshalItems(items),
         _COUPON: coupon,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -488,7 +486,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _CONTENT: content,
         _ACLID: aclid,
         _CP1: cp1,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -514,7 +512,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       parameters: filterOutNulls(<String, Object?>{
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -543,7 +541,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _VALUE: value,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -567,7 +565,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       name: 'join_group',
       parameters: filterOutNulls(<String, Object?>{
         _GROUP_ID: groupId,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -593,7 +591,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       parameters: filterOutNulls(<String, Object?>{
         _LEVEL: level,
         _CHARACTER: character,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -613,7 +611,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       name: 'level_start',
       parameters: filterOutNulls(<String, Object?>{
         _LEVEL_NAME: levelName,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -635,7 +633,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       parameters: filterOutNulls(<String, Object?>{
         _LEVEL_NAME: levelName,
         _SUCCESS: success,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -658,7 +656,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       name: 'login',
       parameters: filterOutNulls(<String, Object?>{
         _METHOD: loginMethod,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -687,7 +685,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _SCORE: score,
         _LEVEL: level,
         _CHARACTER: character,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -728,7 +726,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _SHIPPING: shipping,
         _TRANSACTION_ID: transactionId,
         _AFFILIATION: affiliation,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -757,7 +755,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _CURRENCY: currency,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -781,7 +779,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       parameters: filterOutNulls(<String, Object?>{
         _SCREEN_CLASS: screenClass,
         _SCREEN_NAME: screenName,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -808,7 +806,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _ITEM_LIST_ID: itemListId,
         _ITEM_LIST_NAME: itemListName,
         _ITEMS: _marshalItems(items),
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -841,7 +839,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _LOCATION_ID: locationId,
         _PROMOTION_ID: promotionId,
         _PROMOTION_NAME: promotionName,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -868,7 +866,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _CURRENCY: currency,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
       callOptions: callOptions,
     );
@@ -898,18 +896,20 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
 
     return _delegate.logEvent(
       name: 'search',
-      parameters: filterOutNulls(<String, Object?>{
-        _SEARCH_TERM: searchTerm,
-        _NUMBER_OF_NIGHTS: numberOfNights,
-        _NUMBER_OF_ROOMS: numberOfRooms,
-        _NUMBER_OF_PASSENGERS: numberOfPassengers,
-        _ORIGIN: origin,
-        _DESTINATION: destination,
-        _START_DATE: startDate,
-        _END_DATE: endDate,
-        _TRAVEL_CLASS: travelClass,
-        ...?parameters,
-      }),
+      parameters: filterOutNulls(
+        <String, Object?>{
+          _SEARCH_TERM: searchTerm,
+          _NUMBER_OF_NIGHTS: numberOfNights,
+          _NUMBER_OF_ROOMS: numberOfRooms,
+          _NUMBER_OF_PASSENGERS: numberOfPassengers,
+          _ORIGIN: origin,
+          _DESTINATION: destination,
+          _START_DATE: startDate,
+          _END_DATE: endDate,
+          _TRAVEL_CLASS: travelClass,
+          if (parameters != null) ...parameters,
+        },
+      ),
       callOptions: callOptions,
     );
   }
@@ -934,7 +934,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       parameters: filterOutNulls(<String, Object?>{
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -959,7 +959,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
         _METHOD: method,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -982,7 +982,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       name: 'sign_up',
       parameters: filterOutNulls(<String, Object?>{
         _METHOD: signUpMethod,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1007,7 +1007,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _ITEM_NAME: itemName,
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1019,10 +1019,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// users complete this process and move on to the full app experience.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#TUTORIAL_BEGIN
-  Future<void> logTutorialBegin({Map<String, Object>? parameters}) {
+  Future<void> logTutorialBegin({
+    Map<String, Object>? parameters,
+  }) {
     _assertParameterTypesAreCorrect(parameters);
 
-    return _delegate.logEvent(name: 'tutorial_begin', parameters: parameters);
+    return _delegate.logEvent(
+      name: 'tutorial_begin',
+      parameters: parameters,
+    );
   }
 
   /// Logs the standard `tutorial_complete` event.
@@ -1032,7 +1037,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// completion rate of your on-boarding process.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#TUTORIAL_COMPLETE
-  Future<void> logTutorialComplete({Map<String, Object>? parameters}) {
+  Future<void> logTutorialComplete({
+    Map<String, Object>? parameters,
+  }) {
     _assertParameterTypesAreCorrect(parameters);
 
     return _delegate.logEvent(
@@ -1060,7 +1067,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       name: 'unlock_achievement',
       parameters: filterOutNulls(<String, Object?>{
         _ACHIEVEMENT_ID: id,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1092,7 +1099,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _CURRENCY: currency,
         _VALUE: value,
         _ITEMS: _marshalItems(items),
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1118,7 +1125,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _ITEMS: _marshalItems(items),
         _ITEM_LIST_ID: itemListId,
         _ITEM_LIST_NAME: itemListName,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1149,7 +1156,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _LOCATION_ID: locationId,
         _PROMOTION_ID: promotionId,
         _PROMOTION_NAME: promotionName,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1170,7 +1177,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       name: 'view_search_results',
       parameters: filterOutNulls(<String, Object?>{
         _SEARCH_TERM: searchTerm,
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1205,7 +1212,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _TRANSACTION_ID: transactionId,
         _AFFILIATION: affiliation,
         _ITEMS: _marshalItems(items),
-        ...?parameters,
+        if (parameters != null) ...parameters,
       }),
     );
   }
@@ -1356,8 +1363,7 @@ Map<String, Object> filterOutNulls(Map<String, Object?> parameters) {
 }
 
 @visibleForTesting
-const String valueAndCurrencyMustBeTogetherError =
-    'If you supply the "value" '
+const String valueAndCurrencyMustBeTogetherError = 'If you supply the "value" '
     'parameter, you must also supply the "currency" parameter.';
 
 void _requireValueAndCurrencyTogether(double? value, String? currency) {
@@ -1394,12 +1400,13 @@ List<Map<String, dynamic>>? _marshalItems(List<AnalyticsEventItem>? items) {
 
 void _assertParameterTypesAreCorrect(
   Map<String, Object>? parameters,
-) => parameters?.forEach((key, value) {
-  assert(
-    value is String || value is num,
-    "'string' OR 'number' must be set as the value of the parameter: $key. $value found instead",
-  );
-});
+) =>
+    parameters?.forEach((key, value) {
+      assert(
+        value is String || value is num,
+        "'string' OR 'number' must be set as the value of the parameter: $key. $value found instead",
+      );
+    });
 
 void _assertItemsParameterTypesAreCorrect(List<AnalyticsEventItem>? items) =>
     items?.forEach((item) {

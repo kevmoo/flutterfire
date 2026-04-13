@@ -28,16 +28,13 @@ void main() {
       clearInteractions(mock);
       Firebase.delegatePackingProperty = mock;
 
-      final FirebaseAppPlatform platformApp = FirebaseAppPlatform(
-        testAppName,
-        testOptions,
-      );
+      final FirebaseAppPlatform platformApp =
+          FirebaseAppPlatform(testAppName, testOptions);
 
       when(mock.apps).thenReturn([platformApp]);
       when(mock.app(testAppName)).thenReturn(platformApp);
-      when(
-        mock.initializeApp(name: testAppName, options: testOptions),
-      ).thenAnswer((_) {
+      when(mock.initializeApp(name: testAppName, options: testOptions))
+          .thenAnswer((_) {
         return Future.value(platformApp);
       });
     });
@@ -57,10 +54,8 @@ void main() {
     });
 
     test('.initializeApp()', () async {
-      FirebaseApp initializedApp = await Firebase.initializeApp(
-        name: testAppName,
-        options: testOptions,
-      );
+      FirebaseApp initializedApp =
+          await Firebase.initializeApp(name: testAppName, options: testOptions);
       FirebaseApp app = Firebase.app(testAppName);
 
       expect(initializedApp, app);
@@ -85,16 +80,13 @@ void main() {
     final mock = MockFirebaseCore();
     Firebase.delegatePackingProperty = mock;
 
-    final FirebaseAppPlatform platformApp = FirebaseAppPlatform(
-      expectedName,
-      expectedOptions,
-    );
+    final FirebaseAppPlatform platformApp =
+        FirebaseAppPlatform(expectedName, expectedOptions);
 
     when(mock.apps).thenReturn([platformApp]);
     when(mock.app(expectedName)).thenReturn(platformApp);
-    when(
-      mock.initializeApp(name: expectedName, options: expectedOptions),
-    ).thenAnswer((_) => Future.value(platformApp));
+    when(mock.initializeApp(name: expectedName, options: expectedOptions))
+        .thenAnswer((_) => Future.value(platformApp));
 
     // Initialize the app with only a demo project id. The implementation will
     // set the name and options accordingly.
@@ -105,7 +97,10 @@ void main() {
 
     expect(initializedApp, app);
     verifyInOrder([
-      mock.initializeApp(name: expectedName, options: expectedOptions),
+      mock.initializeApp(
+        name: expectedName,
+        options: expectedOptions,
+      ),
       mock.app(expectedName),
     ]);
   });
@@ -115,7 +110,8 @@ class MockFirebaseCore extends Mock
     with
         // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
         MockPlatformInterfaceMixin
-    implements FirebasePlatform {
+    implements
+        FirebasePlatform {
   @override
   FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
     return super.noSuchMethod(
@@ -131,10 +127,14 @@ class MockFirebaseCore extends Mock
     FirebaseOptions? options,
   }) {
     return super.noSuchMethod(
-      Invocation.method(#initializeApp, const [], {
-        #name: name,
-        #options: options,
-      }),
+      Invocation.method(
+        #initializeApp,
+        const [],
+        {
+          #name: name,
+          #options: options,
+        },
+      ),
       returnValue: Future.value(FakeFirebaseAppPlatform()),
       returnValueForMissingStub: Future.value(FakeFirebaseAppPlatform()),
     );

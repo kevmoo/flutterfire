@@ -19,10 +19,8 @@ void main() {
   group('$MethodChannelListResult', () {
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
-      FirebaseStoragePlatform storage = MethodChannelFirebaseStorage(
-        app: app,
-        bucket: '',
-      );
+      FirebaseStoragePlatform storage =
+          MethodChannelFirebaseStorage(app: app, bucket: '');
       testListResult = MethodChannelListResult(
         storage,
         nextPageToken: '123',

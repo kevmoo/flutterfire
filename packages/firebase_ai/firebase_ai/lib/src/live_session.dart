@@ -52,7 +52,10 @@ class LiveSession {
   ///
   /// [input] (optional): The content to send.
   /// [turnComplete] (optional): Indicates if the turn is complete. Defaults to false.
-  Future<void> send({Content? input, bool turnComplete = false}) async {
+  Future<void> send({
+    Content? input,
+    bool turnComplete = false,
+  }) async {
     _checkWsStatus();
     var clientMessage = input != null
         ? LiveClientContent(turns: [input], turnComplete: turnComplete)
@@ -65,11 +68,9 @@ class LiveSession {
   ///
   /// [functionResponses] (optional): The list of function responses.
   Future<void> sendToolResponse(
-    List<FunctionResponse>? functionResponses,
-  ) async {
-    final toolResponse = LiveClientToolResponse(
-      functionResponses: functionResponses,
-    );
+      List<FunctionResponse>? functionResponses) async {
+    final toolResponse =
+        LiveClientToolResponse(functionResponses: functionResponses);
     _checkWsStatus();
     var clientJson = jsonEncode(toolResponse.toJson());
     _ws.sink.add(clientJson);
@@ -115,8 +116,7 @@ class LiveSession {
   ///
   /// [mediaChunks]: The list of media chunks to send.
   @Deprecated(
-    'Use sendAudioRealtime, sendVideoRealtime, or sendTextRealtime instead',
-  )
+      'Use sendAudioRealtime, sendVideoRealtime, or sendTextRealtime instead')
   Future<void> sendMediaChunks({
     required List<InlineDataPart> mediaChunks,
   }) async {
@@ -150,9 +150,8 @@ class LiveSession {
 
   Future<void> _sendMediaChunk(InlineDataPart chunk) async {
     var clientMessage = LiveClientRealtimeInput(
-      // ignore: deprecated_member_use_from_same_package
-      mediaChunks: [chunk],
-    ); // Create a list with the single chunk
+        // ignore: deprecated_member_use_from_same_package
+        mediaChunks: [chunk]); // Create a list with the single chunk
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
   }

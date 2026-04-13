@@ -33,9 +33,11 @@ class Performance
 
   static Performance getInstance(
     performance_interop.PerformanceJsImpl jsObject,
-  ) => _expando[jsObject] ??= Performance._fromJsObject(jsObject);
+  ) =>
+      _expando[jsObject] ??= Performance._fromJsObject(jsObject);
 
-  Performance._fromJsObject(super.jsObject) : super.fromJsObject();
+  Performance._fromJsObject(performance_interop.PerformanceJsImpl jsObject)
+      : super.fromJsObject(jsObject);
 
   Trace trace(String traceName) =>
       Trace.fromJsObject(performance_interop.trace(jsObject, traceName.toJS));
@@ -48,7 +50,8 @@ class Performance
 }
 
 class Trace extends JsObjectWrapper<performance_interop.TraceJsImpl> {
-  Trace.fromJsObject(super.jsObject) : super.fromJsObject();
+  Trace.fromJsObject(performance_interop.TraceJsImpl jsObject)
+      : super.fromJsObject(jsObject);
 
   String getAttribute(String attr) => jsObject.getAttribute(attr.toJS).toDart;
 
@@ -104,7 +107,9 @@ class PerformanceSettings
     return _expando[jsObject] ??= PerformanceSettings._fromJsObject(jsObject);
   }
 
-  PerformanceSettings._fromJsObject(super.jsObject) : super.fromJsObject();
+  PerformanceSettings._fromJsObject(
+    performance_interop.PerformanceSettingsJsImpl jsObject,
+  ) : super.fromJsObject(jsObject);
 
   bool? get dataCollectionEnabled => jsObject.dataCollectionEnabled?.toDart;
   set dataCollectionEnabled(bool? b) {

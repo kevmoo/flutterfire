@@ -25,12 +25,14 @@ Map<String, Object?> generateImagenRequest(
   ImagenSafetySettings? safetySettings,
 }) {
   final parameters = <String, Object?>{
-    'storageUri': ?gcsUri,
+    if (gcsUri != null) 'storageUri': gcsUri,
     'sampleCount': generationConfig?.numberOfImages ?? 1,
     if (generationConfig?.aspectRatio case final aspectRatio?)
       'aspectRatio': aspectRatio.toJson(),
-    'negativePrompt': ?generationConfig?.negativePrompt,
-    'addWatermark': ?generationConfig?.addWatermark,
+    if (generationConfig?.negativePrompt case final negativePrompt?)
+      'negativePrompt': negativePrompt,
+    if (generationConfig?.addWatermark case final addWatermark?)
+      'addWatermark': addWatermark,
     if (generationConfig?.imageFormat case final imageFormat?)
       'outputOption': imageFormat.toJson(),
     if (safetySettings case final safetySettings?) ...safetySettings.toJson(),
@@ -40,7 +42,7 @@ Map<String, Object?> generateImagenRequest(
 
   return {
     'instances': [
-      {'prompt': prompt},
+      {'prompt': prompt}
     ],
     'parameters': parameters,
   };
@@ -57,16 +59,17 @@ Map<String, Object?> generateImagenEditRequest(
 }) {
   if (!useVertexBackend) {
     throw FirebaseAIException(
-      'Image editing for Imagen is only supported on Vertex AI backend.',
-    );
+        'Image editing for Imagen is only supported on Vertex AI backend.');
   }
   final parameters = <String, Object?>{
     'sampleCount': generationConfig?.numberOfImages ?? 1,
     if (config?.editMode case final editMode?) 'editMode': editMode.toJson(),
     if (config?.editSteps case final editSteps?)
       'editConfig': {'baseSteps': editSteps},
-    'negativePrompt': ?generationConfig?.negativePrompt,
-    'addWatermark': ?generationConfig?.addWatermark,
+    if (generationConfig?.negativePrompt case final negativePrompt?)
+      'negativePrompt': negativePrompt,
+    if (generationConfig?.addWatermark case final addWatermark?)
+      'addWatermark': addWatermark,
     if (generationConfig?.imageFormat case final imageFormat?)
       'outputOption': imageFormat.toJson(),
     if (safetySettings case final safetySettings?) ...safetySettings.toJson(),
@@ -84,7 +87,7 @@ Map<String, Object?> generateImagenEditRequest(
           var image = entry.value;
           return image.toJson(referenceIdOverrideIfNull: index + images.length);
         }).toList(),
-      },
+      }
     ],
   };
 }
@@ -95,7 +98,7 @@ void main() {
       test('creates a basic request with default parameters', () {
         final request = generateImagenRequest('a beautiful landscape');
         expect(request['instances'], [
-          {'prompt': 'a beautiful landscape'},
+          {'prompt': 'a beautiful landscape'}
         ]);
         final params = request['parameters']! as Map<String, Object?>;
         expect(params['sampleCount'], 1);
@@ -118,10 +121,8 @@ void main() {
           addWatermark: false,
           imageFormat: ImagenFormat.png(),
         );
-        final request = generateImagenRequest(
-          'a futuristic city',
-          generationConfig: config,
-        );
+        final request = generateImagenRequest('a futuristic city',
+            generationConfig: config);
         final params = request['parameters']! as Map<String, Object?>;
         expect(params['sampleCount'], 4);
         expect(params['aspectRatio'], '16:9');
@@ -137,10 +138,8 @@ void main() {
           ImagenSafetyFilterLevel.blockNone,
           ImagenPersonFilterLevel.allowAdult,
         );
-        final request = generateImagenRequest(
-          'a robot army',
-          safetySettings: settings,
-        );
+        final request =
+            generateImagenRequest('a robot army', safetySettings: settings);
         final params = request['parameters']! as Map<String, Object?>;
         expect(params['personGeneration'], 'allow_adult');
         expect(params['safetySetting'], 'block_none');
@@ -182,7 +181,7 @@ void main() {
         expect(params['includeRaiReason'], true);
         expect(params['includeSafetyAttributes'], true);
         expect(request['instances'], [
-          {'prompt': 'a sunny beach'},
+          {'prompt': 'a sunny beach'}
         ]);
       });
     });
@@ -193,17 +192,13 @@ void main() {
       setUp(() {
         final dummyBytes = Uint8List.fromList([1, 2, 3]);
         final dummyInlineImage = ImagenInlineImage(
-          bytesBase64Encoded: dummyBytes,
-          mimeType: 'image/jpeg',
-        );
+            bytesBase64Encoded: dummyBytes, mimeType: 'image/jpeg');
         referenceImages = [ImagenRawImage(image: dummyInlineImage)];
       });
 
       test('creates a basic edit request', () {
-        final request = generateImagenEditRequest(
-          referenceImages,
-          'make it sunny',
-        );
+        final request =
+            generateImagenEditRequest(referenceImages, 'make it sunny');
         final params = request['parameters']! as Map<String, Object?>;
         expect(params['sampleCount'], 1);
         expect(params.containsKey('editMode'), isFalse);
@@ -229,11 +224,8 @@ void main() {
         );
         final params = request['parameters']! as Map<String, Object?>;
         expect(params['sampleCount'], 2);
-        expect(
-          params.containsKey('aspectRatio'),
-          isFalse,
-          reason: 'aspectRatio is not a valid parameter for edit requests.',
-        );
+        expect(params.containsKey('aspectRatio'), isFalse,
+            reason: 'aspectRatio is not a valid parameter for edit requests.');
         expect(params['includeRaiReason'], true);
         expect(params['includeSafetyAttributes'], true);
       });

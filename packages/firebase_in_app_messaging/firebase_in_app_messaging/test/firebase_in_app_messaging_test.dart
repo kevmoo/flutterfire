@@ -3,9 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core/test.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -25,17 +26,21 @@ void main() {
 
       fiam = FirebaseInAppMessaging.instance;
       when(
-        mockFiam.delegateFor(app: anyNamed('app')),
-      ).thenAnswer((_) => mockFiam);
-      when(
-        mockFiam.triggerEvent('someEvent'),
-      ).thenAnswer((_) => Future<void>.value());
-      when(
-        mockFiam.setMessagesSuppressed(any),
-      ).thenAnswer((_) => Future<void>.value());
-      when(
-        mockFiam.setAutomaticDataCollectionEnabled(any),
-      ).thenAnswer((_) => Future<void>.value());
+        mockFiam.delegateFor(
+          app: anyNamed('app'),
+        ),
+      ).thenAnswer(
+        (_) => mockFiam,
+      );
+      when(mockFiam.triggerEvent('someEvent')).thenAnswer(
+        (_) => Future<void>.value(),
+      );
+      when(mockFiam.setMessagesSuppressed(any)).thenAnswer(
+        (_) => Future<void>.value(),
+      );
+      when(mockFiam.setAutomaticDataCollectionEnabled(any)).thenAnswer(
+        (_) => Future<void>.value(),
+      );
     });
 
     test('triggerEvent', () async {
@@ -71,7 +76,8 @@ class MockFirebaseInAppMessaging extends Mock
     with
         // ignore: prefer_mixin
         MockPlatformInterfaceMixin
-    implements TestFirebaseInAppMessagingPlatform {
+    implements
+        TestFirebaseInAppMessagingPlatform {
   @override
   FirebaseInAppMessagingPlatform delegateFor({FirebaseApp? app}) {
     return super.noSuchMethod(
@@ -111,7 +117,7 @@ class MockFirebaseInAppMessaging extends Mock
 
 class TestFirebaseInAppMessagingPlatform
     extends FirebaseInAppMessagingPlatform {
-  TestFirebaseInAppMessagingPlatform(super.app);
+  TestFirebaseInAppMessagingPlatform(FirebaseApp? app) : super(app);
 
   @override
   FirebaseInAppMessagingPlatform delegateFor({FirebaseApp? app}) {

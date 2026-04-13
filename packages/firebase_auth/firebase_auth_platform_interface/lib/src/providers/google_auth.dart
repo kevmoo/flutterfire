@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -40,10 +40,8 @@ class GoogleAuthProvider extends AuthProvider {
 
   /// Create a new [GoogleAuthCredential] from a provided [accessToken].
   static OAuthCredential credential({String? idToken, String? accessToken}) {
-    assert(
-      accessToken != null || idToken != null,
-      'At least one of ID token and access token is required',
-    );
+    assert(accessToken != null || idToken != null,
+        'At least one of ID token and access token is required');
     return GoogleAuthCredential._credential(
       idToken: idToken,
       accessToken: accessToken,
@@ -60,7 +58,7 @@ class GoogleAuthProvider extends AuthProvider {
     return _kProviderId;
   }
 
-  final List<String> _scopes = [];
+  List<String> _scopes = [];
   Map<dynamic, dynamic> _parameters = {};
 
   /// Returns the currently assigned scopes to this provider instance.
@@ -92,8 +90,14 @@ class GoogleAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [GoogleAuthProvider.credential].
 class GoogleAuthCredential extends OAuthCredential {
-  GoogleAuthCredential._({super.accessToken, super.idToken})
-    : super(providerId: _kProviderId, signInMethod: _kProviderId);
+  GoogleAuthCredential._({
+    String? accessToken,
+    String? idToken,
+  }) : super(
+            providerId: _kProviderId,
+            signInMethod: _kProviderId,
+            accessToken: accessToken,
+            idToken: idToken);
 
   factory GoogleAuthCredential._credential({
     String? idToken,

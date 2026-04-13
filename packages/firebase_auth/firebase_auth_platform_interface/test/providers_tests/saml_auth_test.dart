@@ -25,5 +25,5 @@ void main() {
 }
 
 class TestSAMLAuthProvider extends SAMLAuthProvider {
-  TestSAMLAuthProvider(super.providerId);
+  TestSAMLAuthProvider(String providerId) : super(providerId);
 }

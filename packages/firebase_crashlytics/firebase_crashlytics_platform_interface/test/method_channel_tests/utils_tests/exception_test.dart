@@ -6,6 +6,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_crashlytics_platform_interface/src/method_channel/utils/exception.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   group('catchPlatformException()', () {
@@ -18,20 +19,16 @@ void main() {
       );
     });
 
-    test(
-      'should catch a [PlatformException] and throw a [FirebaseException]',
-      () async {
-        PlatformException platformException = PlatformException(
-          code: 'UNKNOWN',
-        );
+    test('should catch a [PlatformException] and throw a [FirebaseException]',
+        () async {
+      PlatformException platformException = PlatformException(code: 'UNKNOWN');
 
-        expect(
-          () => convertPlatformException(platformException, StackTrace.empty),
-          throwsA(
-            isA<FirebaseException>().having((e) => e.code, 'code', 'unknown'),
-          ),
-        );
-      },
-    );
+      expect(
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
+          isA<FirebaseException>().having((e) => e.code, 'code', 'unknown'),
+        ),
+      );
+    });
   });
 }

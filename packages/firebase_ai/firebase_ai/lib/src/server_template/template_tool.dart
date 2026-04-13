@@ -22,8 +22,7 @@ final class TemplateTool {
 
   /// Returns a [TemplateTool] instance with list of [TemplateFunctionDeclaration].
   static TemplateTool functionDeclarations(
-    List<TemplateFunctionDeclaration> functionDeclarations,
-  ) {
+      List<TemplateFunctionDeclaration> functionDeclarations) {
     return TemplateTool._(functionDeclarations);
   }
 
@@ -40,28 +39,25 @@ final class TemplateTool {
 
   /// Convert to json object.
   Map<String, Object> toJson() => {
-    if (_functionDeclarations case final functionDeclarations?
-        when functionDeclarations.isNotEmpty)
-      'templateFunctions': functionDeclarations
-          .map((f) => f.hasSchema ? f.toJson() : null)
-          .where((f) => f != null)
-          .toList(),
-  };
+        if (_functionDeclarations case final functionDeclarations?
+            when functionDeclarations.isNotEmpty)
+          'templateFunctions': functionDeclarations
+              .map((f) => f.hasSchema ? f.toJson() : null)
+              .where((f) => f != null)
+              .toList(),
+      };
 }
 
 /// A function declaration for a template tool.
 class TemplateFunctionDeclaration {
   // ignore: public_member_api_docs
-  TemplateFunctionDeclaration(
-    this.name, {
-    Map<String, JSONSchema>? parameters,
-    List<String> optionalParameters = const [],
-  }) : _schemaObject = parameters != null
-           ? JSONSchema.object(
-               properties: parameters,
-               optionalProperties: optionalParameters,
-             )
-           : null;
+  TemplateFunctionDeclaration(this.name,
+      {Map<String, JSONSchema>? parameters,
+      List<String> optionalParameters = const []})
+      : _schemaObject = parameters != null
+            ? JSONSchema.object(
+                properties: parameters, optionalProperties: optionalParameters)
+            : null;
 
   /// The name of the function.
   ///
@@ -76,30 +72,27 @@ class TemplateFunctionDeclaration {
 
   /// Convert to json object.
   Map<String, Object?> toJson() => {
-    'name': name,
-    if (_schemaObject case final schemaObject?)
-      'inputSchema': schemaObject.toJson(),
-  };
+        'name': name,
+        if (_schemaObject case final schemaObject?)
+          'inputSchema': schemaObject.toJson(),
+      };
 }
 
 /// A function declaration for a template tool that can be called by the model.
 final class TemplateAutoFunctionDeclaration
     extends TemplateFunctionDeclaration {
   // ignore: public_member_api_docs
-  TemplateAutoFunctionDeclaration({
-    required String name,
-    required this.callable,
-    Map<String, JSONSchema>? parameters,
-    List<String> optionalParameters = const [],
-  }) : super(
-         name,
-         parameters: parameters,
-         optionalParameters: optionalParameters,
-       );
+  TemplateAutoFunctionDeclaration(
+      {required String name,
+      required this.callable,
+      Map<String, JSONSchema>? parameters,
+      List<String> optionalParameters = const []})
+      : super(name,
+            parameters: parameters, optionalParameters: optionalParameters);
 
   /// The callable function that this declaration represents.
   final FutureOr<Map<String, Object?>> Function(Map<String, Object?> args)
-  callable;
+      callable;
 }
 
 /// Config for template tools to use with server prompts.

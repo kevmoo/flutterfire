@@ -2,9 +2,11 @@ part of 'movies.dart';
 
 class ListMoviesVariablesBuilder {
   final FirebaseDataConnect _dataConnect;
-  ListMoviesVariablesBuilder(this._dataConnect);
-  Deserializer<ListMoviesData> dataDeserializer = (dynamic json) =>
-      ListMoviesData.fromJson(jsonDecode(json));
+  ListMoviesVariablesBuilder(
+    this._dataConnect,
+  );
+  Deserializer<ListMoviesData> dataDeserializer =
+      (dynamic json) => ListMoviesData.fromJson(jsonDecode(json));
 
   Future<QueryResult<ListMoviesData, void>> execute() {
     return ref().execute();
@@ -12,52 +14,24 @@ class ListMoviesVariablesBuilder {
 
   QueryRef<ListMoviesData, void> ref() {
     return _dataConnect.query(
-      "ListMovies",
-      dataDeserializer,
-      emptySerializer,
-      null,
-    );
+        "ListMovies", dataDeserializer, emptySerializer, null);
   }
 }
 
-@immutable
 class ListMoviesMovies {
-  final String id;
-  final String title;
-  final List<ListMoviesMoviesDirectedBy> directed_by;
-  final double? rating;
+  String id;
+  String title;
+  List<ListMoviesMoviesDirectedBy> directed_by;
+  double? rating;
   ListMoviesMovies.fromJson(dynamic json)
-    : id = nativeFromJson<String>(json['id']),
-      title = nativeFromJson<String>(json['title']),
-      directed_by = (json['directed_by'] as List<dynamic>)
-          .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
-          .toList(),
-      rating = json['rating'] == null
-          ? null
-          : nativeFromJson<double>(json['rating']);
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-
-    final ListMoviesMovies otherTyped = other as ListMoviesMovies;
-    return id == otherTyped.id &&
-        title == otherTyped.title &&
-        directed_by == otherTyped.directed_by &&
-        rating == otherTyped.rating;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id.hashCode,
-    title.hashCode,
-    directed_by.hashCode,
-    rating.hashCode,
-  ]);
+      : id = nativeFromJson<String>(json['id']),
+        title = nativeFromJson<String>(json['title']),
+        directed_by = (json['directed_by'] as List<dynamic>)
+            .map((e) => ListMoviesMoviesDirectedBy.fromJson(e))
+            .toList(),
+        rating = json['rating'] == null
+            ? null
+            : nativeFromJson<double>(json['rating']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -78,27 +52,10 @@ class ListMoviesMovies {
   });
 }
 
-@immutable
 class ListMoviesMoviesDirectedBy {
-  final String name;
+  String name;
   ListMoviesMoviesDirectedBy.fromJson(dynamic json)
-    : name = nativeFromJson<String>(json['name']);
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-
-    final ListMoviesMoviesDirectedBy otherTyped =
-        other as ListMoviesMoviesDirectedBy;
-    return name == otherTyped.name;
-  }
-
-  @override
-  int get hashCode => name.hashCode;
+      : name = nativeFromJson<String>(json['name']);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -106,31 +63,17 @@ class ListMoviesMoviesDirectedBy {
     return json;
   }
 
-  ListMoviesMoviesDirectedBy({required this.name});
+  ListMoviesMoviesDirectedBy({
+    required this.name,
+  });
 }
 
-@immutable
 class ListMoviesData {
-  final List<ListMoviesMovies> movies;
+  List<ListMoviesMovies> movies;
   ListMoviesData.fromJson(dynamic json)
-    : movies = (json['movies'] as List<dynamic>)
-          .map((e) => ListMoviesMovies.fromJson(e))
-          .toList();
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-
-    final ListMoviesData otherTyped = other as ListMoviesData;
-    return movies == otherTyped.movies;
-  }
-
-  @override
-  int get hashCode => movies.hashCode;
+      : movies = (json['movies'] as List<dynamic>)
+            .map((e) => ListMoviesMovies.fromJson(e))
+            .toList();
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
@@ -138,5 +81,7 @@ class ListMoviesData {
     return json;
   }
 
-  ListMoviesData({required this.movies});
+  ListMoviesData({
+    required this.movies,
+  });
 }

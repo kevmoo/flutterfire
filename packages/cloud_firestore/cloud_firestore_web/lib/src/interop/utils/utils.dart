@@ -32,9 +32,7 @@ dynamic dartify(dynamic object) {
   if (jsObject.instanceof(TimestampJsConstructor as JSFunction)) {
     final castedJSObject = jsObject as TimestampJsImpl;
     return Timestamp(
-      castedJSObject.seconds.toDartInt,
-      castedJSObject.nanoseconds.toDartInt,
-    );
+        castedJSObject.seconds.toDartInt, castedJSObject.nanoseconds.toDartInt);
   }
   if (jsObject.instanceof(BytesConstructor as JSFunction)) {
     return jsObject as BytesJsImpl;

@@ -32,8 +32,8 @@ void main() {
             cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
             webExperimentalLongPollingOptions:
                 WebExperimentalLongPollingOptions(
-                  timeoutDuration: Duration(seconds: 4),
-                ),
+              timeoutDuration: Duration(seconds: 4),
+            ),
             webPersistentTabManager: WebPersistentMultipleTabManager(),
           ),
         ),
@@ -85,30 +85,29 @@ void main() {
       });
 
       expect(
-        const Settings(
-          persistenceEnabled: true,
-          host: 'foo bar',
-          sslEnabled: true,
-          cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-          webExperimentalAutoDetectLongPolling: true,
-          webExperimentalForceLongPolling: true,
-          webExperimentalLongPollingOptions: WebExperimentalLongPollingOptions(
-            timeoutDuration: Duration(seconds: 4),
-          ),
-        ).asMap,
-        <String, dynamic>{
-          'persistenceEnabled': true,
-          'host': 'foo bar',
-          'sslEnabled': true,
-          'cacheSizeBytes': Settings.CACHE_SIZE_UNLIMITED,
-          'webExperimentalForceLongPolling': true,
-          'webExperimentalAutoDetectLongPolling': true,
-          'webExperimentalLongPollingOptions':
-              const WebExperimentalLongPollingOptions(
+          const Settings(
+              persistenceEnabled: true,
+              host: 'foo bar',
+              sslEnabled: true,
+              cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+              webExperimentalAutoDetectLongPolling: true,
+              webExperimentalForceLongPolling: true,
+              webExperimentalLongPollingOptions:
+                  WebExperimentalLongPollingOptions(
                 timeoutDuration: Duration(seconds: 4),
-              ).asMap,
-        },
-      );
+              )).asMap,
+          <String, dynamic>{
+            'persistenceEnabled': true,
+            'host': 'foo bar',
+            'sslEnabled': true,
+            'cacheSizeBytes': Settings.CACHE_SIZE_UNLIMITED,
+            'webExperimentalForceLongPolling': true,
+            'webExperimentalAutoDetectLongPolling': true,
+            'webExperimentalLongPollingOptions':
+                const WebExperimentalLongPollingOptions(
+              timeoutDuration: Duration(seconds: 4),
+            ).asMap
+          });
     });
 
     test('CACHE_SIZE_UNLIMITED returns -1', () {
@@ -148,14 +147,12 @@ void main() {
           persistenceEnabled: true,
           webPersistentTabManager: WebPersistentMultipleTabManager(),
         ),
-        isNot(
-          equals(
-            const Settings(
-              persistenceEnabled: true,
-              webPersistentTabManager: WebPersistentSingleTabManager(),
-            ),
+        isNot(equals(
+          const Settings(
+            persistenceEnabled: true,
+            webPersistentTabManager: WebPersistentSingleTabManager(),
           ),
-        ),
+        )),
       );
     });
 
@@ -167,10 +164,8 @@ void main() {
 
       final copied = settings.copyWith(host: 'localhost');
 
-      expect(
-        copied.webPersistentTabManager,
-        isA<WebPersistentMultipleTabManager>(),
-      );
+      expect(copied.webPersistentTabManager,
+          isA<WebPersistentMultipleTabManager>());
       expect(copied.host, 'localhost');
       expect(copied.persistenceEnabled, true);
     });

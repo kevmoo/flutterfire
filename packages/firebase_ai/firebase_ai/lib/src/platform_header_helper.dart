@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 /// Method channel for the native platform helper plugin.
 @visibleForTesting
@@ -38,9 +40,8 @@ Future<Map<String, String>> getPlatformSecurityHeaders() async {
   if (_cachedHeaders != null) return _cachedHeaders!;
 
   try {
-    final result = await platformHeaderChannel.invokeMapMethod<String, String>(
-      'getPlatformHeaders',
-    );
+    final result = await platformHeaderChannel
+        .invokeMapMethod<String, String>('getPlatformHeaders');
     _cachedHeaders = result ?? const {};
   } catch (_) {
     _cachedHeaders = const {};

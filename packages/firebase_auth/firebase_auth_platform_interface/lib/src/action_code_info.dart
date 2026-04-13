@@ -4,17 +4,20 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
+import 'package:meta/meta.dart';
 
 /// A response from calling [checkActionCode].
 class ActionCodeInfo {
   // ignore: public_member_api_docs
   @protected
-  ActionCodeInfo({required this.operation, required ActionCodeInfoData data})
-    : _data = data;
+  ActionCodeInfo({
+    required this.operation,
+    required ActionCodeInfoData data,
+  }) : _data = data;
 
   ActionCodeInfoOperation operation;
 
-  final ActionCodeInfoData _data;
+  ActionCodeInfoData _data;
 
   Map<String, dynamic> get data => _data.toMap();
 }
@@ -26,7 +29,10 @@ class ActionCodeInfo {
 class ActionCodeInfoData {
   // ignore: public_member_api_docs
   @protected
-  ActionCodeInfoData({required this.email, required this.previousEmail});
+  ActionCodeInfoData({
+    required this.email,
+    required this.previousEmail,
+  });
 
   /// The email associated with the action code.
   final String? email;
@@ -36,6 +42,9 @@ class ActionCodeInfoData {
 
   /// Converts the [ActionCodeInfoData] instance to a [Map].
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'email': email, 'previousEmail': previousEmail};
+    return <String, dynamic>{
+      'email': email,
+      'previousEmail': previousEmail,
+    };
   }
 }

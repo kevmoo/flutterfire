@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// ignore_for_file: avoid_print
-
 import 'dart:io';
 
 import 'package:barcode_widget/barcode_widget.dart';
@@ -11,6 +9,7 @@ import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_example/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -40,7 +39,10 @@ class ScaffoldSnackbar {
     ScaffoldMessenger.of(_context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
+        SnackBar(
+          content: Text(message),
+          behavior: SnackBarBehavior.floating,
+        ),
       );
   }
 }
@@ -53,14 +55,14 @@ extension on AuthMode {
   String get label => this == AuthMode.login
       ? 'Sign in'
       : this == AuthMode.phone
-      ? 'Sign in'
-      : 'Register';
+          ? 'Sign in'
+          : 'Register';
 }
 
 /// Entrypoint example for various sign-in flows with Firebase.
 class AuthGate extends StatefulWidget {
   // ignore: public_member_api_docs
-  const AuthGate({super.key});
+  const AuthGate({Key? key}) : super(key: key);
   static String? appleAuthorizationCode;
   @override
   State<StatefulWidget> createState() => _AuthGateState();
@@ -98,19 +100,33 @@ class _AuthGateState extends State<AuthGate> {
 
     if (!kIsWeb && Platform.isMacOS) {
       authButtons = {
-        Buttons.Apple: () => _handleMultiFactorException(_signInWithApple),
+        Buttons.Apple: () => _handleMultiFactorException(
+              _signInWithApple,
+            ),
       };
     } else {
       authButtons = {
-        Buttons.Apple: () => _handleMultiFactorException(_signInWithApple),
-        Buttons.Google: () => _handleMultiFactorException(_signInWithGoogle),
-        Buttons.GitHub: () => _handleMultiFactorException(_signInWithGitHub),
-        Buttons.Microsoft: () =>
-            _handleMultiFactorException(_signInWithMicrosoft),
-        Buttons.Twitter: () => _handleMultiFactorException(_signInWithTwitter),
-        Buttons.Yahoo: () => _handleMultiFactorException(_signInWithYahoo),
-        Buttons.Facebook: () =>
-            _handleMultiFactorException(_signInWithFacebook),
+        Buttons.Apple: () => _handleMultiFactorException(
+              _signInWithApple,
+            ),
+        Buttons.Google: () => _handleMultiFactorException(
+              _signInWithGoogle,
+            ),
+        Buttons.GitHub: () => _handleMultiFactorException(
+              _signInWithGitHub,
+            ),
+        Buttons.Microsoft: () => _handleMultiFactorException(
+              _signInWithMicrosoft,
+            ),
+        Buttons.Twitter: () => _handleMultiFactorException(
+              _signInWithTwitter,
+            ),
+        Buttons.Yahoo: () => _handleMultiFactorException(
+              _signInWithYahoo,
+            ),
+        Buttons.Facebook: () => _handleMultiFactorException(
+              _signInWithFacebook,
+            ),
       };
     }
   }
@@ -137,9 +153,8 @@ class _AuthGateState extends State<AuthGate> {
                           Visibility(
                             visible: error.isNotEmpty,
                             child: MaterialBanner(
-                              backgroundColor: Theme.of(
-                                context,
-                              ).colorScheme.error,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.error,
                               content: SelectableText(error),
                               actions: [
                                 TextButton(
@@ -154,9 +169,8 @@ class _AuthGateState extends State<AuthGate> {
                                   ),
                                 ),
                               ],
-                              contentTextStyle: const TextStyle(
-                                color: Colors.white,
-                              ),
+                              contentTextStyle:
+                                  const TextStyle(color: Colors.white),
                               padding: const EdgeInsets.all(10),
                             ),
                           ),
@@ -174,8 +188,8 @@ class _AuthGateState extends State<AuthGate> {
                                   autofillHints: const [AutofillHints.email],
                                   validator: (value) =>
                                       value != null && value.isNotEmpty
-                                      ? null
-                                      : 'Required',
+                                          ? null
+                                          : 'Required',
                                 ),
                                 const SizedBox(height: 20),
                                 TextFormField(
@@ -187,8 +201,8 @@ class _AuthGateState extends State<AuthGate> {
                                   ),
                                   validator: (value) =>
                                       value != null && value.isNotEmpty
-                                      ? null
-                                      : 'Required',
+                                          ? null
+                                          : 'Required',
                                 ),
                               ],
                             ),
@@ -202,8 +216,8 @@ class _AuthGateState extends State<AuthGate> {
                               ),
                               validator: (value) =>
                                   value != null && value.isNotEmpty
-                                  ? null
-                                  : 'Required',
+                                      ? null
+                                      : 'Required',
                             ),
                           const SizedBox(height: 20),
                           SizedBox(
@@ -213,8 +227,8 @@ class _AuthGateState extends State<AuthGate> {
                               onPressed: isLoading
                                   ? null
                                   : () => _handleMultiFactorException(
-                                      _emailAndPassword,
-                                    ),
+                                        _emailAndPassword,
+                                      ),
                               child: isLoading
                                   ? const CircularProgressIndicator.adaptive()
                                   : Text(mode.label),
@@ -224,28 +238,31 @@ class _AuthGateState extends State<AuthGate> {
                             onPressed: _resetPassword,
                             child: const Text('Forgot password?'),
                           ),
-                          ...authButtons.keys.map(
-                            (button) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 200),
-                                child: isLoading
-                                    ? Container(
-                                        color: Colors.grey[200],
-                                        height: 50,
-                                        width: double.infinity,
-                                      )
-                                    : SizedBox(
-                                        width: double.infinity,
-                                        height: 50,
-                                        child: SignInButton(
-                                          button,
-                                          onPressed: authButtons[button],
-                                        ),
-                                      ),
-                              ),
-                            ),
-                          ),
+                          ...authButtons.keys
+                              .map(
+                                (button) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 200),
+                                    child: isLoading
+                                        ? Container(
+                                            color: Colors.grey[200],
+                                            height: 50,
+                                            width: double.infinity,
+                                          )
+                                        : SizedBox(
+                                            width: double.infinity,
+                                            height: 50,
+                                            child: SignInButton(
+                                              button,
+                                              onPressed: authButtons[button],
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
                           SizedBox(
                             width: double.infinity,
                             height: 50,
@@ -397,9 +414,8 @@ class _AuthGateState extends State<AuthGate> {
       setState(() {
         error = '${e.message}';
       });
-      final firstTotpHint = e.resolver.hints.firstWhereOrNull(
-        (element) => element is TotpMultiFactorInfo,
-      );
+      final firstTotpHint = e.resolver.hints
+          .firstWhereOrNull((element) => element is TotpMultiFactorInfo);
       if (firstTotpHint != null) {
         final code = await getSmsCodeFromUser(context);
         final assertion = await TotpMultiFactorGenerator.getAssertionForSignIn(
@@ -410,9 +426,8 @@ class _AuthGateState extends State<AuthGate> {
         return;
       }
 
-      final firstPhoneHint = e.resolver.hints.firstWhereOrNull(
-        (element) => element is PhoneMultiFactorInfo,
-      );
+      final firstPhoneHint = e.resolver.hints
+          .firstWhereOrNull((element) => element is PhoneMultiFactorInfo);
 
       if (firstPhoneHint is! PhoneMultiFactorInfo) {
         return;
@@ -434,7 +449,9 @@ class _AuthGateState extends State<AuthGate> {
 
             try {
               await e.resolver.resolveSignIn(
-                PhoneMultiFactorGenerator.getAssertion(credential),
+                PhoneMultiFactorGenerator.getAssertion(
+                  credential,
+                ),
               );
             } on FirebaseAuthException catch (e) {
               print(e.message);
@@ -480,9 +497,8 @@ class _AuthGateState extends State<AuthGate> {
       });
     } else {
       if (kIsWeb) {
-        final confirmationResult = await auth.signInWithPhoneNumber(
-          phoneController.text,
-        );
+        final confirmationResult =
+            await auth.signInWithPhoneNumber(phoneController.text);
         final smsCode = await getSmsCodeFromUser(context);
 
         if (smsCode != null) {

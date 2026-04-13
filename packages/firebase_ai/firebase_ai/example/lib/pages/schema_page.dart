@@ -39,7 +39,9 @@ class _SchemaPromptPageState extends State<SchemaPromptPage> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 750),
+        duration: const Duration(
+          milliseconds: 750,
+        ),
         curve: Curves.easeOutCirc,
       ),
     );
@@ -48,7 +50,9 @@ class _SchemaPromptPageState extends State<SchemaPromptPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -68,7 +72,10 @@ class _SchemaPromptPageState extends State<SchemaPromptPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+              padding: const EdgeInsets.symmetric(
+                vertical: 25,
+                horizontal: 15,
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -110,9 +117,8 @@ class _SchemaPromptPageState extends State<SchemaPromptPage> {
                 'name': Schema.string(),
                 'age': Schema.integer(),
                 'species': Schema.string(),
-                'accessory': Schema.enumString(
-                  enumValues: ['hat', 'belt', 'shoes'],
-                ),
+                'accessory':
+                    Schema.enumString(enumValues: ['hat', 'belt', 'shoes']),
               },
             ),
           ),
@@ -132,12 +138,10 @@ class _SchemaPromptPageState extends State<SchemaPromptPage> {
         _showError('No response from API.');
         return;
       } else {
-        final text = const JsonEncoder.withIndent(
-          '  ',
-        ).convert(json.decode(response.text!) as Object?);
-        _messages.add(
-          MessageData(text: '```json\n$text\n```', fromUser: false),
-        );
+        final text = const JsonEncoder.withIndent('  ')
+            .convert(json.decode(response.text!) as Object?);
+        _messages
+            .add(MessageData(text: '```json\n$text\n```', fromUser: false));
         setState(() {
           _loading = false;
           _scrollDown();
@@ -163,7 +167,9 @@ class _SchemaPromptPageState extends State<SchemaPromptPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(child: SelectableText(message)),
+          content: SingleChildScrollView(
+            child: SelectableText(message),
+          ),
           actions: [
             TextButton(
               onPressed: () {

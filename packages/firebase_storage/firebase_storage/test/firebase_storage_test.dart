@@ -49,10 +49,8 @@ void main() {
 
     group('instanceFor()', () {
       test('instance', () async {
-        expect(
-          storageSecondary.bucket,
-          kSecondaryBucket.replaceFirst('gs://', ''),
-        );
+        expect(storageSecondary.bucket,
+            kSecondaryBucket.replaceFirst('gs://', ''));
         expect(storageSecondary.app.name, 'foo');
       });
 
@@ -111,19 +109,16 @@ void main() {
 
     group('.refFromURL()', () {
       test(
-        "throws AssertionError when value does not start with 'gs://' or 'http'",
-        () {
-          expect(() => storage.refFromURL('invalid.com'), throwsAssertionError);
-        },
-      );
+          "throws AssertionError when value does not start with 'gs://' or 'http'",
+          () {
+        expect(() => storage.refFromURL('invalid.com'), throwsAssertionError);
+      });
 
-      test(
-        'throws AssertionError when http url is not a valid storage url',
-        () {
-          const String url = 'https://test.com';
-          expect(() => storage.refFromURL(url), throwsAssertionError);
-        },
-      );
+      test('throws AssertionError when http url is not a valid storage url',
+          () {
+        const String url = 'https://test.com';
+        expect(() => storage.refFromURL(url), throwsAssertionError);
+      });
 
       test('verify delegate method is called for encoded http urls', () {
         const String customBucket = 'test.appspot.com';
@@ -192,9 +187,7 @@ void main() {
 
       test('throws AssertionError when port is negative', () {
         expect(
-          () => storage.useStorageEmulator('foo', -10),
-          throwsAssertionError,
-        );
+            () => storage.useStorageEmulator('foo', -10), throwsAssertionError);
       });
 
       test('verify delegate method is called with args', () {

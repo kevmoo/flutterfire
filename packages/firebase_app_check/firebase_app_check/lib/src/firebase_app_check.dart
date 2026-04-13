@@ -6,10 +6,10 @@
 part of '../firebase_app_check.dart';
 
 class FirebaseAppCheck extends FirebasePluginPlatform {
-  static final Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
+  static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
 
   FirebaseAppCheck._({required this.app})
-    : super(app.name, 'plugins.flutter.io/firebase_app_check');
+      : super(app.name, 'plugins.flutter.io/firebase_app_check');
 
   /// The [FirebaseApp] for this current [FirebaseAppCheck] instance.
   FirebaseApp app;
@@ -24,7 +24,9 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
   FirebaseAppCheckPlatform get _delegate {
-    _delegatePackingProperty ??= FirebaseAppCheckPlatform.instanceFor(app: app);
+    _delegatePackingProperty ??= FirebaseAppCheckPlatform.instanceFor(
+      app: app,
+    );
 
     return _delegatePackingProperty!;
   }

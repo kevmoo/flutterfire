@@ -5,12 +5,11 @@
 // ignore_for_file: require_trailing_commas
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Requests & displays the current user permissions for this device.
 class Permissions extends StatefulWidget {
-  const Permissions({super.key});
-
   @override
   State<StatefulWidget> createState() => _Permissions();
 }
@@ -25,12 +24,12 @@ class _Permissions extends State<Permissions> {
       _fetching = true;
     });
 
-    NotificationSettings settings = await FirebaseMessaging.instance
-        .requestPermission(
-          announcement: true,
-          carPlay: true,
-          criticalAlert: true,
-        );
+    NotificationSettings settings =
+        await FirebaseMessaging.instance.requestPermission(
+      announcement: true,
+      carPlay: true,
+      criticalAlert: true,
+    );
 
     setState(() {
       _requested = true;
@@ -44,8 +43,8 @@ class _Permissions extends State<Permissions> {
       _fetching = true;
     });
 
-    NotificationSettings settings = await FirebaseMessaging.instance
-        .getNotificationSettings();
+    NotificationSettings settings =
+        await FirebaseMessaging.instance.getNotificationSettings();
 
     setState(() {
       _requested = true;
@@ -79,37 +78,27 @@ class _Permissions extends State<Permissions> {
 
     if (!_requested) {
       return ElevatedButton(
-        onPressed: requestPermissions,
-        child: const Text('Request Permissions'),
-      );
+          onPressed: requestPermissions,
+          child: const Text('Request Permissions'));
     }
 
-    return Column(
-      children: [
-        row('Authorization Status', statusMap[_settings.authorizationStatus]!),
-        if (defaultTargetPlatform == TargetPlatform.iOS) ...[
-          row('Alert', settingsMap[_settings.alert]!),
-          row('Announcement', settingsMap[_settings.announcement]!),
-          row('Badge', settingsMap[_settings.badge]!),
-          row('Car Play', settingsMap[_settings.carPlay]!),
-          row('Lock Screen', settingsMap[_settings.lockScreen]!),
-          row(
-            'Notification Center',
-            settingsMap[_settings.notificationCenter]!,
-          ),
-          row('Show Previews', previewMap[_settings.showPreviews]!),
-          row('Sound', settingsMap[_settings.sound]!),
-          row(
-            'Provides App Notification Settings',
-            settingsMap[_settings.providesAppNotificationSettings]!,
-          ),
-        ],
-        ElevatedButton(
-          onPressed: checkPermissions,
-          child: const Text('Reload Permissions'),
-        ),
+    return Column(children: [
+      row('Authorization Status', statusMap[_settings.authorizationStatus]!),
+      if (defaultTargetPlatform == TargetPlatform.iOS) ...[
+        row('Alert', settingsMap[_settings.alert]!),
+        row('Announcement', settingsMap[_settings.announcement]!),
+        row('Badge', settingsMap[_settings.badge]!),
+        row('Car Play', settingsMap[_settings.carPlay]!),
+        row('Lock Screen', settingsMap[_settings.lockScreen]!),
+        row('Notification Center', settingsMap[_settings.notificationCenter]!),
+        row('Show Previews', previewMap[_settings.showPreviews]!),
+        row('Sound', settingsMap[_settings.sound]!),
+        row('Provides App Notification Settings',
+            settingsMap[_settings.providesAppNotificationSettings]!),
       ],
-    );
+      ElevatedButton(
+          onPressed: checkPermissions, child: const Text('Reload Permissions')),
+    ]);
   }
 }
 

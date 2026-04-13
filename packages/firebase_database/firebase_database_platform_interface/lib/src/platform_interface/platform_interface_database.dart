@@ -4,6 +4,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_database.dart';
@@ -28,10 +29,8 @@ abstract class DatabasePlatform extends PlatformInterface {
     required FirebaseApp app,
     String? databaseURL,
   }) {
-    return DatabasePlatform.instance.delegateFor(
-      app: app,
-      databaseURL: databaseURL,
-    );
+    return DatabasePlatform.instance
+        .delegateFor(app: app, databaseURL: databaseURL);
   }
 
   /// The current default [DatabasePlatform] instance.

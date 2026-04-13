@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 @JS('firebase_installations')
-library;
+library firebase_interop.installations;
 
 import 'dart:js_interop';
 
@@ -19,16 +19,13 @@ external JSPromise<JSString> getId(InstallationsJsImpl installations);
 
 @JS()
 @staticInterop
-external JSPromise<JSString> getToken(
-  InstallationsJsImpl installations, [
-  JSBoolean? forceRefresh,
-]);
+external JSPromise<JSString> getToken(InstallationsJsImpl installations,
+    [JSBoolean? forceRefresh]);
 
 @JS()
 @staticInterop
 external JSPromise /* void */ deleteInstallations(
-  InstallationsJsImpl installations,
-);
+    InstallationsJsImpl installations);
 
 @JS()
 @staticInterop

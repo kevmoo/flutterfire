@@ -22,28 +22,35 @@ void setupQueryTests() {
 
     group('startAt', () {
       test('returns null when no order modifier is applied', () async {
-        await ref.set({'a': 1, 'b': 2, 'c': 3});
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+        });
 
         final snapshot = await ref.startAt(2).get();
         expect(snapshot.value, isNull);
       });
 
-      test('streams respect orderByChild with numeric startAt', () async {
-        await ref.set({
-          't1': {'timestamp': 1, 'value': 'old'},
-          't2': {'timestamp': 1000, 'value': 'current'},
-        });
+      test(
+        'streams respect orderByChild with numeric startAt',
+        () async {
+          await ref.set({
+            't1': {'timestamp': 1, 'value': 'old'},
+            't2': {'timestamp': 1000, 'value': 'current'},
+          });
 
-        final events = await ref
-            .orderByChild('timestamp')
-            .startAt(1000)
-            .onChildAdded
-            .take(1)
-            .toList();
+          final events = await ref
+              .orderByChild('timestamp')
+              .startAt(1000)
+              .onChildAdded
+              .take(1)
+              .toList();
 
-        expect(events.single.snapshot.key, 't2');
-        expect(events.single.snapshot.child('value').value, 'current');
-      });
+          expect(events.single.snapshot.key, 't2');
+          expect(events.single.snapshot.child('value').value, 'current');
+        },
+      );
 
       test(
         'onValue with startAt(value, key) and no orderBy should not crash',
@@ -60,7 +67,12 @@ void setupQueryTests() {
       );
 
       test('starts at the correct value', () async {
-        await ref.set({'a': 1, 'b': 2, 'c': 3, 'd': 4});
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+          'd': 4,
+        });
 
         final snapshot = await ref.orderByValue().startAt(2).get();
 
@@ -75,14 +87,23 @@ void setupQueryTests() {
 
     group('startAfter', () {
       test('returns null when no order modifier is applied', () async {
-        await ref.set({'a': 1, 'b': 2, 'c': 3});
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+        });
 
         final snapshot = await ref.startAfter(2).get();
         expect(snapshot.value, isNull);
       });
 
       test('starts after the correct value', () async {
-        await ref.set({'a': 1, 'b': 2, 'c': 3, 'd': 4});
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+          'd': 4,
+        });
 
         // TODO(ehesp): Using `get` returns the wrong results. Have flagged with SDK team.
         final e = await ref.orderByValue().startAfter(2).once();
@@ -98,7 +119,11 @@ void setupQueryTests() {
 
     group('endAt', () {
       test('returns all values when no order modifier is applied', () async {
-        await ref.set({'a': 1, 'b': 2, 'c': 3});
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+        });
 
         final expected = ['a', 'b', 'c'];
 
@@ -111,7 +136,12 @@ void setupQueryTests() {
       });
 
       test('ends at the correct value', () async {
-        await ref.set({'a': 1, 'b': 2, 'c': 3, 'd': 4});
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+          'd': 4,
+        });
 
         final snapshot = await ref.orderByValue().endAt(2).get();
 
@@ -126,7 +156,11 @@ void setupQueryTests() {
 
     group('endBefore', () {
       test('returns all values when no order modifier is applied', () async {
-        await ref.set({'a': 1, 'b': 2, 'c': 3});
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+        });
 
         final expected = ['a', 'b', 'c'];
 
@@ -139,7 +173,12 @@ void setupQueryTests() {
       });
 
       test('ends before the correct value', () async {
-        await ref.set({'a': 1, 'b': 2, 'c': 3, 'd': 4});
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+          'd': 4,
+        });
 
         final snapshot = await ref.orderByValue().endBefore(2).get();
 
@@ -154,14 +193,24 @@ void setupQueryTests() {
 
     group('equalTo', () {
       test('returns null when no order modifier is applied', () async {
-        await ref.set({'a': 1, 'b': 2, 'c': 3});
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+        });
 
         final snapshot = await ref.equalTo(2).get();
         expect(snapshot.value, isNull);
       });
 
       test('returns the correct value', () async {
-        await ref.set({'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 2});
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+          'd': 4,
+          'e': 2,
+        });
 
         final snapshot = await ref.orderByValue().equalTo(2).get();
 
@@ -176,7 +225,11 @@ void setupQueryTests() {
 
     group('limitToFirst', () {
       test('returns a limited array', () async {
-        await ref.set({0: 'foo', 1: 'bar', 2: 'baz'});
+        await ref.set({
+          0: 'foo',
+          1: 'bar',
+          2: 'baz',
+        });
 
         final snapshot = await ref.limitToFirst(2).get();
 
@@ -185,11 +238,18 @@ void setupQueryTests() {
       });
 
       test('returns a limited object', () async {
-        await ref.set({'a': 'foo', 'b': 'bar', 'c': 'baz'});
+        await ref.set({
+          'a': 'foo',
+          'b': 'bar',
+          'c': 'baz',
+        });
 
         final snapshot = await ref.limitToFirst(2).get();
 
-        final expected = {'a': 'foo', 'b': 'bar'};
+        final expected = {
+          'a': 'foo',
+          'b': 'bar',
+        };
 
         expect(snapshot.value, equals(expected));
       });
@@ -203,17 +263,31 @@ void setupQueryTests() {
       });
 
       test('streams emit limited maps', () async {
-        await ref.set({'a': 'foo', 'b': 'bar', 'c': 'baz'});
+        await ref.set({
+          'a': 'foo',
+          'b': 'bar',
+          'c': 'baz',
+        });
 
         final event = await ref.orderByKey().limitToFirst(2).onValue.first;
 
-        expect(event.snapshot.value, equals({'a': 'foo', 'b': 'bar'}));
+        expect(
+          event.snapshot.value,
+          equals({
+            'a': 'foo',
+            'b': 'bar',
+          }),
+        );
       });
     });
 
     group('limitToLast', () {
       test('returns a limited array', () async {
-        await ref.set({0: 'foo', 1: 'bar', 2: 'baz'});
+        await ref.set({
+          0: 'foo',
+          1: 'bar',
+          2: 'baz',
+        });
 
         final snapshot = await ref.limitToLast(2).get();
 
@@ -222,11 +296,18 @@ void setupQueryTests() {
       });
 
       test('returns a limited object', () async {
-        await ref.set({'a': 'foo', 'b': 'bar', 'c': 'baz'});
+        await ref.set({
+          'a': 'foo',
+          'b': 'bar',
+          'c': 'baz',
+        });
 
         final snapshot = await ref.limitToLast(2).get();
 
-        final expected = {'b': 'bar', 'c': 'baz'};
+        final expected = {
+          'b': 'bar',
+          'c': 'baz',
+        };
 
         expect(snapshot.value, equals(expected));
       });
@@ -240,20 +321,39 @@ void setupQueryTests() {
       });
 
       test('streams emit limited maps', () async {
-        await ref.set({'a': 'foo', 'b': 'bar', 'c': 'baz'});
+        await ref.set({
+          'a': 'foo',
+          'b': 'bar',
+          'c': 'baz',
+        });
 
         final event = await ref.orderByKey().limitToLast(2).onValue.first;
 
-        expect(event.snapshot.value, equals({'b': 'bar', 'c': 'baz'}));
+        expect(
+          event.snapshot.value,
+          equals({
+            'b': 'bar',
+            'c': 'baz',
+          }),
+        );
       });
     });
 
     group('orderByChild', () {
       test('orders by a child value', () async {
         await ref.set({
-          'a': {'string': 'foo', 'number': 10},
-          'b': {'string': 'bar', 'number': 5},
-          'c': {'string': 'baz', 'number': 8},
+          'a': {
+            'string': 'foo',
+            'number': 10,
+          },
+          'b': {
+            'string': 'bar',
+            'number': 5,
+          },
+          'c': {
+            'string': 'baz',
+            'number': 8,
+          },
         });
 
         final snapshot = await ref.orderByChild('number').get();
@@ -269,9 +369,18 @@ void setupQueryTests() {
     group('orderByKey', () {
       test('orders by a key', () async {
         await ref.set({
-          'b': {'string': 'bar', 'number': 5},
-          'a': {'string': 'foo', 'number': 10},
-          'c': {'string': 'baz', 'number': 8},
+          'b': {
+            'string': 'bar',
+            'number': 5,
+          },
+          'a': {
+            'string': 'foo',
+            'number': 10,
+          },
+          'c': {
+            'string': 'baz',
+            'number': 8,
+          },
         });
 
         final snapshot = await ref.orderByKey().get();
@@ -288,9 +397,18 @@ void setupQueryTests() {
     group('orderByPriority', () {
       test('orders by priority', () async {
         await ref.set({
-          'a': {'string': 'foo', 'number': 10},
-          'b': {'string': 'bar', 'number': 5},
-          'c': {'string': 'baz', 'number': 8},
+          'a': {
+            'string': 'foo',
+            'number': 10,
+          },
+          'b': {
+            'string': 'bar',
+            'number': 5,
+          },
+          'c': {
+            'string': 'baz',
+            'number': 8,
+          },
         });
 
         await Future.wait([
@@ -311,7 +429,11 @@ void setupQueryTests() {
 
     group('orderByValue', () {
       test('orders by a value', () async {
-        await ref.set({'a': 2, 'b': 3, 'c': 1});
+        await ref.set({
+          'a': 2,
+          'b': 3,
+          'c': 1,
+        });
 
         await Future.wait([
           ref.child('a').setPriority(2),
@@ -330,50 +452,55 @@ void setupQueryTests() {
     });
 
     group('onChildAdded', () {
-      test('emits an event when a child is added', () async {
-        // Set data first, then subscribe. onChildAdded fires for
-        // existing children on initial listen, avoiding race conditions
-        // with native listener registration.
-        // Use keys that sort alphabetically in the expected order,
-        // since onChildAdded returns children in key order.
-        await ref.child('a_first').set('foo');
-        await ref.child('b_second').set('bar');
+      test(
+        'emits an event when a child is added',
+        () async {
+          // Set data first, then subscribe. onChildAdded fires for
+          // existing children on initial listen, avoiding race conditions
+          // with native listener registration.
+          // Use keys that sort alphabetically in the expected order,
+          // since onChildAdded returns children in key order.
+          await ref.child('a_first').set('foo');
+          await ref.child('b_second').set('bar');
 
-        final events = await ref.onChildAdded.take(2).toList();
+          final events = await ref.onChildAdded.take(2).toList();
 
-        expect(events[0].snapshot.value, 'foo');
-        expect(events[0].type, DatabaseEventType.childAdded);
-        expect(events[1].snapshot.value, 'bar');
-        expect(events[1].type, DatabaseEventType.childAdded);
-      });
+          expect(events[0].snapshot.value, 'foo');
+          expect(events[0].type, DatabaseEventType.childAdded);
+          expect(events[1].snapshot.value, 'bar');
+          expect(events[1].type, DatabaseEventType.childAdded);
+        },
+      );
     });
 
     group('onChildRemoved', () {
-      test('emits an event when a child is removed', () async {
-        await ref.child('foo').set('foo');
-        await ref.child('bar').set('bar');
+      test(
+        'emits an event when a child is removed',
+        () async {
+          await ref.child('foo').set('foo');
+          await ref.child('bar').set('bar');
 
-        final completer = Completer<DatabaseEvent>();
-        final subscription = ref.onChildRemoved.listen((event) {
-          // Skip probe events used for listener registration
-          if (event.snapshot.key == '__probe__') return;
-          if (!completer.isCompleted) completer.complete(event);
-        });
+          final completer = Completer<DatabaseEvent>();
+          final subscription = ref.onChildRemoved.listen((event) {
+            // Skip probe events used for listener registration
+            if (event.snapshot.key == '__probe__') return;
+            if (!completer.isCompleted) completer.complete(event);
+          });
 
-        // Wait for native listener registration by doing a round-trip
-        await ref.child('__probe__').set(true);
-        await ref.child('__probe__').remove();
+          // Wait for native listener registration by doing a round-trip
+          await ref.child('__probe__').set(true);
+          await ref.child('__probe__').remove();
 
-        await ref.child('bar').remove();
+          await ref.child('bar').remove();
 
-        final event = await completer.future.timeout(
-          const Duration(seconds: 10),
-        );
-        expect(event.snapshot.value, 'bar');
-        expect(event.type, DatabaseEventType.childRemoved);
+          final event =
+              await completer.future.timeout(const Duration(seconds: 10));
+          expect(event.snapshot.value, 'bar');
+          expect(event.type, DatabaseEventType.childRemoved);
 
-        await subscription.cancel();
-      });
+          await subscription.cancel();
+        },
+      );
     });
 
     group('onChildChanged', () {
@@ -385,144 +512,150 @@ void setupQueryTests() {
         await childRef.remove();
       });
 
-      test('emits an event when a child is changed', () async {
-        await childRef.child('foo').set('foo');
-        await childRef.child('bar').set('bar');
+      test(
+        'emits an event when a child is changed',
+        () async {
+          await childRef.child('foo').set('foo');
+          await childRef.child('bar').set('bar');
 
-        final events = <DatabaseEvent>[];
-        final receivedTwo = Completer<void>();
-        final subscription = childRef.onChildChanged.listen((event) {
-          events.add(event);
-          if (events.length >= 2 && !receivedTwo.isCompleted) {
-            receivedTwo.complete();
-          }
-        });
+          final events = <DatabaseEvent>[];
+          final receivedTwo = Completer<void>();
+          final subscription = childRef.onChildChanged.listen((event) {
+            events.add(event);
+            if (events.length >= 2 && !receivedTwo.isCompleted) {
+              receivedTwo.complete();
+            }
+          });
 
-        // Wait for native listener registration by doing a round-trip
-        await childRef.child('__probe__').set(true);
-        await childRef.child('__probe__').remove();
+          // Wait for native listener registration by doing a round-trip
+          await childRef.child('__probe__').set(true);
+          await childRef.child('__probe__').remove();
 
-        await childRef.child('bar').set('baz');
-        await childRef.child('foo').set('bar');
+          await childRef.child('bar').set('baz');
+          await childRef.child('foo').set('bar');
 
-        await receivedTwo.future.timeout(const Duration(seconds: 10));
+          await receivedTwo.future.timeout(const Duration(seconds: 10));
 
-        expect(events[0].snapshot.key, 'bar');
-        expect(events[0].snapshot.value, 'baz');
-        expect(events[0].type, DatabaseEventType.childChanged);
-        expect(events[1].snapshot.key, 'foo');
-        expect(events[1].snapshot.value, 'bar');
-        expect(events[1].type, DatabaseEventType.childChanged);
+          expect(events[0].snapshot.key, 'bar');
+          expect(events[0].snapshot.value, 'baz');
+          expect(events[0].type, DatabaseEventType.childChanged);
+          expect(events[1].snapshot.key, 'foo');
+          expect(events[1].snapshot.value, 'bar');
+          expect(events[1].type, DatabaseEventType.childChanged);
 
-        await subscription.cancel();
-      });
+          await subscription.cancel();
+        },
+      );
     });
 
     group('onChildMoved', () {
-      test('emits an event when a child is moved', () async {
-        await ref.set({
-          'alex': {'nuggets': 60},
-          'rob': {'nuggets': 56},
-          'vassili': {'nuggets': 55.5},
-          'tony': {'nuggets': 52},
-          'greg': {'nuggets': 52},
-        });
+      test(
+        'emits an event when a child is moved',
+        () async {
+          await ref.set({
+            'alex': {'nuggets': 60},
+            'rob': {'nuggets': 56},
+            'vassili': {'nuggets': 55.5},
+            'tony': {'nuggets': 52},
+            'greg': {'nuggets': 52},
+          });
 
-        final events = <DatabaseEvent>[];
-        final receivedTwo = Completer<void>();
-        final subscription = ref.orderByChild('nuggets').onChildMoved.listen((
-          event,
-        ) {
-          events.add(event);
-          if (events.length >= 2 && !receivedTwo.isCompleted) {
-            receivedTwo.complete();
-          }
-        });
+          final events = <DatabaseEvent>[];
+          final receivedTwo = Completer<void>();
+          final subscription =
+              ref.orderByChild('nuggets').onChildMoved.listen((event) {
+            events.add(event);
+            if (events.length >= 2 && !receivedTwo.isCompleted) {
+              receivedTwo.complete();
+            }
+          });
 
-        // Wait for native listener registration by doing a round-trip
-        await ref.child('__probe__').set(true);
-        await ref.child('__probe__').remove();
+          // Wait for native listener registration by doing a round-trip
+          await ref.child('__probe__').set(true);
+          await ref.child('__probe__').remove();
 
-        await ref.child('greg/nuggets').set(57);
-        await ref.child('rob/nuggets').set(61);
+          await ref.child('greg/nuggets').set(57);
+          await ref.child('rob/nuggets').set(61);
 
-        await receivedTwo.future.timeout(const Duration(seconds: 10));
+          await receivedTwo.future.timeout(const Duration(seconds: 10));
 
-        expect(events[0].snapshot.value, {'nuggets': 57});
-        expect(events[0].type, DatabaseEventType.childMoved);
-        expect(events[1].snapshot.value, {'nuggets': 61});
-        expect(events[1].type, DatabaseEventType.childMoved);
+          expect(events[0].snapshot.value, {'nuggets': 57});
+          expect(events[0].type, DatabaseEventType.childMoved);
+          expect(events[1].snapshot.value, {'nuggets': 61});
+          expect(events[1].type, DatabaseEventType.childMoved);
 
-        await subscription.cancel();
-      });
+          await subscription.cancel();
+        },
+      );
     });
 
     group('onValue', () {
       test('emits an event when the data changes', () async {
-        await ref.set({'a': 2, 'b': 3, 'c': 1});
+        await ref.set({
+          'a': 2,
+          'b': 3,
+          'c': 1,
+        });
         expect(
           ref.onValue,
           emitsInOrder([
-            isA<DatabaseEvent>()
-                .having((s) => s.snapshot.value, 'value', {
-                  'a': 2,
-                  'b': 3,
-                  'c': 1,
-                })
-                .having((e) => e.type, 'type', DatabaseEventType.value),
+            isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
+              'a': 2,
+              'b': 3,
+              'c': 1,
+            }).having((e) => e.type, 'type', DatabaseEventType.value),
           ]),
         );
       });
 
       test(
-        'throw a `permission-denied` exception when accessing restricted data',
-        () async {
-          final Completer<FirebaseException> errorReceived =
-              Completer<FirebaseException>();
-          FirebaseDatabase.instance
-              .ref()
-              .child('restricted')
-              .onValue
-              .listen(
-                (event) {
-                  // Do nothing
-                },
-                onError: (error) {
-                  errorReceived.complete(error);
-                },
-              );
+          'throw a `permission-denied` exception when accessing restricted data',
+          () async {
+        final Completer<FirebaseException> errorReceived =
+            Completer<FirebaseException>();
+        FirebaseDatabase.instance.ref().child('restricted').onValue.listen(
+          (event) {
+            // Do nothing
+          },
+          onError: (error) {
+            errorReceived.complete(error);
+          },
+        );
 
-          final streamError = await errorReceived.future;
-          expect(streamError, isA<FirebaseException>());
-          expect(streamError.code, 'permission-denied');
-        },
-      );
+        final streamError = await errorReceived.future;
+        expect(streamError, isA<FirebaseException>());
+        expect(streamError.code, 'permission-denied');
+      });
     });
 
     group('keepSynced', () {
-      test('multiple queries can enable keepSynced without crashing', () async {
-        await ref.set({
-          'a': {'value': 1},
-          'b': {'value': 2},
-          'c': {'value': 3},
-        });
+      test(
+        'multiple queries can enable keepSynced without crashing',
+        () async {
+          await ref.set({
+            'a': {'value': 1},
+            'b': {'value': 2},
+            'c': {'value': 3},
+          });
 
-        // Enable keepSynced on multiple different queries
-        final query1 = ref.orderByChild('value').limitToFirst(2);
-        final query2 = ref.orderByChild('value').limitToLast(2);
-        final query3 = ref.orderByKey().startAt('a');
-        final query4 = ref.orderByValue();
+          // Enable keepSynced on multiple different queries
+          final query1 = ref.orderByChild('value').limitToFirst(2);
+          final query2 = ref.orderByChild('value').limitToLast(2);
+          final query3 = ref.orderByKey().startAt('a');
+          final query4 = ref.orderByValue();
 
-        // These should all complete without throwing
-        await query1.keepSynced(true);
-        await query2.keepSynced(true);
-        await query3.keepSynced(true);
-        await query4.keepSynced(true);
+          // These should all complete without throwing
+          await query1.keepSynced(true);
+          await query2.keepSynced(true);
+          await query3.keepSynced(true);
+          await query4.keepSynced(true);
 
-        // Verify data is still accessible after enabling keepSynced
-        final snapshot = await ref.get();
-        expect(snapshot.value, isNotNull);
-      }, skip: kIsWeb);
+          // Verify data is still accessible after enabling keepSynced
+          final snapshot = await ref.get();
+          expect(snapshot.value, isNotNull);
+        },
+        skip: kIsWeb,
+      );
 
       test(
         'multiple queries can disable keepSynced without crashing',
@@ -557,7 +690,10 @@ void setupQueryTests() {
       test(
         'calling keepSynced multiple times on same query does not crash',
         () async {
-          await ref.set({'a': 1, 'b': 2});
+          await ref.set({
+            'a': 1,
+            'b': 2,
+          });
 
           final query = ref.orderByValue().limitToFirst(5);
 
@@ -576,38 +712,42 @@ void setupQueryTests() {
         skip: kIsWeb,
       );
 
-      test('keepSynced works with various query combinations', () async {
-        await ref.set({
-          'item1': {'name': 'alpha', 'priority': 1},
-          'item2': {'name': 'beta', 'priority': 2},
-          'item3': {'name': 'gamma', 'priority': 3},
-          'item4': {'name': 'delta', 'priority': 4},
-        });
+      test(
+        'keepSynced works with various query combinations',
+        () async {
+          await ref.set({
+            'item1': {'name': 'alpha', 'priority': 1},
+            'item2': {'name': 'beta', 'priority': 2},
+            'item3': {'name': 'gamma', 'priority': 3},
+            'item4': {'name': 'delta', 'priority': 4},
+          });
 
-        // Test various query combinations with keepSynced
-        final queries = [
-          ref.orderByChild('name'),
-          ref.orderByChild('priority').startAt(2),
-          ref.orderByChild('priority').endAt(3),
-          ref.orderByChild('priority').equalTo(2),
-          ref.orderByKey().limitToFirst(2),
-          ref.orderByKey().limitToLast(2),
-        ];
+          // Test various query combinations with keepSynced
+          final queries = [
+            ref.orderByChild('name'),
+            ref.orderByChild('priority').startAt(2),
+            ref.orderByChild('priority').endAt(3),
+            ref.orderByChild('priority').equalTo(2),
+            ref.orderByKey().limitToFirst(2),
+            ref.orderByKey().limitToLast(2),
+          ];
 
-        // Enable keepSynced on all queries
-        for (final query in queries) {
-          await query.keepSynced(true);
-        }
+          // Enable keepSynced on all queries
+          for (final query in queries) {
+            await query.keepSynced(true);
+          }
 
-        // Disable keepSynced on all queries
-        for (final query in queries) {
-          await query.keepSynced(false);
-        }
+          // Disable keepSynced on all queries
+          for (final query in queries) {
+            await query.keepSynced(false);
+          }
 
-        // Verify everything still works
-        final snapshot = await ref.get();
-        expect(snapshot.children.length, 4);
-      }, skip: kIsWeb);
+          // Verify everything still works
+          final snapshot = await ref.get();
+          expect(snapshot.children.length, 4);
+        },
+        skip: kIsWeb,
+      );
     });
   });
 }

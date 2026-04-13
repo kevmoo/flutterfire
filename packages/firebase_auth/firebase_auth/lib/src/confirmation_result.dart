@@ -3,13 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../firebase_auth.dart';
+part of firebase_auth;
 
 /// A result from a phone number sign-in, link, or reauthenticate call.
 ///
 /// This class is only usable on web based platforms.
 class ConfirmationResult {
-  final ConfirmationResultPlatform _delegate;
+  ConfirmationResultPlatform _delegate;
 
   final FirebaseAuth _auth;
 
@@ -28,6 +28,9 @@ class ConfirmationResult {
   /// Finishes a phone number sign-in, link, or reauthentication, given the code
   /// that was sent to the user's mobile device.
   Future<UserCredential> confirm(String verificationCode) async {
-    return UserCredential._(_auth, await _delegate.confirm(verificationCode));
+    return UserCredential._(
+      _auth,
+      await _delegate.confirm(verificationCode),
+    );
   }
 }

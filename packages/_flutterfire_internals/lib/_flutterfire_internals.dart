@@ -3,65 +3,179 @@
 // BSD-style license that can be found in the LICENSE file.
 
 // ignore_for_file: require_trailing_commas
-// This file is NOT public.
+// DO NOT MOVE THIS FILE
+//
+// Other firebase packages may import `package:firebase_core/src/internals.dart`.
 // Moving it would break the imports
 //
 // This file exports utilities shared between firebase packages, without making
 // them public.
 
-import 'package:firebase_core_dart/firebase_core_dart.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+import 'src/interop_shimmer.dart'
+    if (dart.library.js_interop) 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
+import 'src/interop_shimmer.dart'
+    if (dart.library.js_interop) 'src/js_interop.dart' as js_interop;
 
 export 'src/exception.dart';
 
-/// Returns a native Firebase App from a [FirebaseApp].
-///
-/// This uses dynamic access to avoid a hard dependency on web interop types
-/// in the pure Dart platform interface.
-dynamic getAppInterop(dynamic app) {
-  // This is expected to be called only from web packages where
-  // core_interop.getApp is available.
-  throw UnimplementedError('getAppInterop() is web-only');
+/// An extension that adds utilities for safely casting objects
+extension ObjectX<T> on T? {
+  /// Transform an object if that value is not null.
+  ///
+  /// Doing:
+  ///
+  /// ```dart
+  /// Map? json;
+  /// var result = json?['key']?.guard((json) => Model.fromJson(json));
+  /// ```
+  ///
+  /// is equivalent to doing:
+  ///
+  /// ```dart
+  /// Map? json;
+  /// var key = json?['key'];
+  /// var result = key == null ? null : Model.fromJson(key);
+  /// ```
+  R? guard<R>(R Function(T value) cb) {
+    if (this is T) return cb(this as T);
+    return null;
+  }
+
+  /// Safely cast an object, returning `null` if the casted object does not
+  /// match the casted type.
+  R? safeCast<R>() {
+    if (this is R) return this as R;
+    return null;
+  }
 }
 
-/// Returns a native Auth instance from a [FirebaseApp].
-dynamic getAuthInterop(dynamic app) {
-  throw UnimplementedError('getAuthInterop() is web-only');
+// Necessary because of the conditional import
+String _safeConvertFromPossibleJSObject(dynamic value) {
+  if (value is js_interop.JSAny) {
+    return (value as js_interop.JSString).toDart;
+  } else {
+    return value as String;
+  }
 }
 
-/// A wrapper for any Firebase calls that may throw a native error.
-///
-/// It will catch the error and throw a [FirebaseException] instead.
-Future<T> guardWebExceptions<T>(
-  Future<T> Function() callback, {
+FirebaseException _firebaseExceptionFromCoreFirebaseError(
+  core_interop.JSError firebaseError, {
   required String plugin,
-  String? code,
-}) async {
+  required String Function(String) codeParser,
+  required String Function(String code, String message)? messageParser,
+}) {
+  final convertCode = _safeConvertFromPossibleJSObject(firebaseError.code);
+  final code = codeParser(convertCode);
+
+  final String convertMessage =
+      _safeConvertFromPossibleJSObject(firebaseError.message);
+  final message = messageParser != null
+      ? messageParser(code, convertMessage)
+      : convertMessage.replaceFirst('(${firebaseError.code})', '');
+
+  return FirebaseException(
+    plugin: plugin,
+    message: message,
+    code: code,
+  );
+}
+
+/// Checks whether a thrown object needs to be mapped using [_mapException] or
+/// should be left untouched.
+///
+/// It is critical to split [_testException] and [_mapException] so that
+/// exceptions that should not be transformed preserve their stracktrace.
+///
+/// See also https://github.com/dart-lang/sdk/issues/30741
+bool _testException(Object? objectException) {
+  if (objectException is! core_interop.JSError) {
+    return false;
+  }
+
+  final message = _safeConvertFromPossibleJSObject(objectException.message);
+  // Firestore web does not contain `Firebase` in the message so we check the exception itself.
+  return message.contains('Firebase') ||
+      objectException.toString().contains('FirebaseError');
+}
+
+/// Transforms internal errors in something more readable for end-users.
+Object _mapException(
+  Object? exception, {
+  required String plugin,
+  required String Function(String) codeParser,
+  required String Function(String code, String message)? messageParser,
+}) {
+  assert(_testException(exception));
+
+  if (exception is core_interop.JSError) {
+    return _firebaseExceptionFromCoreFirebaseError(
+      exception,
+      plugin: plugin,
+      codeParser: codeParser,
+      messageParser: messageParser,
+    );
+  }
+
+  throw StateError('unrecognized error $exception');
+}
+
+/// Will return a [FirebaseException] from a thrown web error.
+/// Any other errors will be propagated as normal.
+R guardWebExceptions<R>(
+  R Function() cb, {
+  required String plugin,
+  required String Function(String) codeParser,
+  String Function(String code, String message)? messageParser,
+}) {
   try {
-    return await callback();
-  } catch (error, stack) {
-    final dynamic e = error;
-    // Check for properties commonly found on both PlatformException (mobile)
-    // and FirebaseError (web).
-    if (e != null && e is! FirebaseException) {
-      String? errorCode;
-      String? errorMessage;
+    final value = cb();
 
-      try {
-        errorCode = e.code?.toString();
-        errorMessage = e.message?.toString();
-      } catch (_) {
-        // Not a standard native error
-      }
-
-      if (errorCode != null || errorMessage != null) {
-        throw FirebaseException(
-          plugin: plugin,
-          code: code ?? errorCode?.replaceFirst('auth/', '') ?? 'unknown',
-          message: errorMessage ?? '',
-          stackTrace: stack,
-        );
-      }
+    if (value is Future) {
+      return value.catchError(
+        (err, stack) => Error.throwWithStackTrace(
+          _mapException(
+            err,
+            plugin: plugin,
+            codeParser: codeParser,
+            messageParser: messageParser,
+          ),
+          stack,
+        ),
+        test: _testException,
+      ) as R;
+    } else if (value is Stream) {
+      return value.handleError(
+        (err, stack) => Error.throwWithStackTrace(
+          _mapException(
+            err,
+            plugin: plugin,
+            codeParser: codeParser,
+            messageParser: messageParser,
+          ),
+          stack,
+        ),
+        test: _testException,
+      ) as R;
     }
-    rethrow;
+
+    return value;
+  } catch (error, stack) {
+    if (!_testException(error)) {
+      // Make sure to preserve the stacktrace
+      rethrow;
+    }
+
+    Error.throwWithStackTrace(
+      _mapException(
+        error,
+        plugin: plugin,
+        codeParser: codeParser,
+        messageParser: messageParser,
+      ),
+      stack,
+    );
   }
 }

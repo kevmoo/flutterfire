@@ -9,9 +9,9 @@ import 'method_channel_data_snapshot.dart';
 class MethodChannelDatabaseEvent extends DatabaseEventPlatform {
   MethodChannelDatabaseEvent(this._ref, this._data) : super(_data);
 
-  final DatabaseReferencePlatform _ref;
+  DatabaseReferencePlatform _ref;
 
-  final Map<String, dynamic> _data;
+  Map<String, dynamic> _data;
 
   @override
   DataSnapshotPlatform get snapshot {

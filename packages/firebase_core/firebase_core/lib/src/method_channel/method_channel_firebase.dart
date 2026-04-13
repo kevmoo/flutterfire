@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../../firebase_core.dart';
+part of firebase_core;
 
 /// The [FirebasePlatform] implementation that delegates to a [MethodChannel].
 class MethodChannelFirebase extends FirebasePlatform {
@@ -37,16 +37,16 @@ class MethodChannelFirebase extends FirebasePlatform {
   void _initializeFirebaseAppFromMap(CoreInitializeResponse response) {
     MethodChannelFirebaseApp methodChannelFirebaseApp =
         MethodChannelFirebaseApp(
-          response.name,
-          FirebaseOptionsExtension.fromPigeon(response.options),
-          isAutomaticDataCollectionEnabled:
-              response.isAutomaticDataCollectionEnabled,
-        );
+      response.name,
+      FirebaseOptionsExtension.fromPigeon(response.options),
+      isAutomaticDataCollectionEnabled:
+          response.isAutomaticDataCollectionEnabled,
+    );
 
     appInstances[methodChannelFirebaseApp.name] = methodChannelFirebaseApp;
 
-    FirebasePluginPlatform.constantsForPluginApps[methodChannelFirebaseApp
-            .name] =
+    FirebasePluginPlatform
+            .constantsForPluginApps[methodChannelFirebaseApp.name] =
         response.pluginConstants;
   }
 

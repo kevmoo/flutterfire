@@ -20,10 +20,8 @@ void main() {
 
     test('FacebookAuthProvider.FACEBOOK_SIGN_IN_METHOD', () {
       expect(FacebookAuthProvider.FACEBOOK_SIGN_IN_METHOD, isA<String>());
-      expect(
-        FacebookAuthProvider.FACEBOOK_SIGN_IN_METHOD,
-        equals(kMockProviderId),
-      );
+      expect(FacebookAuthProvider.FACEBOOK_SIGN_IN_METHOD,
+          equals(kMockProviderId));
     });
 
     test('FacebookAuthProvider.PROVIDER_ID', () {
@@ -57,9 +55,8 @@ void main() {
         final Map<dynamic, dynamic> kCustomOAuthParameters = <dynamic, dynamic>{
           'display': 'popup',
         };
-        final result = facebookAuthProvider.setCustomParameters(
-          kCustomOAuthParameters,
-        );
+        final result =
+            facebookAuthProvider.setCustomParameters(kCustomOAuthParameters);
         expect(result, isA<FacebookAuthProvider>());
         expect(result.parameters['display'], isA<String>());
         expect(result.parameters['display'], equals('popup'));

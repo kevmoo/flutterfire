@@ -1,31 +1,35 @@
 name: firebase_messaging_web
+resolution: workspace
 description: The web implementation of firebase_messaging
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_messaging/firebase_messaging_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_messaging/firebase_messaging_web
 version: 4.1.4
-resolution: workspace
 
 environment:
-  sdk: ^3.10.0
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: '>=3.22.0'
 
 dependencies:
-  firebase_core: ^3.10.1
-  firebase_core_web: ^3.5.1
-  firebase_messaging_platform_interface: ^4.5.41
-  meta: ^1.18.0
-  web: ^1.1.1
-
-dev_dependencies:
+  _flutterfire_internals: any
+  firebase_core: any
+  firebase_core_web: any
+  firebase_messaging_platform_interface: any
   flutter:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
+  meta: ^1.8.0
+  web: ^1.0.0
+
+dev_dependencies:
+  firebase_core_platform_interface: any
   flutter_test:
     sdk: flutter
+  mockito: ^5.0.0
 
 flutter:
   plugin:
     platforms:
       web:
-        pluginClass: FirebaseMessagingWebRegistration
-        fileName: firebase_messaging_web_registration.dart
+        pluginClass: FirebaseMessagingWeb
+        fileName: firebase_messaging_web.dart

@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_firebase_app_installations.dart';
@@ -19,9 +20,8 @@ abstract class FirebaseAppInstallationsPlatform extends PlatformInterface {
   final FirebaseApp? app;
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAppInstallationsPlatform.instanceFor({
-    required FirebaseApp app,
-  }) {
+  factory FirebaseAppInstallationsPlatform.instanceFor(
+      {required FirebaseApp app}) {
     return FirebaseAppInstallationsPlatform.instance.delegateFor(app: app);
   }
 

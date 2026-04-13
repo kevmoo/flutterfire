@@ -8,6 +8,7 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/utils/firestore_message_codec.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 
 /// This codec is able to decode FieldValues.
 /// This ability is only required in tests, hence why
@@ -37,38 +38,31 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
       case _kArrayUnion:
         final List<dynamic> value = readValue(buffer)! as List<dynamic>;
         return FieldValuePlatform(
-          FieldValueFactoryPlatform.instance.arrayUnion(value),
-        );
+            FieldValueFactoryPlatform.instance.arrayUnion(value));
       case _kArrayRemove:
         final List<dynamic> value = readValue(buffer)! as List<dynamic>;
         return FieldValuePlatform(
-          FieldValueFactoryPlatform.instance.arrayRemove(value),
-        );
+            FieldValueFactoryPlatform.instance.arrayRemove(value));
       case _kDelete:
         return FieldValuePlatform(FieldValueFactoryPlatform.instance.delete());
       case _kServerTimestamp:
         return FieldValuePlatform(
-          FieldValueFactoryPlatform.instance.serverTimestamp(),
-        );
+            FieldValueFactoryPlatform.instance.serverTimestamp());
       case _kIncrementDouble:
         final double value = readValue(buffer)! as double;
         return FieldValuePlatform(
-          FieldValueFactoryPlatform.instance.increment(value),
-        );
+            FieldValueFactoryPlatform.instance.increment(value));
       case _kIncrementInteger:
         final int value = readValue(buffer)! as int;
         return FieldValuePlatform(
-          FieldValueFactoryPlatform.instance.increment(value),
-        );
+            FieldValueFactoryPlatform.instance.increment(value));
       case _kFirestoreInstance:
         String appName = readValue(buffer)! as String;
         String databaseURL = readValue(buffer)! as String;
         readValue(buffer);
         final FirebaseApp app = Firebase.app(appName);
         return MethodChannelFirebaseFirestore(
-          app: app,
-          databaseId: databaseURL,
-        );
+            app: app, databaseId: databaseURL);
       case _kFirestoreQuery:
         Map<dynamic, dynamic> values =
             readValue(buffer)! as Map<dynamic, dynamic>;
@@ -79,7 +73,9 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
           values['path'],
           FirestorePigeonFirebaseApp(
             appName: 'test',
-            settings: PigeonFirebaseSettings(ignoreUndefinedProperties: false),
+            settings: PigeonFirebaseSettings(
+              ignoreUndefinedProperties: false,
+            ),
             databaseURL: '',
           ),
         );

@@ -35,15 +35,24 @@ part 'list_timestamps.dart';
 
 class MoviesConnector {
   AddPersonVariablesBuilder addPerson() {
-    return AddPersonVariablesBuilder(dataConnect);
+    return AddPersonVariablesBuilder(
+      dataConnect,
+    );
   }
 
   AddDirectorToMovieVariablesBuilder addDirectorToMovie() {
-    return AddDirectorToMovieVariablesBuilder(dataConnect);
+    return AddDirectorToMovieVariablesBuilder(
+      dataConnect,
+    );
   }
 
-  AddTimestampVariablesBuilder addTimestamp({required Timestamp timestamp}) {
-    return AddTimestampVariablesBuilder(dataConnect, timestamp: timestamp);
+  AddTimestampVariablesBuilder addTimestamp({
+    required Timestamp timestamp,
+  }) {
+    return AddTimestampVariablesBuilder(
+      dataConnect,
+      timestamp: timestamp,
+    );
   }
 
   AddDateAndTimestampVariablesBuilder addDateAndTimestamp({
@@ -58,7 +67,9 @@ class MoviesConnector {
   }
 
   SeedMoviesVariablesBuilder seedMovies() {
-    return SeedMoviesVariablesBuilder(dataConnect);
+    return SeedMoviesVariablesBuilder(
+      dataConnect,
+    );
   }
 
   CreateMovieVariablesBuilder createMovie({
@@ -74,42 +85,67 @@ class MoviesConnector {
     );
   }
 
-  DeleteMovieVariablesBuilder deleteMovie({required String id}) {
-    return DeleteMovieVariablesBuilder(dataConnect, id: id);
+  DeleteMovieVariablesBuilder deleteMovie({
+    required String id,
+  }) {
+    return DeleteMovieVariablesBuilder(
+      dataConnect,
+      id: id,
+    );
   }
 
   ThingVariablesBuilder thing() {
-    return ThingVariablesBuilder(dataConnect);
+    return ThingVariablesBuilder(
+      dataConnect,
+    );
   }
 
   SeedDataVariablesBuilder seedData() {
-    return SeedDataVariablesBuilder(dataConnect);
+    return SeedDataVariablesBuilder(
+      dataConnect,
+    );
   }
 
   ListMoviesVariablesBuilder listMovies() {
-    return ListMoviesVariablesBuilder(dataConnect);
+    return ListMoviesVariablesBuilder(
+      dataConnect,
+    );
   }
 
-  GetMovieVariablesBuilder getMovie({required GetMovieVariablesKey key}) {
-    return GetMovieVariablesBuilder(dataConnect, key: key);
+  GetMovieVariablesBuilder getMovie({
+    required GetMovieVariablesKey key,
+  }) {
+    return GetMovieVariablesBuilder(
+      dataConnect,
+      key: key,
+    );
   }
 
   ListMoviesByPartialTitleVariablesBuilder listMoviesByPartialTitle({
     required String input,
   }) {
-    return ListMoviesByPartialTitleVariablesBuilder(dataConnect, input: input);
+    return ListMoviesByPartialTitleVariablesBuilder(
+      dataConnect,
+      input: input,
+    );
   }
 
   ListPersonsVariablesBuilder listPersons() {
-    return ListPersonsVariablesBuilder(dataConnect);
+    return ListPersonsVariablesBuilder(
+      dataConnect,
+    );
   }
 
   ListThingVariablesBuilder listThing() {
-    return ListThingVariablesBuilder(dataConnect);
+    return ListThingVariablesBuilder(
+      dataConnect,
+    );
   }
 
   ListTimestampsVariablesBuilder listTimestamps() {
-    return ListTimestampsVariablesBuilder(dataConnect);
+    return ListTimestampsVariablesBuilder(
+      dataConnect,
+    );
   }
 
   static ConnectorConfig connectorConfig = ConnectorConfig(
@@ -121,12 +157,9 @@ class MoviesConnector {
   MoviesConnector({required this.dataConnect});
   static MoviesConnector get instance {
     return MoviesConnector(
-      dataConnect: FirebaseDataConnect.instanceFor(
-        connectorConfig: connectorConfig,
-
-        sdkType: CallerSDKType.generated,
-      ),
-    );
+        dataConnect: FirebaseDataConnect.instanceFor(
+            connectorConfig: connectorConfig,
+            sdkType: CallerSDKType.generated));
   }
 
   FirebaseDataConnect dataConnect;

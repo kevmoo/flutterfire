@@ -20,17 +20,15 @@ class EncodeUtility {
     }
     final output = <String, dynamic>{};
     data.forEach((key, value) {
-      final stringKey = key is DocumentReferencePlatform
-          ? key.path
-          : key as String;
+      final stringKey =
+          key is DocumentReferencePlatform ? key.path : key as String;
       output[stringKey] = valueEncode(value);
     });
     return output;
   }
 
   static Map<firestore_interop.FieldPath, dynamic>? encodeMapDataFieldPath(
-    Map<Object, dynamic>? data,
-  ) {
+      Map<Object, dynamic>? data) {
     if (data == null) {
       return null;
     }
@@ -63,81 +61,61 @@ class EncodeUtility {
       // deep FieldPaths which the web counterpart supports
       return switch (length) {
         1 => firestore_interop.FieldPath(components[0].toJS),
-        2 => firestore_interop.FieldPath(
-          components[0].toJS,
-          components[1].toJS,
-        ),
+        2 =>
+          firestore_interop.FieldPath(components[0].toJS, components[1].toJS),
         3 => firestore_interop.FieldPath(
-          components[0].toJS,
-          components[1].toJS,
-          components[2].toJS,
-        ),
-        4 => firestore_interop.FieldPath(
-          components[0].toJS,
-          components[1].toJS,
-          components[2].toJS,
-          components[3].toJS,
-        ),
-        5 => firestore_interop.FieldPath(
-          components[0].toJS,
-          components[1].toJS,
-          components[2].toJS,
-          components[3].toJS,
-          components[4].toJS,
-        ),
+            components[0].toJS, components[1].toJS, components[2].toJS),
+        4 => firestore_interop.FieldPath(components[0].toJS, components[1].toJS,
+            components[2].toJS, components[3].toJS),
+        5 => firestore_interop.FieldPath(components[0].toJS, components[1].toJS,
+            components[2].toJS, components[3].toJS, components[4].toJS),
         6 => firestore_interop.FieldPath(
-          components[0].toJS,
-          components[1].toJS,
-          components[2].toJS,
-          components[3].toJS,
-          components[4].toJS,
-          components[5].toJS,
-        ),
+            components[0].toJS,
+            components[1].toJS,
+            components[2].toJS,
+            components[3].toJS,
+            components[4].toJS,
+            components[5].toJS),
         7 => firestore_interop.FieldPath(
-          components[0].toJS,
-          components[1].toJS,
-          components[2].toJS,
-          components[3].toJS,
-          components[4].toJS,
-          components[5].toJS,
-          components[6].toJS,
-        ),
+            components[0].toJS,
+            components[1].toJS,
+            components[2].toJS,
+            components[3].toJS,
+            components[4].toJS,
+            components[5].toJS,
+            components[6].toJS),
         8 => firestore_interop.FieldPath(
-          components[0].toJS,
-          components[1].toJS,
-          components[2].toJS,
-          components[3].toJS,
-          components[4].toJS,
-          components[5].toJS,
-          components[6].toJS,
-          components[7].toJS,
-        ),
+            components[0].toJS,
+            components[1].toJS,
+            components[2].toJS,
+            components[3].toJS,
+            components[4].toJS,
+            components[5].toJS,
+            components[6].toJS,
+            components[7].toJS),
         9 => firestore_interop.FieldPath(
-          components[0].toJS,
-          components[1].toJS,
-          components[2].toJS,
-          components[3].toJS,
-          components[4].toJS,
-          components[5].toJS,
-          components[6].toJS,
-          components[7].toJS,
-          components[8].toJS,
-        ),
+            components[0].toJS,
+            components[1].toJS,
+            components[2].toJS,
+            components[3].toJS,
+            components[4].toJS,
+            components[5].toJS,
+            components[6].toJS,
+            components[7].toJS,
+            components[8].toJS),
         10 => firestore_interop.FieldPath(
-          components[0].toJS,
-          components[1].toJS,
-          components[2].toJS,
-          components[3].toJS,
-          components[4].toJS,
-          components[5].toJS,
-          components[6].toJS,
-          components[7].toJS,
-          components[8].toJS,
-          components[9].toJS,
-        ),
+            components[0].toJS,
+            components[1].toJS,
+            components[2].toJS,
+            components[3].toJS,
+            components[4].toJS,
+            components[5].toJS,
+            components[6].toJS,
+            components[7].toJS,
+            components[8].toJS,
+            components[9].toJS),
         _ => throw Exception(
-          'Firestore web FieldPath only supports 10 levels deep field paths',
-        ),
+            'Firestore web FieldPath only supports 10 levels deep field paths')
       };
     } else if (value == FieldPath.documentId) {
       return firestore_interop.documentId();
@@ -145,9 +123,7 @@ class EncodeUtility {
       return value.toDate();
     } else if (value is GeoPoint) {
       return firestore_interop.GeoPointJsImpl(
-        value.latitude.toJS,
-        value.longitude.toJS,
-      );
+          value.latitude.toJS, value.longitude.toJS);
     } else if (value is VectorValue) {
       return firestore_interop.vector(value.toArray().jsify()! as JSArray);
     } else if (value is Blob) {

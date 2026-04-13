@@ -7,6 +7,7 @@ import 'package:cloud_functions_platform_interface/cloud_functions_platform_inte
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_https_callable.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
@@ -37,9 +38,7 @@ void main() {
           throw Exception();
         } else if (mockPlatformExceptionThrown) {
           throw PlatformException(
-            code: 'UNKNOWN',
-            message: kPlatformExceptionMessage,
-          );
+              code: 'UNKNOWN', message: kPlatformExceptionMessage);
         }
 
         switch (call.method) {
@@ -50,10 +49,8 @@ void main() {
         }
       });
 
-      functions = MethodChannelFirebaseFunctions(
-        app: app,
-        region: 'us-central1',
-      );
+      functions =
+          MethodChannelFirebaseFunctions(app: app, region: 'us-central1');
       httpsCallable = MethodChannelHttpsCallable(
         functions!,
         kOrigin,
@@ -110,12 +107,11 @@ void main() {
       });
 
       test(
-        'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
-        () async {
-          mockPlatformExceptionThrown = true;
-          await testExceptionHandling('PLATFORM', httpsCallable!.call);
-        },
-      );
+          'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
+          () async {
+        mockPlatformExceptionThrown = true;
+        await testExceptionHandling('PLATFORM', httpsCallable!.call);
+      });
     });
   });
 }

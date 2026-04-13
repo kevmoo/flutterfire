@@ -26,15 +26,12 @@ void main() {
 
       final connector = MoviesConnector.connectorConfig;
 
-      FirebaseDataConnect.instanceFor(
-        connectorConfig: connector,
-      ).useDataConnectEmulator('localhost', 9399);
+      FirebaseDataConnect.instanceFor(connectorConfig: connector)
+          .useDataConnectEmulator('localhost', 9399);
       await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: 'test@mail.com',
-        password: 'password',
-      );
+          email: 'test@mail.com', password: 'password');
     });
 
     runInstanceTests();

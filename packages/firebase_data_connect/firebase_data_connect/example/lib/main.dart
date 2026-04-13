@@ -52,11 +52,12 @@ void main() async {
     );
   }
   if (configureEmulator) {
-    MoviesConnector.instance.dataConnect.useDataConnectEmulator(
-      '127.0.0.1',
-      9399,
+    MoviesConnector.instance.dataConnect
+        .useDataConnectEmulator('127.0.0.1', 9399);
+    FirebaseAuth.instance.useAuthEmulator(
+      'localhost',
+      9099,
     );
-    FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   }
 
   runApp(const MyApp());
@@ -89,7 +90,9 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: const Center(child: DataConnectWidget()),
+      body: const Center(
+        child: DataConnectWidget(),
+      ),
     );
   }
 }
@@ -116,29 +119,23 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   void initState() {
     super.initState();
 
-    QueryRef<ListMoviesData, void> ref = MoviesConnector.instance
-        .listMovies()
-        .ref();
+    QueryRef<ListMoviesData, void> ref =
+        MoviesConnector.instance.listMovies().ref();
 
-    ref
-        .subscribe()
-        .listen((event) {
-          setState(() {
-            _movies = event.data.movies;
-          });
-        })
-        .onError((e) {
-          _showError("Got an error: $e");
-        });
+    ref.subscribe().listen((event) {
+      setState(() {
+        _movies = event.data.movies;
+      });
+    }).onError((e) {
+      _showError("Got an error: $e");
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Flex(
-        direction: Axis.vertical,
-        children: [
+        padding: const EdgeInsets.all(10.0),
+        child: Flex(direction: Axis.vertical, children: [
           Flexible(
             flex: 1,
             child: TextFormField(
@@ -150,44 +147,43 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
             ),
           ),
           Flexible(
-            flex: 1,
-            child: TextFormField(
-              decoration: const InputDecoration(
-                border: UnderlineInputBorder(),
-                labelText: 'Genre',
-              ),
-              controller: _genreController,
-            ),
-          ),
+              flex: 1,
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  border: UnderlineInputBorder(),
+                  labelText: 'Genre',
+                ),
+                controller: _genreController,
+              )),
           Flexible(
-            flex: 1,
-            child: RatingBar.builder(
-              initialRating: 3,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) =>
-                  const Icon(Icons.star, color: Colors.amber),
-              onRatingUpdate: (rating) {
-                _rating = rating;
-              },
-            ),
-          ),
+              flex: 1,
+              child: RatingBar.builder(
+                initialRating: 3,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (rating) {
+                  _rating = rating;
+                },
+              )),
           Flexible(
-            flex: 1,
-            child: YearPicker(
-              firstDate: DateTime(1990),
-              lastDate: DateTime.now(),
-              selectedDate: _releaseYearDate,
-              onChanged: (value) {
-                setState(() {
-                  _releaseYearDate = value;
-                });
-              },
-            ),
-          ),
+              flex: 1,
+              child: YearPicker(
+                firstDate: DateTime(1990),
+                lastDate: DateTime.now(),
+                selectedDate: _releaseYearDate,
+                onChanged: (value) {
+                  setState(() {
+                    _releaseYearDate = value;
+                  });
+                },
+              )),
           TextButton(
             style: ButtonStyle(
               foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
@@ -217,19 +213,23 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
             },
             child: const Text('Add Movie'),
           ),
-          const Center(child: Text("Movies", style: TextStyle(fontSize: 35.0))),
+          const Center(
+            child: Text(
+              "Movies",
+              style: TextStyle(fontSize: 35.0),
+            ),
+          ),
           Expanded(
-            child: Column(
-              children: [
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () => triggerReload(),
-                    child: ListView(
+              child: Column(
+            children: [
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () => triggerReload(),
+                  child: ListView(
                       scrollDirection: Axis.vertical,
                       children: _movies
-                          .map(
-                            (movie) => Card(
-                              child: Padding(
+                          .map((movie) => Card(
+                                  child: Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: Center(
                                   child: Text(
@@ -239,28 +239,24 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
+                              )))
+                          .toList()),
                 ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+              )
+            ],
+          ))
+        ]));
   }
 
-  void _showError(String message) {
+  _showError(String message) {
     showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(child: SelectableText(message)),
+          content: SingleChildScrollView(
+            child: SelectableText(message),
+          ),
           actions: [
             TextButton(
               onPressed: () {

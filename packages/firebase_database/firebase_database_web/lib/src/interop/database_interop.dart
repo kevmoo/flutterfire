@@ -24,21 +24,20 @@ external ReferenceJsImpl child(ReferenceJsImpl parentRef, JSString path);
 @JS()
 @staticInterop
 external void connectDatabaseEmulator(
-  DatabaseJsImpl database,
-  JSString host,
-  JSNumber port,
+    DatabaseJsImpl database, JSString host, JSNumber port);
+
+@JS()
+@staticInterop
+external void enableLogging(
+    [JSAny /* Func message || JSBoolean enabled */ loggerOrEnabled,
+    JSBoolean persistent]);
+
+@JS()
+@staticInterop
+external JSPromise update(
+  ReferenceJsImpl ref,
+  JSAny? values,
 );
-
-@JS()
-@staticInterop
-external void enableLogging([
-  JSAny /* Func message || JSBoolean enabled */ loggerOrEnabled,
-  JSBoolean persistent,
-]);
-
-@JS()
-@staticInterop
-external JSPromise update(ReferenceJsImpl ref, JSAny? values);
 // TODO - new API for implementing post web v9 SDK integration
 @JS()
 @staticInterop
@@ -119,8 +118,9 @@ external JSFunction onValue(
   QueryJsImpl query,
   JSFunction callback,
   // JSAny Function(DataSnapshotJsImpl, [JSString previousChildName]) callback,
-  JSFunction cancelCallback, [
+  JSFunction cancelCallback,
   // JSAny Function(FirebaseError error) cancelCallback,
+  [
   ListenOptions options,
 ]);
 
@@ -157,11 +157,16 @@ external ReferenceJsImpl ref(DatabaseJsImpl database, [JSString path]);
 
 @JS()
 @staticInterop
-external ReferenceJsImpl refFromURL(DatabaseJsImpl database, JSString url);
+external ReferenceJsImpl refFromURL(
+  DatabaseJsImpl database,
+  JSString url,
+);
 
 @JS()
 @staticInterop
-external JSPromise<ReferenceJsImpl> remove(ReferenceJsImpl ref);
+external JSPromise<ReferenceJsImpl> remove(
+  ReferenceJsImpl ref,
+);
 
 @JS()
 @staticInterop
@@ -183,17 +188,12 @@ external JSPromise set(ReferenceJsImpl ref, JSAny? value);
 @JS()
 @staticInterop
 external JSPromise setPriority(
-  ReferenceJsImpl ref,
-  /* JSString | JSNumber | null */ JSAny? priority,
-);
+    ReferenceJsImpl ref, /* JSString | JSNumber | null */ JSAny? priority);
 
 @JS()
 @staticInterop
-external JSPromise setWithPriority(
-  ReferenceJsImpl ref,
-  JSAny? value,
-  /* JSString | JSNumber | null */ JSAny? priority,
-);
+external JSPromise setWithPriority(ReferenceJsImpl ref, JSAny? value,
+    /* JSString | JSNumber | null */ JSAny? priority);
 
 @JS()
 @staticInterop
@@ -247,9 +247,14 @@ extension type OnDisconnectJsImpl._(JSObject _) implements JSObject {
     //void Function(JSAny) onComplete
   ]);
 
-  external JSPromise setWithPriority(JSAny? value, JSAny? priority);
+  external JSPromise setWithPriority(
+    JSAny? value,
+    JSAny? priority,
+  );
 
-  external JSPromise update(JSAny? values);
+  external JSPromise update(
+    JSAny? values,
+  );
 }
 
 extension type ThenableReferenceJsImpl._(JSObject _)

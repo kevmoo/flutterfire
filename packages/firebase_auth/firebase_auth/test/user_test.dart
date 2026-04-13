@@ -5,7 +5,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
+import 'package:firebase_auth/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -37,15 +37,15 @@ void main() {
     authTimestamp: 1234567,
     issuedAtTimestamp: 12345678,
     signInProvider: 'password',
-    claims: {'claim1': 'value1'},
+    claims: {
+      'claim1': 'value1',
+    },
   );
 
-  final int kMockCreationTimestamp = DateTime.now()
-      .subtract(const Duration(days: 2))
-      .millisecondsSinceEpoch;
-  final int kMockLastSignInTimestamp = DateTime.now()
-      .subtract(const Duration(days: 1))
-      .millisecondsSinceEpoch;
+  final int kMockCreationTimestamp =
+      DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
+  final int kMockLastSignInTimestamp =
+      DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
 
   final kMockUser = PigeonUserDetails(
     userInfo: PigeonUserInfo(
@@ -65,7 +65,7 @@ void main() {
         'email': 'test@example.com',
         'isAnonymous': true,
         'isEmailVerified': false,
-      },
+      }
     ],
   );
   late MockUserPlatform mockUserPlatform;
@@ -118,31 +118,27 @@ void main() {
       );
 
       when(mockAuthPlatform.signInAnonymously()).thenAnswer(
-        (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform),
-      );
+          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
 
       when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform);
 
-      when(
-        mockAuthPlatform.delegateFor(app: anyNamed('app')),
-      ).thenAnswer((_) => mockAuthPlatform);
+      when(mockAuthPlatform.delegateFor(
+        app: anyNamed('app'),
+      )).thenAnswer((_) => mockAuthPlatform);
 
-      when(
-        mockAuthPlatform.setInitialValues(
-          currentUser: anyNamed('currentUser'),
-          languageCode: anyNamed('languageCode'),
-        ),
-      ).thenAnswer((_) => mockAuthPlatform);
+      when(mockAuthPlatform.setInitialValues(
+        currentUser: anyNamed('currentUser'),
+        languageCode: anyNamed('languageCode'),
+      )).thenAnswer((_) => mockAuthPlatform);
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel, (
-            call,
-          ) async {
-            switch (call.method) {
-              default:
-                return <String, dynamic>{'user': user};
-            }
-          });
+          .setMockMethodCallHandler(MethodChannelFirebaseAuth.channel,
+              (call) async {
+        switch (call.method) {
+          default:
+            return <String, dynamic>{'user': user};
+        }
+      });
     });
 
     tearDown(() => testCount++);
@@ -172,9 +168,8 @@ void main() {
     });
 
     test('getIdTokenResult()', () async {
-      when(
-        mockUserPlatform.getIdTokenResult(any),
-      ).thenAnswer((_) async => IdTokenResult(kMockIdTokenResult));
+      when(mockUserPlatform.getIdTokenResult(any))
+          .thenAnswer((_) async => IdTokenResult(kMockIdTokenResult));
 
       final idTokenResult = await auth.currentUser!.getIdTokenResult(true);
 
@@ -184,9 +179,8 @@ void main() {
 
     group('linkWithCredential()', () {
       setUp(() {
-        when(
-          mockUserPlatform.linkWithCredential(any),
-        ).thenAnswer((_) async => mockUserCredPlatform);
+        when(mockUserPlatform.linkWithCredential(any))
+            .thenAnswer((_) async => mockUserCredPlatform);
       });
 
       test('should call linkWithCredential()', () async {
@@ -203,9 +197,8 @@ void main() {
 
     group('reauthenticateWithCredential()', () {
       setUp(() {
-        when(
-          mockUserPlatform.reauthenticateWithCredential(any),
-        ).thenAnswer((_) => Future.value(mockUserCredPlatform));
+        when(mockUserPlatform.reauthenticateWithCredential(any))
+            .thenAnswer((_) => Future.value(mockUserCredPlatform));
       });
       test('should call reauthenticateWithCredential()', () async {
         String newEmail = 'new@email.com';
@@ -230,13 +223,11 @@ void main() {
 
     test('sendEmailVerification()', () async {
       // Necessary as we otherwise get a "null is not a Future<void>" error
-      when(
-        mockUserPlatform.sendEmailVerification(any),
-      ).thenAnswer((i) async {});
+      when(mockUserPlatform.sendEmailVerification(any))
+          .thenAnswer((i) async {});
 
-      final ActionCodeSettings actionCodeSettings = ActionCodeSettings(
-        url: 'test',
-      );
+      final ActionCodeSettings actionCodeSettings =
+          ActionCodeSettings(url: 'test');
 
       await auth.currentUser!.sendEmailVerification(actionCodeSettings);
 
@@ -245,9 +236,8 @@ void main() {
 
     group('unlink()', () {
       setUp(() {
-        when(
-          mockUserPlatform.unlink(any),
-        ).thenAnswer((_) => Future.value(mockUserPlatform));
+        when(mockUserPlatform.unlink(any))
+            .thenAnswer((_) => Future.value(mockUserPlatform));
       });
       test('should call unlink()', () async {
         const String providerId = 'providerId';
@@ -294,12 +284,12 @@ void main() {
       const String photoURL = 'testUrl';
       Map<String, String> data = <String, String>{
         'displayName': displayName,
-        'photoURL': photoURL,
+        'photoURL': photoURL
       };
 
       await auth.currentUser!
-      // ignore: deprecated_member_use_from_same_package
-      .updateProfile(displayName: displayName, photoURL: photoURL);
+          // ignore: deprecated_member_use_from_same_package
+          .updateProfile(displayName: displayName, photoURL: photoURL);
 
       verify(mockUserPlatform.updateProfile(data));
     });
@@ -307,38 +297,25 @@ void main() {
     group('verifyBeforeUpdateEmail()', () {
       test('should call verifyBeforeUpdateEmail()', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(
-          mockUserPlatform.verifyBeforeUpdateEmail(any, any),
-        ).thenAnswer((i) async {});
+        when(mockUserPlatform.verifyBeforeUpdateEmail(any, any))
+            .thenAnswer((i) async {});
 
         const newEmail = 'new@email.com';
         ActionCodeSettings actionCodeSettings = ActionCodeSettings(url: 'test');
 
-        await auth.currentUser!.verifyBeforeUpdateEmail(
-          newEmail,
-          actionCodeSettings,
-        );
+        await auth.currentUser!
+            .verifyBeforeUpdateEmail(newEmail, actionCodeSettings);
 
-        verify(
-          mockUserPlatform.verifyBeforeUpdateEmail(
-            newEmail,
-            actionCodeSettings,
-          ),
-        );
+        verify(mockUserPlatform.verifyBeforeUpdateEmail(
+            newEmail, actionCodeSettings));
       });
     });
 
     test('toString()', () async {
-      when(mockAuthPlatform.currentUser).thenReturn(
-        TestUserPlatform(
-          mockAuthPlatform,
-          TestMultiFactorPlatform(mockAuthPlatform),
-          user,
-        ),
-      );
+      when(mockAuthPlatform.currentUser).thenReturn(TestUserPlatform(
+          mockAuthPlatform, TestMultiFactorPlatform(mockAuthPlatform), user));
 
-      const userInfo =
-          'UserInfo('
+      const userInfo = 'UserInfo('
           'displayName: Flutter Test User, '
           'email: test@example.com, '
           'phoneNumber: null, '
@@ -346,8 +323,7 @@ void main() {
           'providerId: firebase, '
           'uid: 12345)';
 
-      final userMetadata =
-          'UserMetadata('
+      final userMetadata = 'UserMetadata('
           'creationTime: ${DateTime.fromMillisecondsSinceEpoch(kMockCreationTimestamp, isUtc: true)}, '
           'lastSignInTime: ${DateTime.fromMillisecondsSinceEpoch(kMockLastSignInTimestamp, isUtc: true)})';
 
@@ -389,10 +365,8 @@ class MockFirebaseAuth extends Mock
   }
 
   @override
-  FirebaseAuthPlatform delegateFor({
-    FirebaseApp? app,
-    Persistence? persistence,
-  }) {
+  FirebaseAuthPlatform delegateFor(
+      {FirebaseApp? app, Persistence? persistence}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, const [], {#app: app}),
       returnValue: TestFirebaseAuthPlatform(),
@@ -419,8 +393,8 @@ class MockFirebaseAuth extends Mock
 class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
-  MockUserPlatform(FirebaseAuthPlatform auth, PigeonUserDetails user) {
-    TestUserPlatform(auth, TestMultiFactorPlatform(auth), user);
+  MockUserPlatform(FirebaseAuthPlatform auth, PigeonUserDetails _user) {
+    TestUserPlatform(auth, TestMultiFactorPlatform(auth), _user);
   }
 
   @override
@@ -564,10 +538,9 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   TestFirebaseAuthPlatform() : super();
 
   @override
-  FirebaseAuthPlatform delegateFor({
-    FirebaseApp? app,
-    Persistence? persistence,
-  }) => this;
+  FirebaseAuthPlatform delegateFor(
+          {FirebaseApp? app, Persistence? persistence}) =>
+      this;
 
   @override
   FirebaseAuthPlatform setInitialValues({
@@ -579,7 +552,9 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(super.auth, super.multiFactor, super.data);
+  TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
+      PigeonUserDetails data)
+      : super(auth, multiFactor, data);
 }
 
 class TestUserCredentialPlatform extends UserCredentialPlatform {
@@ -589,9 +564,8 @@ class TestUserCredentialPlatform extends UserCredentialPlatform {
     AuthCredential credential,
     UserPlatform userPlatform,
   ) : super(
-        auth: auth,
-        additionalUserInfo: additionalUserInfo,
-        credential: credential,
-        user: userPlatform,
-      );
+            auth: auth,
+            additionalUserInfo: additionalUserInfo,
+            credential: credential,
+            user: userPlatform);
 }

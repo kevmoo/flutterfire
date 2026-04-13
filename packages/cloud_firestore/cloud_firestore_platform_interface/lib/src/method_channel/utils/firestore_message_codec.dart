@@ -12,6 +12,8 @@ import 'package:cloud_firestore_platform_interface/src/method_channel/method_cha
 import 'package:firebase_core/firebase_core.dart';
 // TODO(Lyokone): remove once we bump Flutter SDK min version to 3.3
 // ignore: unnecessary_import
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import '../method_channel_firestore.dart';
 import '../method_channel_query.dart';
@@ -45,13 +47,13 @@ class FirestoreMessageCodec extends StandardMessageCodec {
 
   static const Map<FieldValueType, int> _kFieldValueCodes =
       <FieldValueType, int>{
-        FieldValueType.arrayUnion: _kArrayUnion,
-        FieldValueType.arrayRemove: _kArrayRemove,
-        FieldValueType.delete: _kDelete,
-        FieldValueType.serverTimestamp: _kServerTimestamp,
-        FieldValueType.incrementDouble: _kIncrementDouble,
-        FieldValueType.incrementInteger: _kIncrementInteger,
-      };
+    FieldValueType.arrayUnion: _kArrayUnion,
+    FieldValueType.arrayRemove: _kArrayRemove,
+    FieldValueType.delete: _kDelete,
+    FieldValueType.serverTimestamp: _kServerTimestamp,
+    FieldValueType.incrementDouble: _kIncrementDouble,
+    FieldValueType.incrementInteger: _kIncrementInteger,
+  };
 
   static const Map<FieldPathType, int> _kFieldPathCodes = <FieldPathType, int>{
     FieldPathType.documentId: _kDocumentId,
@@ -148,9 +150,7 @@ class FirestoreMessageCodec extends StandardMessageCodec {
         final FirebaseApp app = Firebase.app(appName);
         final FirebaseFirestorePlatform firestore =
             FirebaseFirestorePlatform.instanceFor(
-              app: app,
-              databaseId: databaseId,
-            );
+                app: app, databaseId: databaseId);
         return firestore.doc(path);
       case _kVectorValue:
         final List<Object?> vector = (readValue(buffer)!) as List<Object?>;

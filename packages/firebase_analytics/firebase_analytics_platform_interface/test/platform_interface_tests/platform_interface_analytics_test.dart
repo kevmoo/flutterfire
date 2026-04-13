@@ -30,7 +30,9 @@ void main() {
         ),
       );
 
-      firebaseAnalyticsPlatform = TestFirebaseAnalyticsPlatform(app);
+      firebaseAnalyticsPlatform = TestFirebaseAnalyticsPlatform(
+        app,
+      );
     });
 
     test('Constructor', () {
@@ -50,9 +52,8 @@ void main() {
     });
 
     test('set.instance', () {
-      FirebaseAnalyticsPlatform.instance = TestFirebaseAnalyticsPlatform(
-        secondaryApp,
-      );
+      FirebaseAnalyticsPlatform.instance =
+          TestFirebaseAnalyticsPlatform(secondaryApp);
 
       expect(
         FirebaseAnalyticsPlatform.instance,
@@ -87,21 +88,19 @@ void main() {
       );
     });
 
-    test(
-      'throws if .setAnalyticsCollectionEnabled() not implemented',
-      () async {
-        await expectLater(
-          () => firebaseAnalyticsPlatform.setAnalyticsCollectionEnabled(true),
-          throwsA(
-            isA<UnimplementedError>().having(
-              (e) => e.message,
-              'message',
-              'setAnalyticsCollectionEnabled() is not implemented',
-            ),
+    test('throws if .setAnalyticsCollectionEnabled() not implemented',
+        () async {
+      await expectLater(
+        () => firebaseAnalyticsPlatform.setAnalyticsCollectionEnabled(true),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'setAnalyticsCollectionEnabled() is not implemented',
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
 
     test('throws if .setUserId() not implemented', () async {
       await expectLater(
@@ -147,9 +146,8 @@ void main() {
 
     test('throws if .setSessionTimeoutDuration() not implemented', () async {
       await expectLater(
-        () => firebaseAnalyticsPlatform.setSessionTimeoutDuration(
-          const Duration(milliseconds: 1000),
-        ),
+        () => firebaseAnalyticsPlatform
+            .setSessionTimeoutDuration(const Duration(milliseconds: 1000)),
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,

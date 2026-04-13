@@ -12,7 +12,7 @@ import 'query_web.dart';
 /// Web implementation for Firestore [CollectionReferencePlatform].
 class CollectionReferenceWeb extends QueryWeb
     implements
-        //ignore: avoid_implementing_value_types
+//ignore: avoid_implementing_value_types
         CollectionReferencePlatform {
   /// instance of Firestore from the web plugin
   final firestore_interop.Firestore _webFirestore;
@@ -25,11 +25,9 @@ class CollectionReferenceWeb extends QueryWeb
   /// Creates an instance of [CollectionReferenceWeb] which represents path
   /// at [pathComponents] and uses implementation of [webFirestore]
   CollectionReferenceWeb(
-    this._firestorePlatform,
-    this._webFirestore,
-    String path,
-  ) : _delegate = _webFirestore.collection(path),
-      super(_firestorePlatform, path, _webFirestore.collection(path));
+      this._firestorePlatform, this._webFirestore, String path)
+      : _delegate = _webFirestore.collection(path),
+        super(_firestorePlatform, path, _webFirestore.collection(path));
 
   @override
   String get path => _delegate.path;
@@ -38,10 +36,7 @@ class CollectionReferenceWeb extends QueryWeb
   DocumentReferencePlatform doc([String? path]) {
     firestore_interop.DocumentReference documentReference = _delegate.doc(path);
     return DocumentReferenceWeb(
-      _firestorePlatform,
-      _webFirestore,
-      documentReference.path,
-    );
+        _firestorePlatform, _webFirestore, documentReference.path);
   }
 
   @override
@@ -56,9 +51,6 @@ class CollectionReferenceWeb extends QueryWeb
     }
 
     return DocumentReferenceWeb(
-      _firestorePlatform,
-      _webFirestore,
-      documentReference.path,
-    );
+        _firestorePlatform, _webFirestore, documentReference.path);
   }
 }

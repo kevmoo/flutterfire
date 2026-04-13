@@ -74,7 +74,9 @@ class _ChatPageState extends State<ChatPage> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 750),
+        duration: const Duration(
+          milliseconds: 750,
+        ),
         curve: Curves.easeOutCirc,
       ),
     );
@@ -83,7 +85,9 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -121,7 +125,10 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+              padding: const EdgeInsets.symmetric(
+                vertical: 25,
+                horizontal: 15,
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -132,7 +139,9 @@ class _ChatPageState extends State<ChatPage> {
                       onSubmitted: _sendChatMessage,
                     ),
                   ),
-                  const SizedBox.square(dimension: 15),
+                  const SizedBox.square(
+                    dimension: 15,
+                  ),
                   if (!_loading)
                     Row(
                       children: [
@@ -174,7 +183,9 @@ class _ChatPageState extends State<ChatPage> {
 
     try {
       _messages.add(MessageData(text: message, fromUser: true));
-      final responseStream = _chat?.sendMessageStream(Content.text(message));
+      final responseStream = _chat?.sendMessageStream(
+        Content.text(message),
+      );
 
       if (responseStream == null) {
         _showError('No response from API.');
@@ -193,10 +204,8 @@ class _ChatPageState extends State<ChatPage> {
         }
         textBuffer.write(response.text ?? '');
         setState(() {
-          _messages.last = MessageData(
-            text: textBuffer.toString(),
-            fromUser: false,
-          );
+          _messages.last =
+              MessageData(text: textBuffer.toString(), fromUser: false);
         });
         _scrollDown();
       }
@@ -223,12 +232,13 @@ class _ChatPageState extends State<ChatPage> {
 
     try {
       _messages.add(MessageData(text: message, fromUser: true));
-      var response = await _chat?.sendMessage(Content.text(message));
+      var response = await _chat?.sendMessage(
+        Content.text(message),
+      );
       final thought = response?.thoughtSummary;
       if (thought != null) {
-        _messages.add(
-          MessageData(text: thought, fromUser: false, isThought: true),
-        );
+        _messages
+            .add(MessageData(text: thought, fromUser: false, isThought: true));
       }
       var text = response?.text;
       _messages.add(MessageData(text: text, fromUser: false));
@@ -262,7 +272,9 @@ class _ChatPageState extends State<ChatPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(child: SelectableText(message)),
+          content: SingleChildScrollView(
+            child: SelectableText(message),
+          ),
           actions: [
             TextButton(
               onPressed: () {

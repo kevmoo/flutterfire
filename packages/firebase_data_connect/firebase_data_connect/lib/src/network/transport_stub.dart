@@ -27,6 +27,7 @@ class TransportStub implements DataConnectTransport {
 
   /// FirebaseAuth
   @override
+
   /// FirebaseAppCheck
   @override
   FirebaseAppCheck? appCheck;
@@ -79,4 +80,5 @@ DataConnectTransport getTransport(
   String appId,
   CallerSDKType sdkType,
   FirebaseAppCheck? appCheck,
-) => TransportStub(transportOptions, options, appId, sdkType, appCheck);
+) =>
+    TransportStub(transportOptions, options, appId, sdkType, appCheck);

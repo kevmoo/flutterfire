@@ -79,7 +79,8 @@ void main() {
 
   group('Serializer and Deserializer', () {
     test('should serialize variables into string format', () {
-      String serializer(Map<String, dynamic> vars) => vars.toString();
+      Serializer<Map<String, dynamic>> serializer =
+          (Map<String, dynamic> vars) => vars.toString();
 
       final inputVars = {'key1': 'value1', 'key2': 123};
       final serializedString = serializer(inputVars);
@@ -88,7 +89,8 @@ void main() {
     });
 
     test('should deserialize string data into expected format', () {
-      Object? deserializer(String data) => {'data': data};
+      Deserializer<Map<String, dynamic>> deserializer =
+          (String data) => {'data': data};
 
       const inputData = '{"message": "Hello World"}';
       final deserializedData = deserializer(inputData);

@@ -4,46 +4,47 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import '../../firebase_app_check_platform_interface.dart';
 import '../pigeon/messages.pigeon.dart';
 import 'utils/exception.dart';
-import 'utils/event_channel.dart';
 import 'utils/provider_to_string.dart';
 
 class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// Create an instance of [MethodChannelFirebaseAppCheck].
   MethodChannelFirebaseAppCheck({required FirebaseApp app})
-    : super(appInstance: app) {
+      : super(appInstance: app) {
     _tokenChangesListeners[app.name] = StreamController<String?>.broadcast();
 
-    _pigeonApi
-        .registerTokenListener(app.name)
-        .then((channelName) {
-          final events = EventChannel(channelName);
-          events
-              .receiveGuardedBroadcastStream(onError: convertPlatformException)
-              .listen((arguments) {
-                // ignore: close_sinks
-                StreamController<String?> controller =
-                    _tokenChangesListeners[app.name]!;
-                Map<dynamic, dynamic> result = arguments;
-                controller.add(result['token'] as String?);
-              });
-          // ignore: avoid_catches_without_on_clauses
-        })
-        .catchError((_) {
-          // Silently ignore errors during token listener registration.
-          // This can happen in test environments where the host API is not set up.
-        });
+    _pigeonApi.registerTokenListener(app.name).then((channelName) {
+      final events = EventChannel(channelName);
+      events
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
+          .listen(
+        (arguments) {
+          // ignore: close_sinks
+          StreamController<String?> controller =
+              _tokenChangesListeners[app.name]!;
+          Map<dynamic, dynamic> result = arguments;
+          controller.add(result['token'] as String?);
+        },
+      );
+      // ignore: avoid_catches_without_on_clauses
+    }).catchError((_) {
+      // Silently ignore errors during token listener registration.
+      // This can happen in test environments where the host API is not set up.
+    });
   }
 
   static final Map<String, StreamController<String?>> _tokenChangesListeners =
       {};
 
-  static final Map<String, MethodChannelFirebaseAppCheck>
-  _methodChannelFirebaseAppCheckInstances =
+  static Map<String, MethodChannelFirebaseAppCheck>
+      _methodChannelFirebaseAppCheckInstances =
       <String, MethodChannelFirebaseAppCheck>{};
 
   /// The Pigeon API used for platform communication.

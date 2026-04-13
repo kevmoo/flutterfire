@@ -51,7 +51,9 @@ void main() {
     });
 
     test('instanceFor', () {
-      final result = FirebaseModelDownloaderPlatform.instanceFor(app: app);
+      final result = FirebaseModelDownloaderPlatform.instanceFor(
+        app: app,
+      );
       expect(result, isA<FirebaseModelDownloaderPlatform>());
     });
 
@@ -144,7 +146,7 @@ void main() {
 class TestFirebaseModelDownloaderPlatform
     extends FirebaseModelDownloaderPlatform {
   TestFirebaseModelDownloaderPlatform(FirebaseApp? app)
-    : super(appInstance: app);
+      : super(appInstance: app);
 
   FirebaseModelDownloaderPlatform testDelegateFor({FirebaseApp? app}) {
     return delegateFor(app: app ?? Firebase.app());

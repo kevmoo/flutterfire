@@ -15,14 +15,12 @@ class TransactionWeb extends TransactionPlatform {
   final firestore_interop.Firestore _webFirestoreDelegate;
   final firestore_interop.Transaction _webTransactionDelegate;
 
-  final FirebaseFirestorePlatform _firestore;
+  FirebaseFirestorePlatform _firestore;
 
   /// Constructor.
   TransactionWeb(
-    this._firestore,
-    this._webFirestoreDelegate,
-    this._webTransactionDelegate,
-  ) : super();
+      this._firestore, this._webFirestoreDelegate, this._webTransactionDelegate)
+      : super();
 
   @override
   TransactionWeb delete(String documentPath) {
@@ -32,16 +30,17 @@ class TransactionWeb extends TransactionPlatform {
 
   @override
   Future<DocumentSnapshotPlatform> get(String documentPath) {
-    return convertWebExceptions(() async {
-      final webDocumentSnapshot = await _webTransactionDelegate.get(
-        _webFirestoreDelegate.doc(documentPath),
-      );
-      return convertWebDocumentSnapshot(
-        _firestore,
-        webDocumentSnapshot,
-        ServerTimestampBehavior.none,
-      );
-    });
+    return convertWebExceptions(
+      () async {
+        final webDocumentSnapshot = await _webTransactionDelegate
+            .get(_webFirestoreDelegate.doc(documentPath));
+        return convertWebDocumentSnapshot(
+          _firestore,
+          webDocumentSnapshot,
+          ServerTimestampBehavior.none,
+        );
+      },
+    );
   }
 
   @override
@@ -59,7 +58,10 @@ class TransactionWeb extends TransactionPlatform {
   }
 
   @override
-  TransactionWeb update(String documentPath, Map<FieldPath, dynamic> data) {
+  TransactionWeb update(
+    String documentPath,
+    Map<FieldPath, dynamic> data,
+  ) {
     _webTransactionDelegate.update(
       _webFirestoreDelegate.doc(documentPath),
       EncodeUtility.encodeMapDataFieldPath(data)!,

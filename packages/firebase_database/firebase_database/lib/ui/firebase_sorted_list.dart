@@ -95,9 +95,8 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
   }
 
   void _onChildRemoved(DatabaseEvent event) {
-    final DataSnapshot snapshot = _snapshots.firstWhere((
-      DataSnapshot snapshot,
-    ) {
+    final DataSnapshot snapshot =
+        _snapshots.firstWhere((DataSnapshot snapshot) {
       return snapshot.key == event.snapshot.key;
     });
     final int index = _snapshots.indexOf(snapshot);
@@ -106,9 +105,8 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
   }
 
   void _onChildChanged(DatabaseEvent event) {
-    final DataSnapshot snapshot = _snapshots.firstWhere((
-      DataSnapshot snapshot,
-    ) {
+    final DataSnapshot snapshot =
+        _snapshots.firstWhere((DataSnapshot snapshot) {
       return snapshot.key == event.snapshot.key;
     });
     final int index = _snapshots.indexOf(snapshot);

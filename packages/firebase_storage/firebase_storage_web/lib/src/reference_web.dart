@@ -9,6 +9,7 @@ import 'dart:typed_data';
 
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 import 'package:web/web.dart' as web;
 
 import './firebase_storage_web.dart';
@@ -25,8 +26,8 @@ final _storageUrlPrefix = RegExp(r'^(?:gs|https?):\//');
 class ReferenceWeb extends ReferencePlatform {
   /// Constructor for this ref
   ReferenceWeb(FirebaseStorageWeb storage, String path)
-    : _path = path,
-      super(storage, path) {
+      : _path = path,
+        super(storage, path) {
     if (_path.startsWith(_storageUrlPrefix)) {
       _ref = storage.delegate.refFromURL(_path);
     } else {
@@ -143,7 +144,9 @@ class ReferenceWeb extends ReferencePlatform {
       this,
       _ref.put(
         data.toJS,
-        settableMetadataToFbUploadMetadata(_cache.store(metadata)),
+        settableMetadataToFbUploadMetadata(
+          _cache.store(metadata),
+        ),
       ),
     );
   }
@@ -153,10 +156,7 @@ class ReferenceWeb extends ReferencePlatform {
   /// Optionally, you can also set metadata onto the uploaded object.
   @override
   TaskPlatform putBlob(dynamic data, [SettableMetadata? metadata]) {
-    assert(
-      (data as JSAny).isA<web.Blob>(),
-      'data must be a package:web Blob object.',
-    );
+    assert(data is web.Blob, 'data must be a package:web Blob object.');
 
     return TaskWeb(
       this,
@@ -186,24 +186,24 @@ class ReferenceWeb extends ReferencePlatform {
     PutStringFormat format, [
     SettableMetadata? metadata,
   ]) {
-    late Uint8List data0;
+    late Uint8List _data;
 
     // The universal package is converting raw to base64, so we need to convert
     // Any base64 string values into a Uint8List.
     if (format == PutStringFormat.base64) {
-      data0 = base64Decode(data);
+      _data = base64Decode(data);
     } else if (format == PutStringFormat.base64Url) {
-      data0 = base64Url.decode(data);
+      _data = base64Url.decode(data);
     } else {
       // If the format is not base64 or base64Url, we need to encode the data
       // as a base64 string.
-      data0 = Uint8List.fromList(base64Encode(utf8.encode(data)).codeUnits);
+      _data = Uint8List.fromList(base64Encode(utf8.encode(data)).codeUnits);
     }
 
     return TaskWeb(
       this,
       _ref.put(
-        data0.toJS,
+        _data.toJS,
         settableMetadataToFbUploadMetadata(
           _cache.store(metadata),
           // md5 is computed server-side, so we don't have to unpack a potentially huge Blob.
@@ -223,8 +223,8 @@ class ReferenceWeb extends ReferencePlatform {
     });
   }
 
-  // Purposefully left unimplemented because of lack of dart:io support in web:
+// Purposefully left unimplemented because of lack of dart:io support in web:
 
-  // TaskPlatform writeToFile(File file) {}
-  // TaskPlatform putFile(File file, [SettableMetadata metadata]) {}
+// TaskPlatform writeToFile(File file) {}
+// TaskPlatform putFile(File file, [SettableMetadata metadata]) {}
 }

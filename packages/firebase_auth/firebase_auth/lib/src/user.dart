@@ -3,11 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../firebase_auth.dart';
+part of firebase_auth;
 
 /// A user account.
 class User {
-  final UserPlatform _delegate;
+  UserPlatform _delegate;
 
   final FirebaseAuth _auth;
   MultiFactor? _multiFactor;
@@ -232,7 +232,9 @@ class User {
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the
   ///    Sign in Method tab and configure the provider.
-  Future<UserCredential> linkWithProvider(AuthProvider provider) async {
+  Future<UserCredential> linkWithProvider(
+    AuthProvider provider,
+  ) async {
     try {
       return UserCredential._(
         _auth,
@@ -318,7 +320,9 @@ class User {
   /// - **invalid-verification-id**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
-  Future<UserCredential> reauthenticateWithPopup(AuthProvider provider) async {
+  Future<UserCredential> reauthenticateWithPopup(
+    AuthProvider provider,
+  ) async {
     return UserCredential._(
       _auth,
       await _delegate.reauthenticateWithPopup(provider),
@@ -354,7 +358,9 @@ class User {
   /// - **invalid-verification-id**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
-  Future<void> reauthenticateWithRedirect(AuthProvider provider) async {
+  Future<void> reauthenticateWithRedirect(
+    AuthProvider provider,
+  ) async {
     await _delegate.reauthenticateWithRedirect(provider);
   }
 
@@ -395,7 +401,10 @@ class User {
   ///    Sign in Method tab and configure the provider.
   Future<UserCredential> linkWithPopup(AuthProvider provider) async {
     try {
-      return UserCredential._(_auth, await _delegate.linkWithPopup(provider));
+      return UserCredential._(
+        _auth,
+        await _delegate.linkWithPopup(provider),
+      );
     } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
       throw FirebaseAuthMultiFactorException._(_auth, e);
     } catch (e) {
@@ -484,10 +493,8 @@ class User {
     bool mustClear = verifier == null;
     verifier ??= RecaptchaVerifier(auth: _delegate.auth);
     try {
-      final result = await _delegate.linkWithPhoneNumber(
-        phoneNumber,
-        verifier.delegate,
-      );
+      final result =
+          await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate);
       if (mustClear) {
         verifier.clear();
       }
@@ -610,9 +617,8 @@ class User {
 
   /// Update the user name.
   Future<void> updateDisplayName(String? displayName) {
-    return _delegate.updateProfile(<String, String?>{
-      'displayName': displayName,
-    });
+    return _delegate
+        .updateProfile(<String, String?>{'displayName': displayName});
   }
 
   /// Update the user's profile picture.

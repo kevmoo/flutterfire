@@ -8,6 +8,7 @@
 import 'dart:async';
 import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cloud_functions_platform_interface/src/pigeon/messages.pigeon.dart';
@@ -47,91 +48,72 @@ abstract class TestCloudFunctionsHostApi {
     BinaryMessenger? binaryMessenger,
     String messageChannelSuffix = '',
   }) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty
-        ? '.$messageChannelSuffix'
-        : '';
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
-      final BasicMessageChannel<Object?>
-      pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
-              Object? message,
-            ) async {
-              assert(
-                message != null,
-                'Argument for dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call was null.',
-              );
-              final List<Object?> args = (message as List<Object?>?)!;
-              final Map<String, Object?>? arg_arguments =
-                  (args[0] as Map<Object?, Object?>?)?.cast<String, Object?>();
-              assert(
-                arg_arguments != null,
-                'Argument for dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call was null, expected non-null Map<String, Object?>.',
-              );
-              try {
-                final Object? output = await api.call(arg_arguments!);
-                return <Object?>[output];
-              } on PlatformException catch (e) {
-                return wrapResponse(error: e);
-              } catch (e) {
-                return wrapResponse(
-                  error: PlatformException(
-                    code: 'error',
-                    message: e.toString(),
-                  ),
-                );
-              }
-            });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final Map<String, Object?>? arg_arguments =
+              (args[0] as Map<Object?, Object?>?)?.cast<String, Object?>();
+          assert(arg_arguments != null,
+              'Argument for dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.call was null, expected non-null Map<String, Object?>.');
+          try {
+            final Object? output = await api.call(arg_arguments!);
+            return <Object?>[output];
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
       }
     }
     {
-      final BasicMessageChannel<Object?>
-      pigeonVar_channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel$messageChannelSuffix',
-        pigeonChannelCodec,
-        binaryMessenger: binaryMessenger,
-      );
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
-              Object? message,
-            ) async {
-              assert(
-                message != null,
-                'Argument for dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel was null.',
-              );
-              final List<Object?> args = (message as List<Object?>?)!;
-              final Map<String, Object>? arg_arguments =
-                  (args[0] as Map<Object?, Object?>?)?.cast<String, Object>();
-              assert(
-                arg_arguments != null,
-                'Argument for dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel was null, expected non-null Map<String, Object>.',
-              );
-              try {
-                await api.registerEventChannel(arg_arguments!);
-                return wrapResponse(empty: true);
-              } on PlatformException catch (e) {
-                return wrapResponse(error: e);
-              } catch (e) {
-                return wrapResponse(
-                  error: PlatformException(
-                    code: 'error',
-                    message: e.toString(),
-                  ),
-                );
-              }
-            });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
+                (Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final Map<String, Object>? arg_arguments =
+              (args[0] as Map<Object?, Object?>?)?.cast<String, Object>();
+          assert(arg_arguments != null,
+              'Argument for dev.flutter.pigeon.cloud_functions_platform_interface.CloudFunctionsHostApi.registerEventChannel was null, expected non-null Map<String, Object>.');
+          try {
+            await api.registerEventChannel(arg_arguments!);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
       }
     }
   }

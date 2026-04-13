@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: avoid_print
-
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -12,7 +11,7 @@ import 'firebase_options.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   String get name => 'foo';
 
@@ -62,7 +61,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('Firebase Core example app')),
+        appBar: AppBar(
+          title: const Text('Firebase Core example app'),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -84,7 +85,10 @@ class MyApp extends StatelessWidget {
                 onPressed: initializeSecondary,
                 child: const Text('Initialize secondary app'),
               ),
-              ElevatedButton(onPressed: apps, child: const Text('List apps')),
+              ElevatedButton(
+                onPressed: apps,
+                child: const Text('List apps'),
+              ),
               ElevatedButton(
                 onPressed: options,
                 child: const Text('List default options'),

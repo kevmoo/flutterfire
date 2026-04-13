@@ -9,28 +9,28 @@ import 'package:firebase_auth_platform_interface/src/method_channel/utils/phone_
 
 void main() {
   test('$PhoneAuthCallbacks', () {
-    void verificationCompleted(AuthCredential phoneAuthCredential) {}
+    final PhoneVerificationCompleted verificationCompleted =
+        (AuthCredential phoneAuthCredential) {};
 
-    void verificationFailed(FirebaseAuthException authException) {}
+    final PhoneVerificationFailed verificationFailed =
+        (FirebaseAuthException authException) {};
 
-    void codeSent(String verificationId, [int? forceResendingToken]) async {}
+    final PhoneCodeSent codeSent = (
+      String verificationId, [
+      int? forceResendingToken,
+    ]) async {};
 
-    void codeAutoRetrievalTimeout(String verificationId) {}
+    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {};
 
-    final callbacks = PhoneAuthCallbacks(
-      verificationCompleted,
-      verificationFailed,
-      codeSent,
-      codeAutoRetrievalTimeout,
-    );
+    final callbacks = PhoneAuthCallbacks(verificationCompleted,
+        verificationFailed, codeSent, codeAutoRetrievalTimeout);
 
     expect(callbacks, isA<PhoneAuthCallbacks>());
     expect(callbacks.verificationCompleted, isA<PhoneVerificationCompleted>());
     expect(callbacks.verificationFailed, isA<PhoneVerificationFailed>());
     expect(callbacks.codeSent, isA<PhoneCodeSent>());
-    expect(
-      callbacks.codeAutoRetrievalTimeout,
-      isA<PhoneCodeAutoRetrievalTimeout>(),
-    );
+    expect(callbacks.codeAutoRetrievalTimeout,
+        isA<PhoneCodeAutoRetrievalTimeout>());
   });
 }

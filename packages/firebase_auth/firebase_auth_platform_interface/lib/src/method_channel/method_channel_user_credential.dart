@@ -12,35 +12,33 @@ import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart
 class MethodChannelUserCredential extends UserCredentialPlatform {
   // ignore: public_member_api_docs
   MethodChannelUserCredential(
-    FirebaseAuthPlatform auth,
-    PigeonUserCredential data,
-  ) : super(
-        auth: auth,
-        additionalUserInfo: data.additionalUserInfo == null
-            ? null
-            : AdditionalUserInfo(
-                isNewUser: data.additionalUserInfo!.isNewUser,
-                profile: Map<String, dynamic>.from(
-                  data.additionalUserInfo!.profile ?? {},
+      FirebaseAuthPlatform auth, PigeonUserCredential data)
+      : super(
+          auth: auth,
+          additionalUserInfo: data.additionalUserInfo == null
+              ? null
+              : AdditionalUserInfo(
+                  isNewUser: data.additionalUserInfo!.isNewUser,
+                  profile: Map<String, dynamic>.from(
+                      data.additionalUserInfo!.profile ?? {}),
+                  providerId: data.additionalUserInfo!.providerId,
+                  username: data.additionalUserInfo!.username,
+                  authorizationCode: data.additionalUserInfo?.authorizationCode,
                 ),
-                providerId: data.additionalUserInfo!.providerId,
-                username: data.additionalUserInfo!.username,
-                authorizationCode: data.additionalUserInfo?.authorizationCode,
-              ),
-        credential: data.credential == null
-            ? null
-            : AuthCredential(
-                providerId: data.credential!.providerId,
-                signInMethod: data.credential!.signInMethod,
-                token: data.credential!.nativeId,
-                accessToken: data.credential!.accessToken,
-              ),
-        user: data.user == null
-            ? null
-            : MethodChannelUser(
-                auth,
-                MethodChannelMultiFactor(auth),
-                data.user!,
-              ),
-      );
+          credential: data.credential == null
+              ? null
+              : AuthCredential(
+                  providerId: data.credential!.providerId,
+                  signInMethod: data.credential!.signInMethod,
+                  token: data.credential!.nativeId,
+                  accessToken: data.credential!.accessToken,
+                ),
+          user: data.user == null
+              ? null
+              : MethodChannelUser(
+                  auth,
+                  MethodChannelMultiFactor(auth),
+                  data.user!,
+                ),
+        );
 }

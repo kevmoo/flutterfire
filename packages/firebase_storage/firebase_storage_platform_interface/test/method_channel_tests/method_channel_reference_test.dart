@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:firebase_storage_platform_interface/src/method_channel/method_channel_firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/src/method_channel/method_channel_reference.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
@@ -23,9 +24,8 @@ void main() {
   const String bucketParam = 'bucket-test';
 
   final kMetadata = SettableMetadata(
-    contentLanguage: 'en',
-    customMetadata: <String, String>{'activity': 'test'},
-  );
+      contentLanguage: 'en',
+      customMetadata: <String, String>{'activity': 'test'});
   const kListOptions = ListOptions(maxResults: 20);
 
   group('$MethodChannelReference', () {
@@ -49,57 +49,52 @@ void main() {
 
     group('delete', () {
       test(
-        'catch a [PlatformException] error and throws a [FirebaseException] error',
-        () async {
-          Function callMethod;
-          callMethod = () => ref.delete();
-          await testExceptionHandling('PLATFORM', callMethod);
-        },
-      );
+          'catch a [PlatformException] error and throws a [FirebaseException] error',
+          () async {
+        Function callMethod;
+        callMethod = () => ref.delete();
+        await testExceptionHandling('PLATFORM', callMethod);
+      });
     });
 
     group('getDownloadURL', () {
       test(
-        'catch a [PlatformException] error and throws a [FirebaseException] error',
-        () async {
-          Function callMethod;
-          callMethod = () => ref.getDownloadURL();
-          await testExceptionHandling('PLATFORM', callMethod);
-        },
-      );
+          'catch a [PlatformException] error and throws a [FirebaseException] error',
+          () async {
+        Function callMethod;
+        callMethod = () => ref.getDownloadURL();
+        await testExceptionHandling('PLATFORM', callMethod);
+      });
     });
 
     group('getMetadata', () {
       test(
-        'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
-        () async {
-          Function callMethod;
-          callMethod = () => ref.getMetadata();
-          await testExceptionHandling('PLATFORM', callMethod);
-        },
-      );
+          'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
+          () async {
+        Function callMethod;
+        callMethod = () => ref.getMetadata();
+        await testExceptionHandling('PLATFORM', callMethod);
+      });
     });
 
     group('list', () {
       test(
-        'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
-        () async {
-          Function callMethod;
-          callMethod = () => ref.list(kListOptions);
-          await testExceptionHandling('PLATFORM', callMethod);
-        },
-      );
+          'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
+          () async {
+        Function callMethod;
+        callMethod = () => ref.list(kListOptions);
+        await testExceptionHandling('PLATFORM', callMethod);
+      });
     });
 
     group('listAll', () {
       test(
-        'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
-        () async {
-          Function callMethod;
-          callMethod = () => ref.listAll();
-          await testExceptionHandling('PLATFORM', callMethod);
-        },
-      );
+          'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
+          () async {
+        Function callMethod;
+        callMethod = () => ref.listAll();
+        await testExceptionHandling('PLATFORM', callMethod);
+      });
     });
 
     group('putBlob', () {
@@ -113,13 +108,12 @@ void main() {
 
     group('updateMetadata', () {
       test(
-        'catch a [PlatformException] error and throws a [FirebaseException] error',
-        () async {
-          Function callMethod;
-          callMethod = () => ref.updateMetadata(kMetadata);
-          await testExceptionHandling('PLATFORM', callMethod);
-        },
-      );
+          'catch a [PlatformException] error and throws a [FirebaseException] error',
+          () async {
+        Function callMethod;
+        callMethod = () => ref.updateMetadata(kMetadata);
+        await testExceptionHandling('PLATFORM', callMethod);
+      });
     });
   });
 }

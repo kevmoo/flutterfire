@@ -3,7 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of '../firebase_storage.dart';
+part of firebase_storage;
 
 /// A [TaskSnapshot] is returned as the result or on-going process of a [Task].
 class TaskSnapshot {
@@ -11,7 +11,7 @@ class TaskSnapshot {
     TaskSnapshotPlatform.verify(_delegate);
   }
 
-  final TaskSnapshotPlatform _delegate;
+  TaskSnapshotPlatform _delegate;
 
   /// The [FirebaseStorage] instance used to create the task.
   final FirebaseStorage storage;

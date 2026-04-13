@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
 import 'dart:async';
 import 'package:waveform_flutter/waveform_flutter.dart' as wf;
@@ -144,10 +145,10 @@ class AudioInput extends ChangeNotifier {
     _amplitudeSubscription = _recorder
         .onAmplitudeChanged(const Duration(milliseconds: 100))
         .listen((amp) {
-          _amplitudeStreamController?.add(
-            wf.Amplitude(current: amp.current, max: amp.max),
-          );
-        });
+      _amplitudeStreamController?.add(
+        wf.Amplitude(current: amp.current, max: amp.max),
+      );
+    });
     amplitudeStream = _amplitudeStreamController?.stream;
 
     isRecording = true;

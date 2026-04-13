@@ -12,6 +12,7 @@ class FirebaseAppCheckWebRegistration {
   /// Called by [FirebaseAppCheck.instance] to register the [FirebaseAppCheckWeb]
   /// plugin with the [FirebaseAppCheckPlatform] instance.
   static void registerWith(Registrar registrar) {
-    FirebaseAppCheckPlatform.instance = FirebaseAppCheckWeb(app: Firebase.app());
+    FirebaseAppCheckPlatform.instance =
+        FirebaseAppCheckWeb(app: Firebase.app());
   }
 }

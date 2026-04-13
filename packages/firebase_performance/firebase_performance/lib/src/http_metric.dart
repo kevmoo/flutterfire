@@ -21,7 +21,7 @@ part of '../firebase_performance.dart';
 class HttpMetric {
   HttpMetric._(this._delegate);
 
-  final HttpMetricPlatform _delegate;
+  HttpMetricPlatform _delegate;
 
   /// HttpResponse code of the request.
   int? get httpResponseCode => _delegate.httpResponseCode;

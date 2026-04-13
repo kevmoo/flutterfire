@@ -3,6 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:flutter/services.dart';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
@@ -36,8 +37,7 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
     }
 
     throw StateError(
-      'MethodChannelFieldValue().increment() expects a "num" value',
-    );
+        'MethodChannelFieldValue().increment() expects a "num" value');
   }
 
   @override

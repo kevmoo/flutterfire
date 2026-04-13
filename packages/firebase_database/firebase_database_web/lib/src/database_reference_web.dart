@@ -9,8 +9,10 @@ class DatabaseReferenceWeb extends QueryWeb
     implements DatabaseReferencePlatform {
   /// Builds an instance of [DatabaseReferenceWeb] delegating to a package:firebase [DatabaseReferencePlatform]
   /// to delegate queries to underlying firebase web plugin
-  DatabaseReferenceWeb(DatabasePlatform database, this._delegate)
-    : super(database, _delegate);
+  DatabaseReferenceWeb(
+    DatabasePlatform database,
+    this._delegate,
+  ) : super(database, _delegate);
 
   final database_interop.DatabaseReference _delegate;
 
@@ -55,7 +57,7 @@ class DatabaseReferenceWeb extends QueryWeb
   @override
   Future<void> setWithPriority(Object? value, Object? priority) async {
     try {
-      await _delegate.setWithPriority(value.jsify(), priority.jsify());
+      await _delegate.setWithPriority(value, priority);
     } catch (e, s) {
       throw convertFirebaseDatabaseException(e, s);
     }
@@ -73,7 +75,7 @@ class DatabaseReferenceWeb extends QueryWeb
   @override
   Future<void> setPriority(priority) async {
     try {
-      await _delegate.setPriority(priority.jsify());
+      await _delegate.setPriority(priority);
     } catch (e, s) {
       throw convertFirebaseDatabaseException(e, s);
     }
@@ -90,9 +92,7 @@ class DatabaseReferenceWeb extends QueryWeb
     bool applyLocally = true,
   }) async {
     return TransactionResultWeb._(
-      this,
-      await _delegate.transaction(transactionHandler, applyLocally),
-    );
+        this, await _delegate.transaction(transactionHandler, applyLocally));
   }
 
   @override

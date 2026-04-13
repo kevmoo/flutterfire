@@ -6,6 +6,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:firebase_messaging_platform_interface/src/method_channel/method_channel_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -32,7 +34,9 @@ void main() {
             return null;
           case 'Messaging#getAPNSToken':
           case 'Messaging#getToken':
-            return {'token': 'test_token'};
+            return {
+              'token': 'test_token',
+            };
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
             return {
@@ -47,7 +51,9 @@ void main() {
               'providesAppNotificationSettings': 0,
             };
           case 'Messaging#setAutoInitEnabled':
-            return {'isAutoInitEnabled': call.arguments['enabled']};
+            return {
+              'isAutoInitEnabled': call.arguments['enabled'],
+            };
           case 'Messaging#deleteInstanceID':
             return true;
           default:
@@ -65,10 +71,8 @@ void main() {
 
     group('$FirebaseMessagingPlatform()', () {
       test('$MethodChannelFirebaseMessaging is the default instance', () {
-        expect(
-          FirebaseMessagingPlatform.instance,
-          isA<MethodChannelFirebaseMessaging>(),
-        );
+        expect(FirebaseMessagingPlatform.instance,
+            isA<MethodChannelFirebaseMessaging>());
       });
 
       test('Cannot be implemented with `implements`', () {
@@ -98,18 +102,16 @@ void main() {
 
     group('setInitialValues()', () {
       test('when isAutoInitEnabled is false', () {
-        final testMessaging = TestMethodChannelFirebaseMessaging(
-          Firebase.app(),
-        );
+        final testMessaging =
+            TestMethodChannelFirebaseMessaging(Firebase.app());
         final result = testMessaging.setInitialValues(isAutoInitEnabled: false);
         expect(result, isA<FirebaseMessagingPlatform>());
         expect(result.isAutoInitEnabled, isFalse);
       });
 
       test('when isAutoInitEnabled is true', () {
-        final testMessaging = TestMethodChannelFirebaseMessaging(
-          Firebase.app(),
-        );
+        final testMessaging =
+            TestMethodChannelFirebaseMessaging(Firebase.app());
         final result = testMessaging.setInitialValues(isAutoInitEnabled: true);
         expect(result, isA<FirebaseMessagingPlatform>());
         expect(result.isAutoInitEnabled, isTrue);
@@ -129,7 +131,9 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall(
           'Messaging#deleteToken',
-          arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
+          arguments: <String, dynamic>{
+            'appName': defaultFirebaseAppName,
+          },
         ),
       ]);
     });
@@ -143,7 +147,9 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall(
           'Messaging#getAPNSToken',
-          arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
+          arguments: <String, dynamic>{
+            'appName': defaultFirebaseAppName,
+          },
         ),
       ]);
     });
@@ -155,7 +161,9 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall(
           'Messaging#getToken',
-          arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
+          arguments: <String, dynamic>{
+            'appName': defaultFirebaseAppName,
+          },
         ),
       ]);
     });
@@ -163,10 +171,8 @@ void main() {
     test('requestPermission', () async {
       // test android response
       final androidPermissions = await messaging.requestPermission();
-      expect(
-        androidPermissions.authorizationStatus,
-        equals(AuthorizationStatus.authorized),
-      );
+      expect(androidPermissions.authorizationStatus,
+          equals(AuthorizationStatus.authorized));
       // clear log
       log.clear();
 
@@ -174,10 +180,8 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final iosStatus = await messaging.requestPermission();
       expect(iosStatus.authorizationStatus, isA<AuthorizationStatus>());
-      expect(
-        iosStatus.authorizationStatus,
-        equals(AuthorizationStatus.authorized),
-      );
+      expect(iosStatus.authorizationStatus,
+          equals(AuthorizationStatus.authorized));
 
       // check native method was called
       expect(log, <Matcher>[
@@ -194,7 +198,7 @@ void main() {
               'provisional': false,
               'sound': true,
               'providesAppNotificationSettings': false,
-            },
+            }
           },
         ),
       ]);
@@ -210,7 +214,7 @@ void main() {
           'Messaging#setAutoInitEnabled',
           arguments: <String, dynamic>{
             'appName': defaultFirebaseAppName,
-            'enabled': true,
+            'enabled': true
           },
         ),
       ]);
@@ -226,7 +230,7 @@ void main() {
           'Messaging#setAutoInitEnabled',
           arguments: <String, dynamic>{
             'appName': defaultFirebaseAppName,
-            'enabled': false,
+            'enabled': false
           },
         ),
       ]);

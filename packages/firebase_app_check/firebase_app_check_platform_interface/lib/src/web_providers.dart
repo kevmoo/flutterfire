@@ -9,11 +9,11 @@ abstract class WebProvider {
 }
 
 class ReCaptchaV3Provider extends WebProvider {
-  ReCaptchaV3Provider(super.siteKey);
+  ReCaptchaV3Provider(String siteKey) : super(siteKey);
 }
 
 class ReCaptchaEnterpriseProvider extends WebProvider {
-  ReCaptchaEnterpriseProvider(super.siteKey);
+  ReCaptchaEnterpriseProvider(String siteKey) : super(siteKey);
 }
 
 /// Debug provider for Web.

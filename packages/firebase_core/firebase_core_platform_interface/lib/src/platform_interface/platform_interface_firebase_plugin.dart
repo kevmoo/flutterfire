@@ -12,7 +12,7 @@ part of '../../firebase_core_platform_interface.dart';
 abstract class FirebasePluginPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
   FirebasePluginPlatform(this._appName, this._methodChannelName)
-    : super(token: _token);
+      : super(token: _token);
 
   /// The global data store for all constants, for each plugin and [FirebaseAppPlatform] instance.
   ///
@@ -20,7 +20,7 @@ abstract class FirebasePluginPlatform extends PlatformInterface {
   /// any constant values which are required before the plugins can be consumed are registered
   /// here. For example, calling [FirebaseAppPlatform.isAutomaticDataCollectionEnabled]
   /// requires that the value is synchronously available for use after initialization.
-  static final Map<dynamic, dynamic> constantsForPluginApps = {};
+  static Map<dynamic, dynamic> _constantsForPluginApps = {};
 
   final String _appName;
 
@@ -36,7 +36,7 @@ abstract class FirebasePluginPlatform extends PlatformInterface {
   /// Returns any plugin constants this plugin app instance has initialized.
   Map<dynamic, dynamic> get pluginConstants {
     final appConstants =
-        constantsForPluginApps[_appName] as Map<Object?, Object?>?;
+        _constantsForPluginApps[_appName] as Map<Object?, Object?>?;
 
     if (appConstants != null && appConstants[_methodChannelName] != null) {
       return appConstants[_methodChannelName]! as Map<dynamic, dynamic>;

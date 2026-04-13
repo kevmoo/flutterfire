@@ -74,8 +74,7 @@ class Cache {
   void _listenForAuthChanges() {
     if (dataConnect.auth == null) {
       developer.log(
-        'Not listening for auth changes since no auth instance in data connect',
-      );
+          'Not listening for auth changes since no auth instance in data connect');
       return;
     }
 
@@ -99,36 +98,28 @@ class Cache {
 
     final Map<DataConnectPath, PathMetadata> paths =
         serverResponse.extensions != null
-        ? ExtensionResponse.fromJson(
-            serverResponse.extensions!,
-          ).flattenPathMetadata()
-        : {};
+            ? ExtensionResponse.fromJson(serverResponse.extensions!)
+                .flattenPathMetadata()
+            : {};
 
     final dehydrationResult = await _resultTreeProcessor.dehydrateResults(
-      queryId,
-      serverResponse.data,
-      _cacheProvider!,
-      paths,
-    );
+        queryId, serverResponse.data, _cacheProvider!, paths);
 
     EntityNode rootNode = dehydrationResult.dehydratedTree;
-    Map<String, dynamic> dehydratedMap = rootNode.toJson(
-      mode: EncodingMode.dehydrated,
-    );
+    Map<String, dynamic> dehydratedMap =
+        rootNode.toJson(mode: EncodingMode.dehydrated);
 
     // if we have server ttl, that overrides maxAge from cacheSettings
-    Duration ttl =
-        serverResponse.extensions != null &&
+    Duration ttl = serverResponse.extensions != null &&
             serverResponse.extensions!['ttl'] != null
         ? Duration(seconds: serverResponse.extensions!['ttl'] as int)
         : (serverResponse.ttl ?? _settings.maxAge);
 
     final resultTree = ResultTree(
-      data: dehydratedMap,
-      ttl: ttl,
-      cachedAt: DateTime.now(),
-      lastAccessed: DateTime.now(),
-    );
+        data: dehydratedMap,
+        ttl: ttl,
+        cachedAt: DateTime.now(),
+        lastAccessed: DateTime.now());
 
     _cacheProvider!.setResultTree(queryId, resultTree);
 
@@ -139,9 +130,7 @@ class Cache {
 
   /// Fetches a cached result.
   Future<Map<String, dynamic>?> resultTree(
-    String queryId,
-    bool allowStale,
-  ) async {
+      String queryId, bool allowStale) async {
     if (_cacheProvider == null) {
       return null;
     }
@@ -164,13 +153,11 @@ class Cache {
       resultTree.lastAccessed = DateTime.now();
       _cacheProvider!.setResultTree(queryId, resultTree);
 
-      EntityNode rootNode = EntityNode.fromJson(
-        resultTree.data,
-        _cacheProvider!,
-      );
+      EntityNode rootNode =
+          EntityNode.fromJson(resultTree.data, _cacheProvider!);
 
-      Map<String, dynamic> hydratedJson = await _resultTreeProcessor
-          .hydrateResults(rootNode, _cacheProvider!);
+      Map<String, dynamic> hydratedJson =
+          await _resultTreeProcessor.hydrateResults(rootNode, _cacheProvider!);
 
       return hydratedJson;
     }

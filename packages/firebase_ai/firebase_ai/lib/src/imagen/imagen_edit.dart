@@ -14,6 +14,7 @@
 
 import 'dart:convert';
 
+import 'package:meta/meta.dart';
 
 /// The desired outcome of the image editing.
 @experimental
@@ -151,12 +152,12 @@ final class ImagenMaskConfig extends ImagenReferenceConfig {
 
   @override
   Map<String, Object?> toJson() => {
-    'maskImageConfig': {
-      'maskMode': maskMode.toJson(),
-      if (maskDilation != null) 'dilation': maskDilation,
-      if (maskClasses != null) 'maskClasses': jsonEncode(maskClasses),
-    },
-  };
+        'maskImageConfig': {
+          'maskMode': maskMode.toJson(),
+          if (maskDilation != null) 'dilation': maskDilation,
+          if (maskClasses != null) 'maskClasses': jsonEncode(maskClasses),
+        },
+      };
 }
 
 /// The configuration for the subject.
@@ -168,7 +169,10 @@ final class ImagenMaskConfig extends ImagenReferenceConfig {
 )
 final class ImagenSubjectConfig extends ImagenReferenceConfig {
   // ignore: public_member_api_docs
-  ImagenSubjectConfig({this.description, this.type});
+  ImagenSubjectConfig({
+    this.description,
+    this.type,
+  });
 
   /// A description of the subject.
   final String? description;
@@ -178,11 +182,11 @@ final class ImagenSubjectConfig extends ImagenReferenceConfig {
 
   @override
   Map<String, Object?> toJson() => {
-    'subjectImageConfig': {
-      if (description != null) 'subjectDescription': description,
-      if (type != null) 'subjectType': type!.toJson(),
-    },
-  };
+        'subjectImageConfig': {
+          if (description != null) 'subjectDescription': description,
+          if (type != null) 'subjectType': type!.toJson(),
+        },
+      };
 }
 
 /// The configuration for the style.
@@ -194,16 +198,18 @@ final class ImagenSubjectConfig extends ImagenReferenceConfig {
 )
 final class ImagenStyleConfig extends ImagenReferenceConfig {
   // ignore: public_member_api_docs
-  ImagenStyleConfig({this.description});
+  ImagenStyleConfig({
+    this.description,
+  });
 
   /// A description of the style.
   final String? description;
   @override
   Map<String, Object?> toJson() => {
-    'styleImageConfig': {
-      if (description != null) 'styleDescription': description,
-    },
-  };
+        'styleImageConfig': {
+          if (description != null) 'styleDescription': description,
+        },
+      };
 }
 
 /// The configuration for the control.
@@ -235,15 +241,15 @@ final class ImagenControlConfig extends ImagenReferenceConfig {
   final int? superpixelRuler;
   @override
   Map<String, Object?> toJson() => {
-    'controlImageConfig': {
-      'controlType': controlType.toJson(),
-      if (enableComputation != null)
-        'enableControlImageComputation': enableComputation,
-      if (superpixelRegionSize != null)
-        'superpixelRegionSize': superpixelRegionSize,
-      if (superpixelRuler != null) 'superpixelRuler': superpixelRuler,
-    },
-  };
+        'controlImageConfig': {
+          'controlType': controlType.toJson(),
+          if (enableComputation != null)
+            'enableControlImageComputation': enableComputation,
+          if (superpixelRegionSize != null)
+            'superpixelRegionSize': superpixelRegionSize,
+          if (superpixelRuler != null) 'superpixelRuler': superpixelRuler,
+        },
+      };
 }
 
 /// The configuration for image editing.
@@ -255,7 +261,10 @@ final class ImagenControlConfig extends ImagenReferenceConfig {
 )
 final class ImagenEditingConfig {
   // ignore: public_member_api_docs
-  ImagenEditingConfig({this.editMode, this.editSteps});
+  ImagenEditingConfig({
+    this.editMode,
+    this.editSteps,
+  });
 
   /// The mode of the editing.
   final ImagenEditMode? editMode;
@@ -273,7 +282,10 @@ final class ImagenEditingConfig {
 )
 final class ImagenDimensions {
   // ignore: public_member_api_docs
-  ImagenDimensions({required this.width, required this.height});
+  ImagenDimensions({
+    required this.width,
+    required this.height,
+  });
 
   /// The width of the image.
   final int width;
@@ -306,49 +318,35 @@ final class ImagenImagePlacement {
   static const ImagenImagePlacement center = ImagenImagePlacement._(null, null);
 
   /// The top center of the image.
-  static const ImagenImagePlacement topCenter = ImagenImagePlacement._(
-    null,
-    null,
-  );
+  static const ImagenImagePlacement topCenter =
+      ImagenImagePlacement._(null, null);
 
   /// The bottom center of the image.
-  static const ImagenImagePlacement bottomCenter = ImagenImagePlacement._(
-    null,
-    null,
-  );
+  static const ImagenImagePlacement bottomCenter =
+      ImagenImagePlacement._(null, null);
 
   /// The left center of the image.
-  static const ImagenImagePlacement leftCenter = ImagenImagePlacement._(
-    null,
-    null,
-  );
+  static const ImagenImagePlacement leftCenter =
+      ImagenImagePlacement._(null, null);
 
   /// The right center of the image.
-  static const ImagenImagePlacement rightCenter = ImagenImagePlacement._(
-    null,
-    null,
-  );
+  static const ImagenImagePlacement rightCenter =
+      ImagenImagePlacement._(null, null);
 
   /// The top left of the image.
   static const ImagenImagePlacement topLeft = ImagenImagePlacement._(0, 0);
 
   /// The top right of the image.
-  static const ImagenImagePlacement topRight = ImagenImagePlacement._(
-    null,
-    null,
-  );
+  static const ImagenImagePlacement topRight =
+      ImagenImagePlacement._(null, null);
 
   /// The bottom left of the image.
-  static const ImagenImagePlacement bottomLeft = ImagenImagePlacement._(
-    null,
-    null,
-  );
+  static const ImagenImagePlacement bottomLeft =
+      ImagenImagePlacement._(null, null);
 
   /// The bottom right of the image.
-  static const ImagenImagePlacement bottomRight = ImagenImagePlacement._(
-    null,
-    null,
-  );
+  static const ImagenImagePlacement bottomRight =
+      ImagenImagePlacement._(null, null);
 
   /// Normalizes the placement to the given dimensions.
   ImagenImagePlacement normalizeToDimensions(

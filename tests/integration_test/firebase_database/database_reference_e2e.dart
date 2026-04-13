@@ -30,7 +30,11 @@ void setupDatabaseReferenceTests() {
             database.ref('denied_read').get(),
             throwsA(
               isA<FirebaseException>()
-                  .having((error) => error.code, 'code', 'permission-denied')
+                  .having(
+                    (error) => error.code,
+                    'code',
+                    'permission-denied',
+                  )
                   .having(
                     (error) => error.message,
                     'message',
@@ -96,7 +100,10 @@ void setupDatabaseReferenceTests() {
         await ref.update({'bar': newValue});
         final actual = await ref.get();
 
-        expect(actual.value, {'foo': 'bar', 'bar': newValue});
+        expect(actual.value, {
+          'foo': 'bar',
+          'bar': newValue,
+        });
       });
     });
 
@@ -155,11 +162,10 @@ void setupDatabaseReferenceTests() {
         await ref
             .runTransaction((value) => Transaction.success(1))
             .then((result) {
-              // No-op
-            })
-            .catchError((e) {
-              errorReceived.complete(e as FirebaseException);
-            });
+          // No-op
+        }).catchError((e) {
+          errorReceived.complete(e as FirebaseException);
+        });
 
         final streamError = await errorReceived.future;
         expect(streamError, isA<FirebaseException>());

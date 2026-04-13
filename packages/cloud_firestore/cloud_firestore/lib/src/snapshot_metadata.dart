@@ -6,7 +6,7 @@ part of '../cloud_firestore.dart';
 
 /// Metadata about a snapshot, describing the state of the snapshot.
 class SnapshotMetadata {
-  final SnapshotMetadataPlatform _delegate;
+  SnapshotMetadataPlatform _delegate;
 
   SnapshotMetadata._(this._delegate);
 

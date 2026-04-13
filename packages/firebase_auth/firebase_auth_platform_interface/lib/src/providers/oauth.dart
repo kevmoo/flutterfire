@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:meta/meta.dart';
 
 /// A generic provider instance.
 ///
@@ -11,7 +12,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 /// standalone for integration with other 3rd party providers.
 class OAuthProvider extends AuthProvider {
   // ignore: public_member_api_docs
-  OAuthProvider(super.providerId);
+  OAuthProvider(String providerId) : super(providerId);
 
   List<String> _scopes = [];
   Map<String, String> _parameters = {};
@@ -40,7 +41,9 @@ class OAuthProvider extends AuthProvider {
 
   /// Sets the OAuth custom parameters to pass in a OAuth request for popup and
   /// redirect sign-in operations.
-  OAuthProvider setCustomParameters(Map<String, String> customOAuthParameters) {
+  OAuthProvider setCustomParameters(
+    Map<String, String> customOAuthParameters,
+  ) {
     _parameters = customOAuthParameters;
     return this;
   }
@@ -72,15 +75,19 @@ class OAuthCredential extends AuthCredential {
   // ignore: public_member_api_docs
   @protected
   const OAuthCredential({
-    required super.providerId,
-    required super.signInMethod,
-    super.accessToken,
+    required String providerId,
+    required String signInMethod,
+    String? accessToken,
     this.idToken,
     this.secret,
     this.rawNonce,
     this.serverAuthCode,
     this.appleFullPersonName,
-  });
+  }) : super(
+          providerId: providerId,
+          signInMethod: signInMethod,
+          accessToken: accessToken,
+        );
 
   /// The OAuth ID token associated with the credential if it belongs to an
   /// OIDC provider, such as `google.com`.

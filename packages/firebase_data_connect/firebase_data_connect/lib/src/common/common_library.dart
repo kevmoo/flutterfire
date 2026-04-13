@@ -19,6 +19,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 
 import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart';
 
 part 'dataconnect_error.dart';
 part 'dataconnect_options.dart';

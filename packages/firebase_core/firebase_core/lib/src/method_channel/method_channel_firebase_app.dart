@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../../firebase_core.dart';
+part of firebase_core;
 
 /// The entry point for accessing a Firebase app instance.
 ///
@@ -20,7 +20,7 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
     super.options, {
     bool? isAutomaticDataCollectionEnabled,
   }) : _isAutomaticDataCollectionEnabled =
-           isAutomaticDataCollectionEnabled ?? false;
+            isAutomaticDataCollectionEnabled ?? false;
 
   /// Keeps track of whether this app has been deleted by the user.
   bool _isDeleted = false;

@@ -3,6 +3,4 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// This is a stub file to work around odd dart web compiler builder issues.
-library;
-
 export 'dart:js_interop';

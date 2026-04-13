@@ -7,6 +7,8 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_messaging.dart';
@@ -119,7 +121,9 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// before the instance has initialized to prevent any unnecessary async
   /// calls.
   @protected
-  FirebaseMessagingPlatform setInitialValues({bool? isAutoInitEnabled}) {
+  FirebaseMessagingPlatform setInitialValues({
+    bool? isAutoInitEnabled,
+  }) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 
@@ -150,8 +154,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// on web a service worker can be registered.
   void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {
     throw UnimplementedError(
-      'registerBackgroundMessageHandler() is not implemented',
-    );
+        'registerBackgroundMessageHandler() is not implemented');
   }
 
   /// Removes access to an FCM token previously authorized with optional [senderId].
@@ -168,7 +171,9 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }
 
   /// Returns the default FCM token for this device and optionally [senderId].
-  Future<String?> getToken({String? vapidKey}) {
+  Future<String?> getToken({
+    String? vapidKey,
+  }) {
     throw UnimplementedError('getToken() is not implemented');
   }
 
@@ -287,8 +292,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     required bool sound,
   }) {
     throw UnimplementedError(
-      'setForegroundNotificationPresentationOptions() is not implemented',
-    );
+        'setForegroundNotificationPresentationOptions() is not implemented');
   }
 
   /// Subscribe to topic in background.

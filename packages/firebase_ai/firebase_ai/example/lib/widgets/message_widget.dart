@@ -60,9 +60,8 @@ class MessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: isFromUser
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
+      mainAxisAlignment:
+          isFromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Flexible(
           child: Container(
@@ -71,16 +70,19 @@ class MessageWidget extends StatelessWidget {
               color: isThought
                   ? Theme.of(context).colorScheme.secondaryContainer
                   : isFromUser
-                  ? Theme.of(context).colorScheme.primaryContainer
-                  : Theme.of(context).colorScheme.surfaceContainerHighest,
+                      ? Theme.of(context).colorScheme.primaryContainer
+                      : Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(18),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            padding: const EdgeInsets.symmetric(
+              vertical: 15,
+              horizontal: 20,
+            ),
             margin: const EdgeInsets.only(bottom: 8),
             child: Column(
               children: [
                 if (text case final text?) MarkdownBody(data: text),
-                ?image,
+                if (image case final image?) image,
               ],
             ),
           ),

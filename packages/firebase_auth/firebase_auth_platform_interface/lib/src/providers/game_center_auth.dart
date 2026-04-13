@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 const _kProviderId = 'gc.apple.com';
@@ -59,7 +57,10 @@ class GameCenterAuthProvider extends AuthProvider {
 /// [GameCenterAuthProvider.credential].
 class GameCenterAuthCredential extends OAuthCredential {
   GameCenterAuthCredential._()
-    : super(providerId: _kProviderId, signInMethod: _kProviderId);
+      : super(
+          providerId: _kProviderId,
+          signInMethod: _kProviderId,
+        );
 
   factory GameCenterAuthCredential._credential() {
     return GameCenterAuthCredential._();

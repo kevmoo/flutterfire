@@ -14,6 +14,7 @@
 
 import 'package:camera/camera.dart';
 import 'package:camera_macos/camera_macos.dart' deferred as camera_macos_lib;
+import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 
@@ -42,11 +43,15 @@ class SquareCameraPreview extends StatelessWidget {
       child: Container(
         width: 352, // Adjusted from 350 to be a multiple of 4
         height: 352,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: AspectRatio(
           aspectRatio: 1,
           child: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(16)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(16),
+            ),
             // The camera preview is often not a square. To fill the 1:1 aspect
             // ratio, we scale the preview to cover the area and clip it.
             child: Transform.scale(

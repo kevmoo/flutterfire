@@ -30,49 +30,48 @@ part of '../base_model.dart';
   '"Nano Banana" models)(https://firebase.google.com/docs/ai-logic/imagen-models-migration).',
 )
 final class ImagenModel extends BaseApiClientModel {
-  ImagenModel._({
-    required FirebaseApp app,
-    required String model,
-    required String location,
-    required bool useVertexBackend,
-    bool? useLimitedUseAppCheckTokens,
-    FirebaseAppCheck? appCheck,
-    FirebaseAuth? auth,
-    ImagenGenerationConfig? generationConfig,
-    ImagenSafetySettings? safetySettings,
-  }) : _generationConfig = generationConfig,
-       _safetySettings = safetySettings,
-       _useVertexBackend = useVertexBackend,
-       super(
-         serializationStrategy: useVertexBackend
-             ? VertexSerialization()
-             : DeveloperSerialization(),
-         modelUri: useVertexBackend
-             ? _VertexUri(app: app, model: model, location: location)
-             : _GoogleAIUri(app: app, model: model),
-         client: HttpApiClient(
-           apiKey: app.options.apiKey,
-           requestHeaders: BaseModel.firebaseTokens(
-             appCheck,
-             auth,
-             app,
-             useLimitedUseAppCheckTokens,
-           ),
-         ),
-       );
+  ImagenModel._(
+      {required FirebaseApp app,
+      required String model,
+      required String location,
+      required bool useVertexBackend,
+      bool? useLimitedUseAppCheckTokens,
+      FirebaseAppCheck? appCheck,
+      FirebaseAuth? auth,
+      ImagenGenerationConfig? generationConfig,
+      ImagenSafetySettings? safetySettings})
+      : _generationConfig = generationConfig,
+        _safetySettings = safetySettings,
+        _useVertexBackend = useVertexBackend,
+        super(
+            serializationStrategy: useVertexBackend
+                ? VertexSerialization()
+                : DeveloperSerialization(),
+            modelUri: useVertexBackend
+                ? _VertexUri(app: app, model: model, location: location)
+                : _GoogleAIUri(app: app, model: model),
+            client: HttpApiClient(
+                apiKey: app.options.apiKey,
+                requestHeaders: BaseModel.firebaseTokens(
+                    appCheck, auth, app, useLimitedUseAppCheckTokens)));
 
   final ImagenGenerationConfig? _generationConfig;
   final ImagenSafetySettings? _safetySettings;
   final bool _useVertexBackend;
 
-  Map<String, Object?> _generateImagenRequest(String prompt, {String? gcsUri}) {
+  Map<String, Object?> _generateImagenRequest(
+    String prompt, {
+    String? gcsUri,
+  }) {
     final parameters = <String, Object?>{
-      'storageUri': ?gcsUri,
+      if (gcsUri != null) 'storageUri': gcsUri,
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
       if (_generationConfig?.aspectRatio case final aspectRatio?)
         'aspectRatio': aspectRatio.toJson(),
-      'negativePrompt': ?_generationConfig?.negativePrompt,
-      'addWatermark': ?_generationConfig?.addWatermark,
+      if (_generationConfig?.negativePrompt case final negativePrompt?)
+        'negativePrompt': negativePrompt,
+      if (_generationConfig?.addWatermark case final addWatermark?)
+        'addWatermark': addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
       if (_safetySettings case final safetySettings?)
@@ -83,7 +82,7 @@ final class ImagenModel extends BaseApiClientModel {
 
     return {
       'instances': [
-        {'prompt': prompt},
+        {'prompt': prompt}
       ],
       'parameters': parameters,
     };
@@ -93,12 +92,15 @@ final class ImagenModel extends BaseApiClientModel {
   /// prompt.
   Future<ImagenGenerationResponse<ImagenInlineImage>> generateImages(
     String prompt,
-  ) => makeRequest(
-    Task.predict,
-    _generateImagenRequest(prompt),
-    (jsonObject) =>
-        parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
-  );
+  ) =>
+      makeRequest(
+        Task.predict,
+        _generateImagenRequest(
+          prompt,
+        ),
+        (jsonObject) =>
+            parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+      );
 
   /// Generates images with format of [ImagenGCSImage] based on the given
   /// prompt.
@@ -107,11 +109,16 @@ final class ImagenModel extends BaseApiClientModel {
   Future<ImagenGenerationResponse<ImagenGCSImage>> _generateImagesGCS(
     String prompt,
     String gcsUri,
-  ) => makeRequest(
-    Task.predict,
-    _generateImagenRequest(prompt, gcsUri: gcsUri),
-    (jsonObject) => parseImagenGenerationResponse<ImagenGCSImage>(jsonObject),
-  );
+  ) =>
+      makeRequest(
+        Task.predict,
+        _generateImagenRequest(
+          prompt,
+          gcsUri: gcsUri,
+        ),
+        (jsonObject) =>
+            parseImagenGenerationResponse<ImagenGCSImage>(jsonObject),
+      );
 
   /// Edits an image based on a prompt and a list of reference images.
   @experimental
@@ -119,12 +126,17 @@ final class ImagenModel extends BaseApiClientModel {
     List<ImagenReferenceImage> referenceImages,
     String prompt, {
     ImagenEditingConfig? config,
-  }) => makeRequest(
-    Task.predict,
-    _generateImagenEditRequest(referenceImages, prompt, config: config),
-    (jsonObject) =>
-        parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
-  );
+  }) =>
+      makeRequest(
+        Task.predict,
+        _generateImagenEditRequest(
+          referenceImages,
+          prompt,
+          config: config,
+        ),
+        (jsonObject) =>
+            parseImagenGenerationResponse<ImagenInlineImage>(jsonObject),
+      );
 
   /// Inpaints an image based on a prompt and a mask.
   @experimental
@@ -133,7 +145,15 @@ final class ImagenModel extends BaseApiClientModel {
     String prompt,
     ImagenMaskReference mask, {
     ImagenEditingConfig? config,
-  }) => editImage([mask, ImagenRawImage(image: image)], prompt, config: config);
+  }) =>
+      editImage(
+        [
+          mask,
+          ImagenRawImage(image: image),
+        ],
+        prompt,
+        config: config,
+      );
 
   Map<String, Object?> _generateImagenEditRequest(
     List<ImagenReferenceImage> images,
@@ -142,16 +162,17 @@ final class ImagenModel extends BaseApiClientModel {
   }) {
     if (!_useVertexBackend) {
       throw FirebaseAIException(
-        'Image editing for Imagen is only supported on Vertex AI backend.',
-      );
+          'Image editing for Imagen is only supported on Vertex AI backend.');
     }
     final parameters = <String, Object?>{
       'sampleCount': _generationConfig?.numberOfImages ?? 1,
       if (config?.editMode case final editMode?) 'editMode': editMode.toJson(),
       if (config?.editSteps case final editSteps?)
         'editConfig': {'baseSteps': editSteps},
-      'negativePrompt': ?_generationConfig?.negativePrompt,
-      'addWatermark': ?_generationConfig?.addWatermark,
+      if (_generationConfig?.negativePrompt case final negativePrompt?)
+        'negativePrompt': negativePrompt,
+      if (_generationConfig?.addWatermark case final addWatermark?)
+        'addWatermark': addWatermark,
       if (_generationConfig?.imageFormat case final imageFormat?)
         'outputOption': imageFormat.toJson(),
       if (_safetySettings case final safetySettings?)
@@ -169,10 +190,9 @@ final class ImagenModel extends BaseApiClientModel {
             int index = entry.key;
             var image = entry.value;
             return image.toJson(
-              referenceIdOverrideIfNull: index + images.length,
-            );
+                referenceIdOverrideIfNull: index + images.length);
           }).toList(),
-        },
+        }
       ],
     };
   }
@@ -189,14 +209,15 @@ ImagenModel createImagenModel({
   FirebaseAuth? auth,
   ImagenGenerationConfig? generationConfig,
   ImagenSafetySettings? safetySettings,
-}) => ImagenModel._(
-  model: model,
-  app: app,
-  appCheck: appCheck,
-  auth: auth,
-  location: location,
-  useVertexBackend: useVertexBackend,
-  useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-  safetySettings: safetySettings,
-  generationConfig: generationConfig,
-);
+}) =>
+    ImagenModel._(
+      model: model,
+      app: app,
+      appCheck: appCheck,
+      auth: auth,
+      location: location,
+      useVertexBackend: useVertexBackend,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      safetySettings: safetySettings,
+      generationConfig: generationConfig,
+    );

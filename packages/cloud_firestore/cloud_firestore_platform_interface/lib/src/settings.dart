@@ -1,8 +1,9 @@
-// ignore_for_file: constant_identifier_names, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:flutter/foundation.dart';
 
 /// Specifies custom configurations for your Cloud Firestore instance.
 ///
@@ -116,26 +117,23 @@ class Settings {
     WebPersistentTabManager? webPersistentTabManager,
   }) {
     assert(
-      cacheSizeBytes == null ||
-          cacheSizeBytes == CACHE_SIZE_UNLIMITED ||
-          // 1mb and 100mb. minimum and maximum inclusive range.
-          (cacheSizeBytes >= 1048576 && cacheSizeBytes <= 104857600),
-      'Cache size must be between 1048576 bytes (inclusive) and 104857600 bytes (inclusive)',
-    );
+        cacheSizeBytes == null ||
+            cacheSizeBytes == CACHE_SIZE_UNLIMITED ||
+            // 1mb and 100mb. minimum and maximum inclusive range.
+            (cacheSizeBytes >= 1048576 && cacheSizeBytes <= 104857600),
+        'Cache size must be between 1048576 bytes (inclusive) and 104857600 bytes (inclusive)');
 
     return Settings(
       persistenceEnabled: persistenceEnabled ?? this.persistenceEnabled,
       host: host ?? this.host,
       sslEnabled: sslEnabled ?? this.sslEnabled,
       cacheSizeBytes: cacheSizeBytes ?? this.cacheSizeBytes,
-      webExperimentalForceLongPolling:
-          webExperimentalForceLongPolling ??
+      webExperimentalForceLongPolling: webExperimentalForceLongPolling ??
           this.webExperimentalForceLongPolling,
       webExperimentalAutoDetectLongPolling:
           webExperimentalAutoDetectLongPolling ??
-          this.webExperimentalAutoDetectLongPolling,
-      webExperimentalLongPollingOptions:
-          webExperimentalLongPollingOptions ??
+              this.webExperimentalAutoDetectLongPolling,
+      webExperimentalLongPollingOptions: webExperimentalLongPollingOptions ??
           this.webExperimentalLongPollingOptions,
       ignoreUndefinedProperties:
           ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
@@ -163,17 +161,17 @@ class Settings {
 
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    persistenceEnabled,
-    host,
-    sslEnabled,
-    cacheSizeBytes,
-    webExperimentalForceLongPolling,
-    webExperimentalAutoDetectLongPolling,
-    webExperimentalLongPollingOptions,
-    ignoreUndefinedProperties,
-    webPersistentTabManager,
-  );
+        runtimeType,
+        persistenceEnabled,
+        host,
+        sslEnabled,
+        cacheSizeBytes,
+        webExperimentalForceLongPolling,
+        webExperimentalAutoDetectLongPolling,
+        webExperimentalLongPollingOptions,
+        ignoreUndefinedProperties,
+        webPersistentTabManager,
+      );
 
   @override
   String toString() => 'Settings($asMap)';
@@ -266,10 +264,14 @@ class WebExperimentalLongPollingOptions {
   /// such as 25 seconds, may fix prematurely-closed hanging GET requests.
   final Duration? timeoutDuration;
 
-  const WebExperimentalLongPollingOptions({this.timeoutDuration});
+  const WebExperimentalLongPollingOptions({
+    this.timeoutDuration,
+  });
 
   Map<String, dynamic> get asMap {
-    return {'timeoutDuration': timeoutDuration?.inSeconds};
+    return {
+      'timeoutDuration': timeoutDuration?.inSeconds,
+    };
   }
 
   @override

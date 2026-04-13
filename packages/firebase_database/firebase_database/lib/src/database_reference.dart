@@ -13,7 +13,7 @@ part of '../firebase_database.dart';
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 class DatabaseReference extends Query {
-  final DatabaseReferencePlatform _delegate;
+  DatabaseReferencePlatform _delegate;
 
   DatabaseReference._(this._delegate) : super._(_delegate);
 
@@ -28,13 +28,13 @@ class DatabaseReference extends Query {
   /// refers to the root of your Firebase Database, it has no parent, and
   /// therefore parent() will return null.
   DatabaseReference? get parent {
-    final platformParent = _delegate.parent;
+    final _platformParent = _delegate.parent;
 
-    if (platformParent == null) {
+    if (_platformParent == null) {
       return null;
     }
 
-    return DatabaseReference._(platformParent);
+    return DatabaseReference._(_platformParent);
   }
 
   /// Gets a [DatabaseReference] for the root location.

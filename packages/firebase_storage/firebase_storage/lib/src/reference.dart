@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../firebase_storage.dart';
+part of firebase_storage;
 
 /// Represents a reference to a Google Cloud Storage object. Developers can
 /// upload, download, and delete objects, as well as get/set object metadata.
@@ -12,7 +12,7 @@ class Reference {
     ReferencePlatform.verify(_delegate);
   }
 
-  final ReferencePlatform _delegate;
+  ReferencePlatform _delegate;
 
   /// The storage service associated with this reference.
   final FirebaseStorage storage;
@@ -72,11 +72,9 @@ class Reference {
   /// Storage List API will filter these unsupported objects. [list] may fail
   /// if there are too many unsupported objects in the bucket.
   Future<ListResult> list([ListOptions? options]) async {
-    assert(
-      options == null ||
-          options.maxResults == null ||
-          options.maxResults! > 0 && options.maxResults! <= 1000,
-    );
+    assert(options == null ||
+        options.maxResults == null ||
+        options.maxResults! > 0 && options.maxResults! <= 1000);
     return ListResult._(storage, await _delegate.list(options));
   }
 
@@ -133,9 +131,7 @@ class Reference {
   /// Optionally, you can also set metadata onto the uploaded object.
   UploadTask putData(Uint8List data, [SettableMetadata? metadata]) {
     return UploadTask._(
-      storage,
-      _delegate.putData(data, _withInferredContentType(metadata)),
-    );
+        storage, _delegate.putData(data, _withInferredContentType(metadata)));
   }
 
   /// Upload a [Blob]. Note; this is only supported on web platforms.
@@ -144,9 +140,7 @@ class Reference {
   UploadTask putBlob(dynamic blob, [SettableMetadata? metadata]) {
     assert(blob != null);
     return UploadTask._(
-      storage,
-      _delegate.putBlob(blob, _withInferredContentType(metadata)),
-    );
+        storage, _delegate.putBlob(blob, _withInferredContentType(metadata)));
   }
 
   /// Upload a [File] from the filesystem. The file must exist.
@@ -172,32 +166,34 @@ class Reference {
     PutStringFormat format = PutStringFormat.raw,
     SettableMetadata? metadata,
   }) {
-    String data0 = data;
-    PutStringFormat format0 = format;
-    SettableMetadata? metadata0 = metadata;
+    String _data = data;
+    PutStringFormat _format = format;
+    SettableMetadata? _metadata = metadata;
 
     // Convert any raw string values into a Base64 format
     if (format == PutStringFormat.raw) {
-      data0 = base64.encode(utf8.encode(data0));
-      format0 = PutStringFormat.base64;
+      _data = base64.encode(utf8.encode(_data));
+      _format = PutStringFormat.base64;
     }
 
     // Convert a data_url into a Base64 format
     if (format == PutStringFormat.dataUrl) {
-      format0 = PutStringFormat.base64;
+      _format = PutStringFormat.base64;
       UriData uri = UriData.fromUri(Uri.parse(data));
       assert(uri.isBase64);
-      data0 = uri.contentText;
+      _data = uri.contentText;
 
-      if (metadata0 == null && uri.mimeType.isNotEmpty) {
-        metadata0 = SettableMetadata(contentType: uri.mimeType);
+      if (_metadata == null && uri.mimeType.isNotEmpty) {
+        _metadata = SettableMetadata(
+          contentType: uri.mimeType,
+        );
       }
 
       // If the data_url contains a mime-type & the user has not provided it,
       // set it
-      if ((metadata0!.contentType == null || metadata0.contentType!.isEmpty) &&
+      if ((_metadata!.contentType == null || _metadata.contentType!.isEmpty) &&
           uri.mimeType.isNotEmpty) {
-        metadata0 = SettableMetadata(
+        _metadata = SettableMetadata(
           cacheControl: metadata!.cacheControl,
           contentDisposition: metadata.contentDisposition,
           contentEncoding: metadata.contentEncoding,
@@ -207,9 +203,7 @@ class Reference {
       }
     }
     return UploadTask._(
-      storage,
-      _delegate.putString(data0, format0, metadata0),
-    );
+        storage, _delegate.putString(_data, _format, _metadata));
   }
 
   /// Updates the metadata on a storage object.

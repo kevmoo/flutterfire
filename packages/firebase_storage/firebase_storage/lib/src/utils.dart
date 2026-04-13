@@ -67,7 +67,10 @@ Map<String, String?>? partsFromHttpUrl(String url) {
       return null;
     }
 
-    return {'bucket': match.group(1), 'path': match.group(3)};
+    return {
+      'bucket': match.group(1),
+      'path': match.group(3),
+    };
   } else {
     // Google Cloud storage url
     RegExp cloudStorageRegExp = RegExp(
@@ -81,7 +84,10 @@ Map<String, String?>? partsFromHttpUrl(String url) {
       return null;
     }
 
-    return {'bucket': match.group(1), 'path': match.group(2)};
+    return {
+      'bucket': match.group(1),
+      'path': match.group(2),
+    };
   }
 }
 

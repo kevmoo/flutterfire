@@ -11,7 +11,7 @@ import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart
 
 class MethodChannelMultiFactor extends MultiFactorPlatform {
   /// Constructs a new [MethodChannelMultiFactor] instance.
-  MethodChannelMultiFactor(super.auth);
+  MethodChannelMultiFactor(FirebaseAuthPlatform auth) : super(auth);
 
   final _api = MultiFactorUserHostApi();
 
@@ -38,10 +38,10 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
     MultiFactorAssertionPlatform assertion, {
     String? displayName,
   }) async {
-    final assertion0 = assertion as MultiFactorAssertion;
+    final _assertion = assertion as MultiFactorAssertion;
 
-    if (assertion0.credential is PhoneAuthCredential) {
-      final credential = assertion0.credential! as PhoneAuthCredential;
+    if (_assertion.credential is PhoneAuthCredential) {
+      final credential = _assertion.credential! as PhoneAuthCredential;
       final verificationId = credential.verificationId;
       final verificationCode = credential.smsCode;
 
@@ -64,11 +64,11 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
       } catch (e, stack) {
         convertPlatformException(e, stack);
       }
-    } else if (assertion0 is TotpMultiFactorAssertion) {
+    } else if (_assertion is TotpMultiFactorAssertion) {
       try {
         await _api.enrollTotp(
           pigeonDefault,
-          assertion0.assertionId,
+          _assertion.assertionId,
           displayName,
         );
       } catch (e, stack) {
@@ -76,7 +76,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
       }
     } else {
       throw UnimplementedError(
-        'Credential type ${assertion0.credential} is not supported yet',
+        'Credential type ${_assertion.credential} is not supported yet',
       );
     }
   }
@@ -94,7 +94,10 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
     }
 
     try {
-      await _api.unenroll(pigeonDefault, uidToUnenroll);
+      await _api.unenroll(
+        pigeonDefault,
+        uidToUnenroll,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -113,12 +116,13 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
 
 class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
   MethodChannelMultiFactorResolver(
-    super.hints,
-    super.session,
+    List<MultiFactorInfo> hints,
+    MultiFactorSession session,
     String resolverId,
     MethodChannelFirebaseAuth auth,
-  ) : _resolverId = resolverId,
-      _auth = auth;
+  )   : _resolverId = resolverId,
+        _auth = auth,
+        super(hints, session);
 
   final String _resolverId;
 
@@ -129,10 +133,10 @@ class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
   Future<UserCredentialPlatform> resolveSignIn(
     MultiFactorAssertionPlatform assertion,
   ) async {
-    final assertion0 = assertion as MultiFactorAssertion;
+    final _assertion = assertion as MultiFactorAssertion;
 
-    if (assertion0.credential is PhoneAuthCredential) {
-      final credential = assertion0.credential! as PhoneAuthCredential;
+    if (_assertion.credential is PhoneAuthCredential) {
+      final credential = _assertion.credential! as PhoneAuthCredential;
       final verificationId = credential.verificationId;
       final verificationCode = credential.smsCode;
 
@@ -160,12 +164,12 @@ class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
       } catch (e, stack) {
         convertPlatformException(e, stack);
       }
-    } else if (assertion0 is TotpMultiFactorAssertion) {
+    } else if (_assertion is TotpMultiFactorAssertion) {
       try {
         final result = await _api.resolveSignIn(
           _resolverId,
           null,
-          assertion0.assertionId,
+          _assertion.assertionId,
         );
 
         MethodChannelUserCredential userCredential =
@@ -177,7 +181,7 @@ class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
       }
     } else {
       throw UnimplementedError(
-        'Credential type ${assertion0.credential} is not supported yet',
+        'Credential type ${_assertion.credential} is not supported yet',
       );
     }
   }
@@ -193,7 +197,9 @@ class MultiFactorAssertion extends MultiFactorAssertionPlatform {
 }
 
 class PhoneMultiFactorAssertion extends MultiFactorAssertion {
-  PhoneMultiFactorAssertion(PhoneAuthCredential super.credential);
+  PhoneMultiFactorAssertion(
+    PhoneAuthCredential credential,
+  ) : super(credential);
 }
 
 /// Helper class used to generate PhoneMultiFactorAssertions.
@@ -202,13 +208,17 @@ class MethodChannelPhoneMultiFactorGenerator
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
   @override
-  MultiFactorAssertionPlatform getAssertion(PhoneAuthCredential credential) {
+  MultiFactorAssertionPlatform getAssertion(
+    PhoneAuthCredential credential,
+  ) {
     return PhoneMultiFactorAssertion(credential);
   }
 }
 
 class TotpMultiFactorAssertion extends MultiFactorAssertion {
-  TotpMultiFactorAssertion(this.assertionId) : super(null);
+  TotpMultiFactorAssertion(
+    this.assertionId,
+  ) : super(null);
 
   final String assertionId;
 }
@@ -221,7 +231,9 @@ class MethodChannelTotpMultiFactorGenerator
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
   @override
-  Future<TotpSecretPlatform> generateSecret(MultiFactorSession session) async {
+  Future<TotpSecretPlatform> generateSecret(
+    MultiFactorSession session,
+  ) async {
     final pigeonSecret = await _api.generateSecret(session.id);
     return MethodChannelTotpSecret(
       pigeonSecret.codeIntervalSeconds,
@@ -243,10 +255,8 @@ class MethodChannelTotpMultiFactorGenerator
     TotpSecretPlatform secret,
     String oneTimePassword,
   ) async {
-    final totpAssertionId = await _api.getAssertionForEnrollment(
-      secret.secretKey,
-      oneTimePassword,
-    );
+    final totpAssertionId =
+        await _api.getAssertionForEnrollment(secret.secretKey, oneTimePassword);
     return TotpMultiFactorAssertion(totpAssertionId);
   }
 
@@ -257,10 +267,8 @@ class MethodChannelTotpMultiFactorGenerator
     String enrollmentId,
     String oneTimePassword,
   ) async {
-    final totpAssertionId = await _api.getAssertionForSignIn(
-      enrollmentId,
-      oneTimePassword,
-    );
+    final totpAssertionId =
+        await _api.getAssertionForSignIn(enrollmentId, oneTimePassword);
     return TotpMultiFactorAssertion(totpAssertionId);
   }
 }
@@ -295,7 +303,12 @@ class MethodChannelTotpSecret extends TotpSecretPlatform {
 
   /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
   @override
-  Future<void> openInOtpApp(String qrCodeUrl) async {
-    await _api.openInOtpApp(secretKey, qrCodeUrl);
+  Future<void> openInOtpApp(
+    String qrCodeUrl,
+  ) async {
+    await _api.openInOtpApp(
+      secretKey,
+      qrCodeUrl,
+    );
   }
 }

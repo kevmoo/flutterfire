@@ -16,11 +16,9 @@ export 'messaging_interop.dart';
 
 /// Given an AppJSImp, return the Messaging instance.
 Messaging getMessagingInstance([App? app]) {
-  return Messaging.getInstance(
-    app != null
-        ? messaging_interop.getMessaging(app.jsObject)
-        : messaging_interop.getMessaging(),
-  );
+  return Messaging.getInstance(app != null
+      ? messaging_interop.getMessaging(app.jsObject)
+      : messaging_interop.getMessaging());
 }
 
 class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
@@ -36,7 +34,8 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   static Future<bool> isSupported() =>
       messaging_interop.isSupported().toDart.then((value) => value.toDart);
 
-  Messaging._fromJsObject(super.jsObject) : super.fromJsObject();
+  Messaging._fromJsObject(messaging_interop.MessagingJsImpl jsObject)
+      : super.fromJsObject(jsObject);
 
   /// To forcibly stop a registration token from being used, delete it by calling this method.
   /// Calling this method will stop the periodic data transmission to the FCM backend.
@@ -46,18 +45,15 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
   /// that can be used to send push messages to this user.
   Future<String> getToken({String? vapidKey}) async {
     try {
-      final token =
-          (await messaging_interop
-                  .getToken(
-                    jsObject,
-                    vapidKey == null
-                        ? null
-                        : messaging_interop.GetTokenOptions(
-                            vapidKey: vapidKey.toJS,
-                          ),
-                  )
-                  .toDart)
-              .toDart;
+      final token = (await messaging_interop
+              .getToken(
+                  jsObject,
+                  vapidKey == null
+                      ? null
+                      : messaging_interop.GetTokenOptions(
+                          vapidKey: vapidKey.toJS))
+              .toDart)
+          .toDart;
       return token;
     } catch (err) {
       // A race condition can happen in which the service worker get registered
@@ -81,38 +77,32 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
       _createOnMessageStream(_onMessageController);
 
   Stream<MessagePayload> _createOnMessageStream(
-    StreamController<MessagePayload>? controller,
-  ) {
-    StreamController<MessagePayload>? controller0 = controller;
-    if (controller0 == null) {
-      controller0 = StreamController.broadcast(sync: true);
-      void nextWrapper(JSAny payload) {
-        controller0!.add(
-          MessagePayload._fromJsObject(
-            payload as messaging_interop.MessagePayloadJsImpl,
-          ),
-        );
-      }
-
-      void errorWrapper(JSError e) {
-        controller0!.addError(e);
-      }
+      StreamController<MessagePayload>? controller) {
+    StreamController<MessagePayload>? _controller = controller;
+    if (_controller == null) {
+      _controller = StreamController.broadcast(sync: true);
+      final nextWrapper = (JSAny payload) {
+        _controller!.add(MessagePayload._fromJsObject(
+            payload as messaging_interop.MessagePayloadJsImpl));
+      };
+      final errorWrapper = (JSError e) {
+        _controller!.addError(e);
+      };
 
       messaging_interop.onMessage(
-        jsObject,
-        messaging_interop.Observer(
-          next: nextWrapper.toJS,
-          error: errorWrapper.toJS,
-        ),
-      );
+          jsObject,
+          messaging_interop.Observer(
+              next: nextWrapper.toJS, error: errorWrapper.toJS));
     }
-    return controller0.stream;
+    return _controller.stream;
   }
 }
 
 class NotificationPayload
     extends JsObjectWrapper<messaging_interop.NotificationPayloadJsImpl> {
-  NotificationPayload._fromJsObject(super.jsObject) : super.fromJsObject();
+  NotificationPayload._fromJsObject(
+      messaging_interop.NotificationPayloadJsImpl jsObject)
+      : super.fromJsObject(jsObject);
 
   String? get title => jsObject.title?.toDart;
   String? get body => jsObject.body?.toDart;
@@ -121,7 +111,8 @@ class NotificationPayload
 
 class MessagePayload
     extends JsObjectWrapper<messaging_interop.MessagePayloadJsImpl> {
-  MessagePayload._fromJsObject(super.jsObject) : super.fromJsObject();
+  MessagePayload._fromJsObject(messaging_interop.MessagePayloadJsImpl jsObject)
+      : super.fromJsObject(jsObject);
 
   String get messageId => jsObject.messageId.toDart;
   String? get collapseKey => jsObject.collapseKey?.toDart;
@@ -138,7 +129,8 @@ class MessagePayload
 }
 
 class FcmOptions extends JsObjectWrapper<messaging_interop.FcmOptionsJsImpl> {
-  FcmOptions._fromJsObject(super.jsObject) : super.fromJsObject();
+  FcmOptions._fromJsObject(messaging_interop.FcmOptionsJsImpl jsObject)
+      : super.fromJsObject(jsObject);
 
   String? get analyticsLabel => jsObject.analyticsLabel?.toDart;
   String? get link => jsObject.link?.toDart;

@@ -23,10 +23,8 @@ void main() {
     setUpAll(() async {
       app = await Firebase.initializeApp();
       firebaseStoragePlatform = TestFirebaseStoragePlatform(app);
-      listResultPlatform = TestListResultPlatform(
-        firebaseStoragePlatform,
-        'foo',
-      );
+      listResultPlatform =
+          TestListResultPlatform(firebaseStoragePlatform, 'foo');
     });
 
     test('Constructor', () {
@@ -68,10 +66,12 @@ void main() {
 }
 
 class TestListResultPlatform extends ListResultPlatform {
-  TestListResultPlatform(super.storage, super.nextPageToken);
+  TestListResultPlatform(
+      FirebaseStoragePlatform? storage, String? nextPageToken)
+      : super(storage, nextPageToken);
 }
 
 class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
   TestFirebaseStoragePlatform(FirebaseApp? app)
-    : super(appInstance: app, bucket: '');
+      : super(appInstance: app, bucket: '');
 }

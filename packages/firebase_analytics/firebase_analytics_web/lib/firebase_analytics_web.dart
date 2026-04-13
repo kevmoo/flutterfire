@@ -5,13 +5,19 @@
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_analytics_web/utils/exception.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
+import 'src/firebase_analytics_version.dart';
 
 import 'interop/analytics.dart' as analytics_interop;
 
 /// Web implementation of [FirebaseAnalyticsPlatform]
 class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
+  static const String _libraryName = 'flutter-fire-analytics';
+
   /// instance of Analytics from the web plugin
   analytics_interop.Analytics? _webAnalytics;
 
@@ -27,8 +33,18 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   /// Builds an instance of [FirebaseAnalyticsWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseAnalyticsWeb({FirebaseApp? app, this.webOptions})
-    : super(appInstance: app);
+  FirebaseAnalyticsWeb({
+    FirebaseApp? app,
+    this.webOptions,
+  }) : super(appInstance: app);
+
+  /// Called by PluginRegistry to register this plugin for Flutter Web
+  static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
+    FirebaseCoreWeb.registerService('analytics');
+    FirebaseAnalyticsPlatform.instance = FirebaseAnalyticsWeb();
+  }
 
   @override
   FirebaseAnalyticsPlatform delegateFor({
@@ -101,7 +117,10 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     AnalyticsCallOptions? callOptions,
   }) async {
     return convertWebExceptions(() {
-      return _delegate.setUserId(id: id, callOptions: callOptions);
+      return _delegate.setUserId(
+        id: id,
+        callOptions: callOptions,
+      );
     });
   }
 
@@ -143,6 +162,8 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<String?> getAppInstanceId() async {
-    throw UnimplementedError('getAppInstanceId() is not supported on web');
+    throw UnimplementedError(
+      'getAppInstanceId() is not supported on web',
+    );
   }
 }

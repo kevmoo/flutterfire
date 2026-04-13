@@ -30,30 +30,32 @@ void setupInstanceTests() {
     });
 
     test('instanceFor', () {
-      FirebaseStorage secondaryStorage = FirebaseStorage.instanceFor(
-        app: secondaryApp,
-        bucket: 'test',
-      );
+      FirebaseStorage secondaryStorage =
+          FirebaseStorage.instanceFor(app: secondaryApp, bucket: 'test');
       expect(storage.app, isA<FirebaseApp>());
       expect(secondaryStorage, isA<FirebaseStorage>());
       expect(secondaryStorage.app.name, 'testapp');
     });
 
-    test('default bucket cannot be null', () async {
-      try {
-        secondaryAppWithoutBucket = await testInitializeSecondaryApp(
-          withDefaultBucket: false,
-        );
+    test(
+      'default bucket cannot be null',
+      () async {
+        try {
+          secondaryAppWithoutBucket =
+              await testInitializeSecondaryApp(withDefaultBucket: false);
 
-        FirebaseStorage.instanceFor(app: secondaryAppWithoutBucket);
-        fail('should have thrown an error');
-      } on FirebaseException catch (e) {
-        expect(
-          e.message,
-          "No storage bucket could be found for the app 'testapp-no-bucket'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.",
-        );
-      }
-    });
+          FirebaseStorage.instanceFor(
+            app: secondaryAppWithoutBucket,
+          );
+          fail('should have thrown an error');
+        } on FirebaseException catch (e) {
+          expect(
+            e.message,
+            "No storage bucket could be found for the app 'testapp-no-bucket'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.",
+          );
+        }
+      },
+    );
 
     group('ref', () {
       test('uses default path if none provided', () {
@@ -181,24 +183,22 @@ void setupInstanceTests() {
         expect(ref.fullPath, '/');
       });
 
-      test(
-        'throws an error if url does not start with gs:// or https://',
-        () async {
-          expect(
-            () {
-              storage.refFromURL('bs://foo/bar/cat.gif');
-              fail('Should have thrown an [AssertionError]');
-            },
-            throwsA(
-              isA<AssertionError>().having(
-                (p0) => p0.message,
-                'assertion message',
-                contains("a url must start with 'gs://' or 'https://'"),
-              ),
+      test('throws an error if url does not start with gs:// or https://',
+          () async {
+        expect(
+          () {
+            storage.refFromURL('bs://foo/bar/cat.gif');
+            fail('Should have thrown an [AssertionError]');
+          },
+          throwsA(
+            isA<AssertionError>().having(
+              (p0) => p0.message,
+              'assertion message',
+              contains("a url must start with 'gs://' or 'https://'"),
             ),
-          );
-        },
-      );
+          ),
+        );
+      });
     });
 
     group('setMaxOperationRetryTime', () {

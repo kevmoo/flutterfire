@@ -10,8 +10,11 @@ import '../firebase_database.dart' show DataSnapshot, DatabaseEvent, Query;
 import 'utils/stream_subscriber_mixin.dart';
 
 typedef ChildCallback = void Function(int index, DataSnapshot snapshot);
-typedef ChildMovedCallback =
-    void Function(int fromIndex, int toIndex, DataSnapshot snapshot);
+typedef ChildMovedCallback = void Function(
+  int fromIndex,
+  int toIndex,
+  DataSnapshot snapshot,
+);
 typedef ValueCallback = void Function(DataSnapshot snapshot);
 typedef ErrorCallback = void Function(FirebaseException error);
 

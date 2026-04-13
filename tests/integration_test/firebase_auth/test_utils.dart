@@ -28,7 +28,12 @@ const int testEmulatorPort = 9099;
 
 class EmulatorOobCode {
   @protected
-  EmulatorOobCode({this.type, this.email, this.oobCode, this.oobLink});
+  EmulatorOobCode({
+    this.type,
+    this.email,
+    this.oobCode,
+    this.oobLink,
+  });
 
   final EmulatorOobCodeType? type;
   final String? email;
@@ -43,7 +48,10 @@ enum EmulatorOobCodeType {
   verifyEmail,
 }
 
-String generateRandomEmail({String prefix = '', String suffix = '@foo.bar'}) {
+String generateRandomEmail({
+  String prefix = '',
+  String suffix = '@foo.bar',
+}) {
   var uuid = createCryptoRandomString();
   var testEmail = prefix + uuid + suffix;
   return testEmail;
@@ -55,7 +63,9 @@ Future<void> emulatorClearAllUsers() async {
     Uri.parse(
       'http://$testEmulatorHost:$testEmulatorPort/emulator/v1/projects/$_testFirebaseProjectId/accounts',
     ),
-    headers: {'Authorization': 'Bearer owner'},
+    headers: {
+      'Authorization': 'Bearer owner',
+    },
   );
 }
 
@@ -82,12 +92,13 @@ Future<String?> emulatorPhoneVerificationCode(String phoneNumber) async {
     Uri.parse(
       'http://$testEmulatorHost:$testEmulatorPort/emulator/v1/projects/$_testFirebaseProjectId/verificationCodes',
     ),
-    headers: {'Authorization': 'Bearer owner'},
+    headers: {
+      'Authorization': 'Bearer owner',
+    },
   );
   final responseBody = Map<String, dynamic>.from(jsonDecode(response.body));
-  final verificationCodes = List<Map<String, dynamic>>.from(
-    responseBody['verificationCodes'],
-  );
+  final verificationCodes =
+      List<Map<String, dynamic>>.from(responseBody['verificationCodes']);
   return verificationCodes.reversed.firstWhere(
     (verificationCode) => verificationCode['phoneNumber'] == phoneNumber,
     orElse: () => {'code': 'NOT_FOUND'},
@@ -115,7 +126,9 @@ Future<EmulatorOobCode?> emulatorOutOfBandCode(
     Uri.parse(
       'http://$testEmulatorHost:$testEmulatorPort/emulator/v1/projects/$_testFirebaseProjectId/oobCodes',
     ),
-    headers: {'Authorization': 'Bearer owner'},
+    headers: {
+      'Authorization': 'Bearer owner',
+    },
   );
 
   String? requestType;
@@ -166,7 +179,14 @@ String emulatorCreateCustomToken(
   final int iat = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
 
   final String jwtHeaderEncoded = base64
-      .encode(utf8.encode(jsonEncode({'alg': 'none', 'typ': 'JWT'})))
+      .encode(
+        utf8.encode(
+          jsonEncode({
+            'alg': 'none',
+            'typ': 'JWT',
+          }),
+        ),
+      )
       // Note that base64 padding ("=") must be omitted as per JWT spec.
       .replaceAll(RegExp(r'=+$'), '');
 

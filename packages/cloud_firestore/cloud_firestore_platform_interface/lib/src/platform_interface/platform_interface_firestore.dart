@@ -6,6 +6,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../../cloud_firestore_platform_interface.dart';
@@ -19,7 +20,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
 
   /// Create an instance using [app]
   FirebaseFirestorePlatform({this.appInstance, this.databaseChoice})
-    : super(token: _token);
+      : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app {
@@ -40,10 +41,8 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     required FirebaseApp app,
     required String databaseId,
   }) {
-    return FirebaseFirestorePlatform.instance.delegateFor(
-      app: app,
-      databaseId: databaseId,
-    );
+    return FirebaseFirestorePlatform.instance
+        .delegateFor(app: app, databaseId: databaseId);
   }
 
   /// The current default [FirebaseFirestorePlatform] instance.
@@ -52,9 +51,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// if no other implementation was provided.
   static FirebaseFirestorePlatform get instance {
     return _instance ??= MethodChannelFirebaseFirestore(
-      app: Firebase.app(),
-      databaseId: '(default)',
-    );
+        app: Firebase.app(), databaseId: '(default)');
   }
 
   static FirebaseFirestorePlatform? _instance;
@@ -68,10 +65,8 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseFirestorePlatform delegateFor({
-    required FirebaseApp app,
-    required String databaseId,
-  }) {
+  FirebaseFirestorePlatform delegateFor(
+      {required FirebaseApp app, required String databaseId}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -177,11 +172,8 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   ///
   /// By default transactions will retry 5 times. You can change the number of attempts
   /// with [maxAttempts]. Attempts should be at least 1.
-  Future<T?> runTransaction<T>(
-    TransactionHandler<T> transactionHandler, {
-    Duration timeout = const Duration(seconds: 30),
-    int maxAttempts = 5,
-  }) {
+  Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
+      {Duration timeout = const Duration(seconds: 30), int maxAttempts = 5}) {
     throw UnimplementedError('runTransaction() is not implemented');
   }
 
@@ -243,8 +235,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// Gets the PersistentCacheIndexManager instance used by this firestore instance.
   PersistentCacheIndexManagerPlatform? persistentCacheIndexManager() {
     throw UnimplementedError(
-      'persistentCacheIndexManager() is not implemented',
-    );
+        'persistentCacheIndexManager() is not implemented');
   }
 
   /// Globally enables / disables Cloud Firestore logging for the SDK.

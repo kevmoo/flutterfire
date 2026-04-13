@@ -15,7 +15,9 @@ import 'utils/exception.dart';
 /// Method Channel delegate for [UserPlatform] instances.
 class MethodChannelUser extends UserPlatform {
   /// Constructs a new [MethodChannelUser] instance.
-  MethodChannelUser(super.auth, super.multiFactor, super.data);
+  MethodChannelUser(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
+      PigeonUserDetails data)
+      : super(auth, multiFactor, data);
 
   final _api = FirebaseAuthUserHostApi();
 
@@ -39,7 +41,10 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<String?> getIdToken(bool forceRefresh) async {
     try {
-      final data = await _api.getIdToken(pigeonDefault, forceRefresh);
+      final data = await _api.getIdToken(
+        pigeonDefault,
+        forceRefresh,
+      );
 
       return data.token;
     } catch (e, stack) {
@@ -50,7 +55,10 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<IdTokenResult> getIdTokenResult(bool forceRefresh) async {
     try {
-      final data = await _api.getIdToken(pigeonDefault, forceRefresh);
+      final data = await _api.getIdToken(
+        pigeonDefault,
+        forceRefresh,
+      );
 
       return IdTokenResult(data);
     } catch (e, stack) {
@@ -68,10 +76,8 @@ class MethodChannelUser extends UserPlatform {
         credential.asMap(),
       );
 
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        auth,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(auth, result);
 
       auth.currentUser = userCredential.user;
       return userCredential;
@@ -81,7 +87,9 @@ class MethodChannelUser extends UserPlatform {
   }
 
   @override
-  Future<UserCredentialPlatform> linkWithProvider(AuthProvider provider) async {
+  Future<UserCredentialPlatform> linkWithProvider(
+    AuthProvider provider,
+  ) async {
     try {
       // To extract scopes and custom parameters from the provider
       final convertedProvider = convertToOAuthProvider(provider);
@@ -99,10 +107,8 @@ class MethodChannelUser extends UserPlatform {
         ),
       );
 
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        auth,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(auth, result);
 
       auth.currentUser = userCredential.user;
       return userCredential;
@@ -121,10 +127,8 @@ class MethodChannelUser extends UserPlatform {
         credential.asMap(),
       );
 
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        auth,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(auth, result);
 
       auth.currentUser = userCredential.user;
       return userCredential;
@@ -154,10 +158,8 @@ class MethodChannelUser extends UserPlatform {
         ),
       );
 
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        auth,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(auth, result);
 
       auth.currentUser = userCredential.user;
       return userCredential;
@@ -171,11 +173,8 @@ class MethodChannelUser extends UserPlatform {
     try {
       final result = await _api.reload(pigeonDefault);
 
-      MethodChannelUser user = MethodChannelUser(
-        auth,
-        super.multiFactor,
-        result,
-      );
+      MethodChannelUser user =
+          MethodChannelUser(auth, super.multiFactor, result);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -213,10 +212,8 @@ class MethodChannelUser extends UserPlatform {
       final result = await _api.unlink(pigeonDefault, providerId);
 
       // Native returns a UserCredential, whereas Dart should expect a User
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        auth,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(auth, result);
       MethodChannelUser? user = userCredential.user as MethodChannelUser?;
 
       auth.currentUser = user;
@@ -232,11 +229,8 @@ class MethodChannelUser extends UserPlatform {
     try {
       final result = await _api.updateEmail(pigeonDefault, newEmail);
 
-      MethodChannelUser user = MethodChannelUser(
-        auth,
-        super.multiFactor,
-        result,
-      );
+      MethodChannelUser user =
+          MethodChannelUser(auth, super.multiFactor, result);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -249,11 +243,8 @@ class MethodChannelUser extends UserPlatform {
     try {
       final result = await _api.updatePassword(pigeonDefault, newPassword);
 
-      MethodChannelUser user = MethodChannelUser(
-        auth,
-        super.multiFactor,
-        result,
-      );
+      MethodChannelUser user =
+          MethodChannelUser(auth, super.multiFactor, result);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -269,11 +260,8 @@ class MethodChannelUser extends UserPlatform {
         phoneCredential.asMap(),
       );
 
-      MethodChannelUser user = MethodChannelUser(
-        auth,
-        super.multiFactor,
-        result,
-      );
+      MethodChannelUser user =
+          MethodChannelUser(auth, super.multiFactor, result);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -293,11 +281,8 @@ class MethodChannelUser extends UserPlatform {
           photoUrlChanged: profile.containsKey('photoURL'),
         ),
       );
-      MethodChannelUser user = MethodChannelUser(
-        auth,
-        super.multiFactor,
-        result,
-      );
+      MethodChannelUser user =
+          MethodChannelUser(auth, super.multiFactor, result);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {

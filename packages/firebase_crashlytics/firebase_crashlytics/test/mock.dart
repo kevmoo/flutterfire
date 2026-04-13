@@ -4,8 +4,9 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:firebase_core/test.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_crashlytics_platform_interface/firebase_crashlytics_platform_interface.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 typedef Callback = void Function(MethodCall call);
@@ -28,8 +29,8 @@ class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
       ),
       pluginConstants: {
         'plugins.flutter.io/firebase_crashlytics': {
-          'isCrashlyticsCollectionEnabled': true,
-        },
+          'isCrashlyticsCollectionEnabled': true
+        }
       },
     );
   }
@@ -47,10 +48,10 @@ class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
         ),
         pluginConstants: {
           'plugins.flutter.io/firebase_crashlytics': {
-            'isCrashlyticsCollectionEnabled': true,
-          },
+            'isCrashlyticsCollectionEnabled': true
+          }
         },
-      ),
+      )
     ];
   }
 
@@ -71,23 +72,26 @@ void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
   TestFirebaseCoreHostApi.setUp(MockFirebaseAppWithCollectionEnabled());
 
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(MethodChannelFirebaseCrashlytics.channel, (
-        MethodCall methodCall,
-      ) async {
-        methodCallLog.add(methodCall);
-        switch (methodCall.method) {
-          case 'Crashlytics#checkForUnsentReports':
-            return {'unsentReports': true};
-          case 'Crashlytics#setCrashlyticsCollectionEnabled':
-            return {
-              'isCrashlyticsCollectionEnabled': methodCall.arguments['enabled'],
-            };
-          case 'Crashlytics#didCrashOnPreviousExecution':
-            return {'didCrashOnPreviousExecution': true};
-          case 'Crashlytics#recordError':
-            return null;
-          default:
-            return false;
-        }
-      });
+      .setMockMethodCallHandler(MethodChannelFirebaseCrashlytics.channel,
+          (MethodCall methodCall) async {
+    methodCallLog.add(methodCall);
+    switch (methodCall.method) {
+      case 'Crashlytics#checkForUnsentReports':
+        return {
+          'unsentReports': true,
+        };
+      case 'Crashlytics#setCrashlyticsCollectionEnabled':
+        return {
+          'isCrashlyticsCollectionEnabled': methodCall.arguments['enabled']
+        };
+      case 'Crashlytics#didCrashOnPreviousExecution':
+        return {
+          'didCrashOnPreviousExecution': true,
+        };
+      case 'Crashlytics#recordError':
+        return null;
+      default:
+        return false;
+    }
+  });
 }

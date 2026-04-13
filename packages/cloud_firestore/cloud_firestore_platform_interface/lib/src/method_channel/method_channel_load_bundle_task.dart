@@ -7,26 +7,26 @@ import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 
 class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
-  MethodChannelLoadBundleTask({required Future<String?> task}) : super() {
+  MethodChannelLoadBundleTask({
+    required Future<String?> task,
+  }) : super() {
     Stream<LoadBundleTaskSnapshotPlatform> mapNativeStream() async* {
       final observerId = await task;
 
       final nativePlatformStream =
-          MethodChannelFirebaseFirestore.loadBundleChannel(
-            observerId!,
-          ).receiveBroadcastStream();
+          MethodChannelFirebaseFirestore.loadBundleChannel(observerId!)
+              .receiveBroadcastStream();
       try {
         await for (final snapshot in nativePlatformStream) {
           final taskState = convertToTaskState(snapshot['taskState']);
 
           yield LoadBundleTaskSnapshotPlatform(
-            taskState,
-            Map<String, dynamic>.from(snapshot),
-          );
+              taskState, Map<String, dynamic>.from(snapshot));
 
           if (taskState == LoadBundleTaskState.success) {
             // this will close the stream and stop listening to nativePlatformStream
@@ -45,17 +45,14 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
             : null;
 
         throw FirebaseException(
-          plugin: 'cloud_firestore',
-          code: 'load-bundle-error',
-          message: details?['message'] ?? '',
-        );
+            plugin: 'cloud_firestore',
+            code: 'load-bundle-error',
+            message: details?['message'] ?? '');
       }
     }
 
     stream = mapNativeStream().asBroadcastStream(
-      onListen: (sub) => sub.resume(),
-      onCancel: (sub) => sub.pause(),
-    );
+        onListen: (sub) => sub.resume(), onCancel: (sub) => sub.pause());
   }
 
   @override

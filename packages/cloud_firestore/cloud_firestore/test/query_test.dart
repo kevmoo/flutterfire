@@ -57,29 +57,29 @@ void main() {
             .where('foo.bar', isGreaterThan: 1234);
       });
 
-      test(
-        'throw an exception when making query combining `in` & `not-in`',
-        () {
-          expect(
-            () => query!.where('number', whereIn: [1, 2], whereNotIn: [3, 4]),
-            throwsAssertionError,
-          );
+      test('throw an exception when making query combining `in` & `not-in`',
+          () {
+        expect(
+          () => query!.where('number', whereIn: [1, 2], whereNotIn: [3, 4]),
+          throwsAssertionError,
+        );
 
-          expect(
-            () => query!
-                .where('number', whereIn: [1, 2])
-                .where('number', whereNotIn: [3, 4]),
-            throwsAssertionError,
-          );
+        expect(
+          () => query!.where('number', whereIn: [1, 2]).where(
+            'number',
+            whereNotIn: [3, 4],
+          ),
+          throwsAssertionError,
+        );
 
-          expect(
-            () => query!
-                .where('number', whereNotIn: [3, 4])
-                .where('number', whereIn: [1, 2]),
-            throwsAssertionError,
-          );
-        },
-      );
+        expect(
+          () => query!.where('number', whereNotIn: [3, 4]).where(
+            'number',
+            whereIn: [1, 2],
+          ),
+          throwsAssertionError,
+        );
+      });
 
       test('allows inequality  different to first orderBy', () {
         query!.where('foo', isGreaterThan: 123).orderBy('bar');
@@ -105,7 +105,10 @@ void main() {
       test('throws if arrayContainsAny query length is greater than 30', () {
         List<int> numbers = List.generate(31, (i) => i + 1);
         expect(
-          () => query!.where('foo', arrayContainsAny: numbers),
+          () => query!.where(
+            'foo',
+            arrayContainsAny: numbers,
+          ),
           throwsAssertionError,
         );
       });
@@ -145,18 +148,20 @@ void main() {
           throwsAssertionError,
         );
         expect(
-          () => query!
-              .where('foo.bar', arrayContainsAny: [1, 2])
-              .where('foo.bar', arrayContains: 3),
+          () => query!.where(
+            'foo.bar',
+            arrayContainsAny: [1, 2],
+          ).where('foo.bar', arrayContains: 3),
           throwsAssertionError,
         );
       });
 
       test('throws if multiple disjunctive filters in query', () {
         expect(
-          () => query!
-              .where('foo', arrayContainsAny: [1])
-              .where('foo', arrayContainsAny: [2, 3]),
+          () => query!.where('foo', arrayContainsAny: [1]).where(
+            'foo',
+            arrayContainsAny: [2, 3],
+          ),
           throwsAssertionError,
         );
         expect(
@@ -167,42 +172,40 @@ void main() {
           throwsAssertionError,
         );
         expect(
-          () => query!
-              .where('foo', arrayContains: 1)
-              .where('foo', whereIn: [2, 3])
-              .where('foo', arrayContainsAny: [2]),
+          () => query!.where('foo', arrayContains: 1).where(
+            'foo',
+            whereIn: [2, 3],
+          ).where('foo', arrayContainsAny: [2]),
           throwsAssertionError,
         );
       });
 
       test(
-        'throws if FieldPath.documentId field is used in conjunction with isNotEqualTo filter',
-        () {
-          expect(
-            () => query!
-                .where(FieldPath.documentId, isEqualTo: 'fake-id')
-                .where('foo', isNotEqualTo: 'bar'),
-            throwsAssertionError,
-          );
+          'throws if FieldPath.documentId field is used in conjunction with isNotEqualTo filter',
+          () {
+        expect(
+          () => query!
+              .where(FieldPath.documentId, isEqualTo: 'fake-id')
+              .where('foo', isNotEqualTo: 'bar'),
+          throwsAssertionError,
+        );
 
-          expect(
-            () => query!
-                .where('foo', isNotEqualTo: 'bar')
-                .where(FieldPath.documentId, whereIn: [2, 3]),
-            throwsAssertionError,
-          );
-        },
-      );
+        expect(
+          () => query!
+              .where('foo', isNotEqualTo: 'bar')
+              .where(FieldPath.documentId, whereIn: [2, 3]),
+          throwsAssertionError,
+        );
+      });
 
       test(
-        'allow isNotEqualTo filter on FieldPath.documentId field & a different field on a separate filter',
-        () {
-          query!
-              .where(FieldPath.documentId, isNotEqualTo: 'fake-id')
-              .where(FieldPath.documentId, isEqualTo: 'another-fake-id')
-              .where('foo', isNull: true);
-        },
-      );
+          'allow isNotEqualTo filter on FieldPath.documentId field & a different field on a separate filter',
+          () {
+        query!
+            .where(FieldPath.documentId, isNotEqualTo: 'fake-id')
+            .where(FieldPath.documentId, isEqualTo: 'another-fake-id')
+            .where('foo', isNull: true);
+      });
 
       test('allows arrayContains with whereIn filter', () {
         query!.where('foo', arrayContains: 1).where('foo', whereIn: [2, 3]);
@@ -345,7 +348,7 @@ void main() {
           ),
           isNot(
             query.withConverter<int>(
-              fromFirestore: (_, _) => 21,
+              fromFirestore: (_, __) => 21,
               toFirestore: toFirestore,
             ),
           ),
@@ -358,7 +361,7 @@ void main() {
           isNot(
             query.withConverter<int>(
               fromFirestore: fromFirestore,
-              toFirestore: (_, _) => {},
+              toFirestore: (_, __) => {},
             ),
           ),
         );
@@ -366,39 +369,34 @@ void main() {
     });
 
     group('Settings()', () {
-      test(
-        'Test the assert for setting `cacheSizeBytes` minimum and maximum',
-        () {
-          void configureCache(int? cacheSizeBytes) {
-            assert(
-              cacheSizeBytes == null ||
-                  cacheSizeBytes == Settings.CACHE_SIZE_UNLIMITED ||
-                  (cacheSizeBytes >= 1048576 && cacheSizeBytes <= 104857600),
-              'Cache size, if specified, must be either CACHE_SIZE_UNLIMITED or between 1048576 bytes (inclusive) and 104857600 bytes (inclusive).',
-            );
-          }
-
-          // Happy paths
-          expect(() => configureCache(null), returnsNormally);
-          expect(
-            () => configureCache(Settings.CACHE_SIZE_UNLIMITED),
-            returnsNormally,
+      test('Test the assert for setting `cacheSizeBytes` minimum and maximum',
+          () {
+        void configureCache(int? cacheSizeBytes) {
+          assert(
+            cacheSizeBytes == null ||
+                cacheSizeBytes == Settings.CACHE_SIZE_UNLIMITED ||
+                (cacheSizeBytes >= 1048576 && cacheSizeBytes <= 104857600),
+            'Cache size, if specified, must be either CACHE_SIZE_UNLIMITED or between 1048576 bytes (inclusive) and 104857600 bytes (inclusive).',
           );
-          expect(() => configureCache(5000000), returnsNormally);
-          expect(() => configureCache(1048577), returnsNormally);
-          expect(() => configureCache(104857600), returnsNormally);
-          expect(() => configureCache(104857500), returnsNormally);
+        }
 
-          // Assertion triggers
-          expect(() => configureCache(1), throwsA(isA<AssertionError>()));
-          expect(() => configureCache(1000), throwsA(isA<AssertionError>()));
-          expect(
-            () => configureCache(200000000),
-            throwsA(isA<AssertionError>()),
-          );
-          expect(() => configureCache(500000), throwsA(isA<AssertionError>()));
-        },
-      );
+        // Happy paths
+        expect(() => configureCache(null), returnsNormally);
+        expect(
+          () => configureCache(Settings.CACHE_SIZE_UNLIMITED),
+          returnsNormally,
+        );
+        expect(() => configureCache(5000000), returnsNormally);
+        expect(() => configureCache(1048577), returnsNormally);
+        expect(() => configureCache(104857600), returnsNormally);
+        expect(() => configureCache(104857500), returnsNormally);
+
+        // Assertion triggers
+        expect(() => configureCache(1), throwsA(isA<AssertionError>()));
+        expect(() => configureCache(1000), throwsA(isA<AssertionError>()));
+        expect(() => configureCache(200000000), throwsA(isA<AssertionError>()));
+        expect(() => configureCache(500000), throwsA(isA<AssertionError>()));
+      });
     });
   });
 }

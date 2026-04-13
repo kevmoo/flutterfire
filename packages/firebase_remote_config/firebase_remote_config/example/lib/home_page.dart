@@ -1,15 +1,14 @@
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -22,7 +21,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Remote Config Example')),
+      appBar: AppBar(
+        title: const Text('Remote Config Example'),
+      ),
       body: Column(
         children: [
           _ButtonAndText(
@@ -109,9 +110,8 @@ class _HomePageState extends State<HomePage> {
                   return 'Listening cancelled';
                 }
                 setState(() {
-                  subscription = remoteConfig.onConfigUpdated.listen((
-                    event,
-                  ) async {
+                  subscription =
+                      remoteConfig.onConfigUpdated.listen((event) async {
                     // Make new values available to the app.
                     await remoteConfig.activate();
 
@@ -142,10 +142,11 @@ class _HomePageState extends State<HomePage> {
 
 class _ButtonAndText extends StatefulWidget {
   const _ButtonAndText({
+    Key? key,
     required this.defaultText,
     required this.onPressed,
     required this.buttonText,
-  });
+  }) : super(key: key);
 
   final String defaultText;
   final String buttonText;

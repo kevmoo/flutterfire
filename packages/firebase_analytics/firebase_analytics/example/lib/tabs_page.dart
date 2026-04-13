@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 class TabsPage extends StatefulWidget {
-  const TabsPage(this.observer, {super.key});
+  TabsPage(this.observer, {Key? key}) : super(key: key);
 
   final FirebaseAnalyticsObserver observer;
 
@@ -64,7 +64,10 @@ class _TabsPageState extends State<TabsPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        bottom: TabBar(controller: _controller, tabs: tabs),
+        bottom: TabBar(
+          controller: _controller,
+          tabs: tabs,
+        ),
       ),
       body: TabBarView(
         controller: _controller,

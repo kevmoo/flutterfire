@@ -5,12 +5,13 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
+import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 import 'utils/exception.dart';
-import 'utils/event_channel.dart';
 
 /// An implementation of [DocumentReferencePlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
@@ -38,9 +39,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           data: data,
           option: PigeonDocumentOption(
             merge: options?.merge,
-            mergeFields: options?.mergeFields
-                ?.map((e) => e.components)
-                .toList(),
+            mergeFields:
+                options?.mergeFields?.map((e) => e.components).toList(),
           ),
         ),
       );
@@ -54,28 +54,30 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     try {
       await MethodChannelFirebaseFirestore.pigeonChannel
           .documentReferenceUpdate(
-            pigeonApp,
-            DocumentReferenceRequest(path: _pointer.path, data: data),
-          );
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+          data: data,
+        ),
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
   }
 
   @override
-  Future<DocumentSnapshotPlatform> get([
-    GetOptions options = const GetOptions(),
-  ]) async {
+  Future<DocumentSnapshotPlatform> get(
+      [GetOptions options = const GetOptions()]) async {
     try {
       final result = await MethodChannelFirebaseFirestore.pigeonChannel
           .documentReferenceGet(
-            pigeonApp,
-            DocumentReferenceRequest(
-              path: _pointer.path,
-              source: options.source,
-              serverTimestampBehavior: options.serverTimestampBehavior,
-            ),
-          );
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+          source: options.source,
+          serverTimestampBehavior: options.serverTimestampBehavior,
+        ),
+      );
 
       return DocumentSnapshotPlatform(
         firestore,
@@ -93,9 +95,11 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     try {
       await MethodChannelFirebaseFirestore.pigeonChannel
           .documentReferenceDelete(
-            pigeonApp,
-            DocumentReferenceRequest(path: _pointer.path),
-          );
+        pigeonApp,
+        DocumentReferenceRequest(
+          path: _pointer.path,
+        ),
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -111,38 +115,41 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     late StreamController<DocumentSnapshotPlatform>
-    controller; // ignore: close_sinks
+        controller; // ignore: close_sinks
 
     StreamSubscription<dynamic>? snapshotStreamSubscription;
     controller = StreamController<DocumentSnapshotPlatform>.broadcast(
       onListen: () async {
         final observerId = await MethodChannelFirebaseFirestore.pigeonChannel
             .documentReferenceSnapshot(
-              pigeonApp,
-              DocumentReferenceRequest(
-                path: _pointer.path,
-                serverTimestampBehavior: serverTimestampBehavior,
-              ),
-              includeMetadataChanges,
-              listenSource,
-            );
+          pigeonApp,
+          DocumentReferenceRequest(
+            path: _pointer.path,
+            serverTimestampBehavior: serverTimestampBehavior,
+          ),
+          includeMetadataChanges,
+          listenSource,
+        );
         snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId)
                 .receiveGuardedBroadcastStream(
-                  onError: convertPlatformException,
-                )
-                .listen((snapshot) {
-                  final PigeonDocumentSnapshot result =
-                      PigeonDocumentSnapshot.decode(snapshot);
-                  controller.add(
-                    DocumentSnapshotPlatform(
-                      firestore,
-                      result.path,
-                      result.data,
-                      result.metadata,
-                    ),
-                  );
-                }, onError: controller.addError);
+          onError: convertPlatformException,
+        )
+                .listen(
+          (snapshot) {
+            final PigeonDocumentSnapshot result =
+                PigeonDocumentSnapshot.decode(snapshot);
+            controller.add(
+              DocumentSnapshotPlatform(
+                firestore,
+                result.path,
+                result.data,
+                result.metadata,
+              ),
+            );
+          },
+          onError: controller.addError,
+        );
       },
       onCancel: () {
         snapshotStreamSubscription?.cancel();

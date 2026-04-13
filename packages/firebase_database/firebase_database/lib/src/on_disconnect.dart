@@ -21,7 +21,7 @@ part of '../firebase_database.dart';
 /// operation to occur each time a disconnect occurs, you'll need to
 /// re-establish the onDisconnect operations each time you reconnect.
 class OnDisconnect {
-  final OnDisconnectPlatform _delegate;
+  OnDisconnectPlatform _delegate;
 
   OnDisconnect._(this._delegate) {
     OnDisconnectPlatform.verify(_delegate);

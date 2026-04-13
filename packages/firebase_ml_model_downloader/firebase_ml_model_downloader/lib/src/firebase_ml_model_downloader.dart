@@ -6,7 +6,7 @@ part of '../firebase_ml_model_downloader.dart';
 
 class FirebaseModelDownloader extends FirebasePluginPlatform {
   FirebaseModelDownloader._({required this.app})
-    : super(app.name, 'plugins.flutter.io/firebase_ml_model_downloader');
+      : super(app.name, 'plugins.flutter.io/firebase_ml_model_downloader');
 
   // Cached and lazily loaded instance of [FirebaseModelDownloaderPlatform] to avoid
   // creating a [MethodChannelFirebaseFunctions] when not needed or creating an
@@ -28,7 +28,9 @@ class FirebaseModelDownloader extends FirebasePluginPlatform {
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseModelDownloader get instance {
-    return FirebaseModelDownloader.instanceFor(app: Firebase.app());
+    return FirebaseModelDownloader.instanceFor(
+      app: Firebase.app(),
+    );
   }
 
   /// Returns an instance using a specified [FirebaseApp].

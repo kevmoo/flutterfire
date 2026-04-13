@@ -13,6 +13,7 @@
 // limitations under the License.
 import 'package:flutter/material.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import 'package:flutter/services.dart';
 import '../widgets/message_widget.dart';
 
 class ImagePromptPage extends StatefulWidget {
@@ -36,7 +37,9 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 750),
+        duration: const Duration(
+          milliseconds: 750,
+        ),
         curve: Curves.easeOutCirc,
       ),
     );
@@ -45,7 +48,9 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -73,7 +78,10 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+              padding: const EdgeInsets.symmetric(
+                vertical: 25,
+                horizontal: 15,
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -83,7 +91,9 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
                       controller: _textController,
                     ),
                   ),
-                  const SizedBox.square(dimension: 15),
+                  const SizedBox.square(
+                    dimension: 15,
+                  ),
                   if (!_loading)
                     IconButton(
                       onPressed: () async {
@@ -220,7 +230,9 @@ class _ImagePromptPageState extends State<ImagePromptPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(child: SelectableText(message)),
+          content: SingleChildScrollView(
+            child: SelectableText(message),
+          ),
           actions: [
             TextButton(
               onPressed: () {

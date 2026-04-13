@@ -8,7 +8,9 @@ import 'dart:io' as io;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'firebase_options.dart';
@@ -16,14 +18,16 @@ import 'save_as/save_as.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   if (defaultTargetPlatform != TargetPlatform.windows) {
     // window currently don't support storage emulator
     final emulatorHost =
         (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
-        ? '10.0.2.2'
-        : 'localhost';
+            ? '10.0.2.2'
+            : 'localhost';
 
     await FirebaseStorage.instance.useStorageEmulator(emulatorHost, 9199);
   }
@@ -50,7 +54,7 @@ enum UploadType {
 ///
 /// Returns a [MaterialApp].
 class StorageExampleApp extends StatelessWidget {
-  const StorageExampleApp({super.key});
+  StorageExampleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +63,9 @@ class StorageExampleApp extends StatelessWidget {
       theme: ThemeData.dark(),
       // Disable the banner to make the "+" button more visible.
       debugShowCheckedModeBanner: false,
-      home: Scaffold(body: TaskManager()),
+      home: Scaffold(
+        body: TaskManager(),
+      ),
     );
   }
 }
@@ -67,7 +73,7 @@ class StorageExampleApp extends StatelessWidget {
 /// A StatefulWidget which keeps track of the current uploaded files.
 class TaskManager extends StatefulWidget {
   // ignore: public_member_api_docs
-  const TaskManager({super.key});
+  TaskManager({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -81,9 +87,11 @@ class _TaskManager extends State<TaskManager> {
   /// The user selects a file, and the task is added to the list.
   Future<UploadTask?> uploadFile(XFile? file) async {
     if (file == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('No file was selected')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No file was selected'),
+        ),
+      );
 
       return null;
     }
@@ -195,11 +203,17 @@ class _TaskManager extends State<TaskManager> {
   Future<void> _downloadLink(Reference ref) async {
     final link = await ref.getDownloadURL();
 
-    await Clipboard.setData(ClipboardData(text: link));
+    await Clipboard.setData(
+      ClipboardData(
+        text: link,
+      ),
+    );
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Success!\n Copied download URL to Clipboard!'),
+        content: Text(
+          'Success!\n Copied download URL to Clipboard!',
+        ),
       ),
     );
   }
@@ -228,9 +242,8 @@ class _TaskManager extends State<TaskManager> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Success!\n deleted ${ref.name} \n from bucket: ${ref.bucket}\n '
-          'at path: ${ref.fullPath} \n',
-        ),
+            'Success!\n deleted ${ref.name} \n from bucket: ${ref.bucket}\n '
+            'at path: ${ref.fullPath} \n'),
       ),
     );
   }
@@ -300,13 +313,13 @@ class _TaskManager extends State<TaskManager> {
 class UploadTaskListTile extends StatelessWidget {
   // ignore: public_member_api_docs
   const UploadTaskListTile({
-    super.key,
+    Key? key,
     required this.task,
     required this.onDismissed,
     required this.onDownload,
     required this.onDownloadLink,
     required this.onDelete,
-  });
+  }) : super(key: key);
 
   /// The [UploadTask].
   final UploadTask /*!*/ task;
@@ -332,73 +345,72 @@ class UploadTaskListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<TaskSnapshot>(
       stream: task.snapshotEvents,
-      builder:
-          (BuildContext context, AsyncSnapshot<TaskSnapshot> asyncSnapshot) {
-            Widget subtitle = const Text('---');
-            TaskSnapshot? snapshot = asyncSnapshot.data;
-            TaskState? state = snapshot?.state;
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<TaskSnapshot> asyncSnapshot,
+      ) {
+        Widget subtitle = const Text('---');
+        TaskSnapshot? snapshot = asyncSnapshot.data;
+        TaskState? state = snapshot?.state;
 
-            if (asyncSnapshot.hasError) {
-              if (asyncSnapshot.error is FirebaseException &&
-                  // ignore: cast_nullable_to_non_nullable
-                  (asyncSnapshot.error as FirebaseException).code ==
-                      'canceled') {
-                subtitle = const Text('Upload canceled.');
-              } else {
-                // ignore: avoid_print
-                print(asyncSnapshot.error);
-                subtitle = const Text('Something went wrong.');
-              }
-            } else if (snapshot != null) {
-              subtitle = Text(
-                '$state: ${_bytesTransferred(snapshot)} bytes sent',
-              );
-            }
+        if (asyncSnapshot.hasError) {
+          if (asyncSnapshot.error is FirebaseException &&
+              // ignore: cast_nullable_to_non_nullable
+              (asyncSnapshot.error as FirebaseException).code == 'canceled') {
+            subtitle = const Text('Upload canceled.');
+          } else {
+            // ignore: avoid_print
+            print(asyncSnapshot.error);
+            subtitle = const Text('Something went wrong.');
+          }
+        } else if (snapshot != null) {
+          subtitle = Text('$state: ${_bytesTransferred(snapshot)} bytes sent');
+        }
 
-            return Dismissible(
-              key: Key(task.hashCode.toString()),
-              onDismissed: ($) => onDismissed(),
-              child: ListTile(
-                title: Text('Upload Task #${task.hashCode}'),
-                subtitle: subtitle,
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    if (state == TaskState.running)
-                      IconButton(
-                        icon: const Icon(Icons.pause),
-                        onPressed: task.pause,
-                      ),
-                    if (state == TaskState.running)
-                      IconButton(
-                        icon: const Icon(Icons.cancel),
-                        onPressed: task.cancel,
-                      ),
-                    if (state == TaskState.paused)
-                      IconButton(
-                        icon: const Icon(Icons.file_upload),
-                        onPressed: task.resume,
-                      ),
-                    if (state == TaskState.success)
-                      IconButton(
-                        icon: const Icon(Icons.file_download),
-                        onPressed: onDownload,
-                      ),
-                    if (state == TaskState.success)
-                      IconButton(
-                        icon: const Icon(Icons.link),
-                        onPressed: onDownloadLink,
-                      ),
-                    if (state == TaskState.success)
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: onDelete,
-                      ),
-                  ],
-                ),
-              ),
-            );
-          },
+        return Dismissible(
+          key: Key(task.hashCode.toString()),
+          onDismissed: ($) => onDismissed(),
+          child: ListTile(
+            title: Text('Upload Task #${task.hashCode}'),
+            subtitle: subtitle,
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                if (state == TaskState.running)
+                  IconButton(
+                    icon: const Icon(Icons.pause),
+                    onPressed: task.pause,
+                  ),
+                if (state == TaskState.running)
+                  IconButton(
+                    icon: const Icon(Icons.cancel),
+                    onPressed: task.cancel,
+                  ),
+                if (state == TaskState.paused)
+                  IconButton(
+                    icon: const Icon(Icons.file_upload),
+                    onPressed: task.resume,
+                  ),
+                if (state == TaskState.success)
+                  IconButton(
+                    icon: const Icon(Icons.file_download),
+                    onPressed: onDownload,
+                  ),
+                if (state == TaskState.success)
+                  IconButton(
+                    icon: const Icon(Icons.link),
+                    onPressed: onDownloadLink,
+                  ),
+                if (state == TaskState.success)
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: onDelete,
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

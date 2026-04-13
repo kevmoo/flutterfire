@@ -21,14 +21,10 @@ void main() {
   MockReferencePlatform mockReference = MockReferencePlatform();
   MockListResultPlatform mockList = MockListResultPlatform();
 
-  List<MockReferencePlatform> items = List.from([
-    MockReferencePlatform(),
-    MockReferencePlatform(),
-  ]);
-  List<MockReferencePlatform> prefixes = List.from([
-    MockReferencePlatform(),
-    MockReferencePlatform(),
-  ]);
+  List<MockReferencePlatform> items =
+      List.from([MockReferencePlatform(), MockReferencePlatform()]);
+  List<MockReferencePlatform> prefixes =
+      List.from([MockReferencePlatform(), MockReferencePlatform()]);
 
   group('$ListResult', () {
     setUpAll(() async {
@@ -44,9 +40,8 @@ void main() {
       when(mockList.prefixes).thenReturn(prefixes);
 
       Reference ref = storage.ref();
-      listResult = await ref.list(
-        const ListOptions(maxResults: 10, pageToken: 'token'),
-      );
+      listResult =
+          await ref.list(const ListOptions(maxResults: 10, pageToken: 'token'));
     });
 
     group('.items', () {

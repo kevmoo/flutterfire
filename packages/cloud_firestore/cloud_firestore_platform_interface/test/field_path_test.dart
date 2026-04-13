@@ -10,14 +10,10 @@ void main() {
   group('$FieldPath', () {
     test('equality', () {
       expect(FieldPath(const ['foo']), equals(FieldPath(const ['foo'])));
-      expect(
-        FieldPath(const ['foo', 'bar']),
-        equals(FieldPath(const ['foo', 'bar'])),
-      );
-      expect(
-        FieldPath(const ['foo', 'bar']),
-        equals(FieldPath.fromString('foo.bar')),
-      );
+      expect(FieldPath(const ['foo', 'bar']),
+          equals(FieldPath(const ['foo', 'bar'])));
+      expect(FieldPath(const ['foo', 'bar']),
+          equals(FieldPath.fromString('foo.bar')));
     });
 
     test('throws is invalid path is provided', () {
@@ -27,13 +23,9 @@ void main() {
     test('returns a [List] of components', () {
       expect(FieldPath(const ['foo']).components, equals(const ['foo']));
       expect(
-        FieldPath(const ['foo.bar']).components,
-        equals(const ['foo.bar']),
-      );
-      expect(
-        FieldPath(const ['foo.bar', 'baz']).components,
-        equals(const ['foo.bar', 'baz']),
-      );
+          FieldPath(const ['foo.bar']).components, equals(const ['foo.bar']));
+      expect(FieldPath(const ['foo.bar', 'baz']).components,
+          equals(const ['foo.bar', 'baz']));
     });
 
     test('returns a [FieldPathType] for a documentId', () {
@@ -56,10 +48,8 @@ void main() {
 
       test('creates a [FieldPath]', () {
         expect(FieldPath.fromString('foo.bar.baz'), isA<FieldPath>());
-        expect(
-          FieldPath.fromString('foo.bar.baz').components,
-          equals(['foo', 'bar', 'baz']),
-        );
+        expect(FieldPath.fromString('foo.bar.baz').components,
+            equals(['foo', 'bar', 'baz']));
       });
     });
   });

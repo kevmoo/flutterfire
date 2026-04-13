@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 @TestOn('chrome')
-library;
-
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_app_check_web/firebase_app_check_web.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,7 +21,7 @@ void main() {
     });
 
     test('instance', () {
-      final appCheck = FirebaseAppCheckPlatform.instance;
+      final appCheck = FirebaseAppCheckWeb.instance;
 
       expect(appCheck, isA<FirebaseAppCheckWeb>());
     });
@@ -36,15 +34,27 @@ void main() {
 
     test('activate with ReCaptchaV3Provider', () async {
       final provider = ReCaptchaV3Provider('key');
-      await appCheck.activate(webProvider: provider);
-      verify(appCheck.activate(webProvider: provider));
+      await appCheck.activate(
+        webProvider: provider,
+      );
+      verify(
+        appCheck.activate(
+          webProvider: provider,
+        ),
+      );
       verifyNoMoreInteractions(appCheck);
     });
 
     test('activate with ReCaptchaEnterpriseProvider', () async {
       final provider = ReCaptchaEnterpriseProvider('key');
-      await appCheck.activate(webProvider: provider);
-      verify(appCheck.activate(webProvider: provider));
+      await appCheck.activate(
+        webProvider: provider,
+      );
+      verify(
+        appCheck.activate(
+          webProvider: provider,
+        ),
+      );
       verifyNoMoreInteractions(appCheck);
     });
 

@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -41,7 +41,9 @@ class AppleAuthProvider extends AuthProvider {
 
   /// Create a new [AppleAuthCredential] from a provided [accessToken];
   static OAuthCredential credential(String accessToken) {
-    return AppleAuthCredential._credential(accessToken);
+    return AppleAuthCredential._credential(
+      accessToken,
+    );
   }
 
   /// Create a new [AppleAuthCredential] from a provided [idToken], [rawNonce] and [appleFullPersonName];
@@ -67,7 +69,7 @@ class AppleAuthProvider extends AuthProvider {
     return _kProviderId;
   }
 
-  final List<String> _scopes = [];
+  List<String> _scopes = [];
   Map<String, String> _parameters = {};
 
   /// Returns the currently assigned scopes to this provider instance.
@@ -100,14 +102,23 @@ class AppleAuthProvider extends AuthProvider {
 /// [AppleAuthProvider.credential].
 class AppleAuthCredential extends OAuthCredential {
   AppleAuthCredential._({
-    super.accessToken,
-    super.rawNonce,
-    super.idToken,
-    super.appleFullPersonName,
-  }) : super(providerId: _kProviderId, signInMethod: _kProviderId);
+    String? accessToken,
+    String? rawNonce,
+    String? idToken,
+    AppleFullPersonName? appleFullPersonName,
+  }) : super(
+          providerId: _kProviderId,
+          signInMethod: _kProviderId,
+          accessToken: accessToken,
+          appleFullPersonName: appleFullPersonName,
+          rawNonce: rawNonce,
+          idToken: idToken,
+        );
 
   factory AppleAuthCredential._credential(String accessToken) {
-    return AppleAuthCredential._(accessToken: accessToken);
+    return AppleAuthCredential._(
+      accessToken: accessToken,
+    );
   }
 
   factory AppleAuthCredential._credentialWithIDToken(

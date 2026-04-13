@@ -5,6 +5,7 @@
 // ignore_for_file: require_trailing_commas
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 
 /// ValueSource defines the possible sources of a config parameter value.
 enum ValueSource {
@@ -37,7 +38,7 @@ class RemoteConfigValue {
   /// Default value for Bool
   static const bool defaultValueForBool = false;
 
-  final List<int>? _value;
+  List<int>? _value;
 
   /// Indicates at which source this value came from.
   final ValueSource source;

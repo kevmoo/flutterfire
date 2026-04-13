@@ -22,7 +22,8 @@ Functions getFunctionsInstance(App app, [String? region]) {
 }
 
 class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
-  Functions._fromJsObject(super.jsObject) : super.fromJsObject();
+  Functions._fromJsObject(functions_interop.FunctionsJsImpl jsObject)
+      : super.fromJsObject(jsObject);
   static final _expando = Expando<Functions>();
 
   /// Creates a new Functions from a [jsObject].
@@ -34,39 +35,27 @@ class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
 
   AppJsImpl get app => jsObject.app;
 
-  HttpsCallable httpsCallable(
-    String name, [
-    functions_interop.HttpsCallableOptions? options,
-  ]) {
+  HttpsCallable httpsCallable(String name,
+      [functions_interop.HttpsCallableOptions? options]) {
     JSFunction httpCallableImpl;
     if (options != null) {
-      httpCallableImpl = functions_interop.httpsCallable(
-        jsObject,
-        name.toJS,
-        options,
-      );
+      httpCallableImpl =
+          functions_interop.httpsCallable(jsObject, name.toJS, options);
     } else {
       httpCallableImpl = functions_interop.httpsCallable(jsObject, name.toJS);
     }
     return HttpsCallable.getInstance(httpCallableImpl);
   }
 
-  HttpsCallable httpsCallableUri(
-    Uri uri, [
-    functions_interop.HttpsCallableOptions? options,
-  ]) {
+  HttpsCallable httpsCallableUri(Uri uri,
+      [functions_interop.HttpsCallableOptions? options]) {
     JSFunction httpCallableImpl;
     if (options != null) {
       httpCallableImpl = functions_interop.httpsCallableFromURL(
-        jsObject,
-        uri.toString().toJS,
-        options,
-      );
+          jsObject, uri.toString().toJS, options);
     } else {
-      httpCallableImpl = functions_interop.httpsCallableFromURL(
-        jsObject,
-        uri.toString().toJS,
-      );
+      httpCallableImpl =
+          functions_interop.httpsCallableFromURL(jsObject, uri.toString().toJS);
     }
     return HttpsCallable.getInstance(httpCallableImpl);
   }
@@ -76,7 +65,8 @@ class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
 }
 
 class HttpsCallable extends JsObjectWrapper<JSFunction> {
-  HttpsCallable._fromJsObject(super.jsObject) : super.fromJsObject();
+  HttpsCallable._fromJsObject(JSFunction jsObject)
+      : super.fromJsObject(jsObject);
 
   static final _expando = Expando<HttpsCallable>();
 
@@ -94,10 +84,8 @@ class HttpsCallable extends JsObjectWrapper<JSFunction> {
     );
   }
 
-  Stream<dynamic> stream(
-    JSAny? data,
-    functions_interop.HttpsCallableStreamOptions? options,
-  ) async* {
+  Stream<dynamic> stream(JSAny? data,
+      functions_interop.HttpsCallableStreamOptions? options) async* {
     final streamCallable = await (jsObject as functions_interop.HttpsCallable)
         .stream(data, options)
         .toDart;
@@ -152,17 +140,17 @@ dynamic _convertNested(dynamic object) {
 
 class HttpsCallableResult
     extends JsObjectWrapper<functions_interop.HttpsCallableResultJsImpl> {
-  HttpsCallableResult._fromJsObject(super.jsObject)
-    : _data = _dartify(jsObject.data),
-      super.fromJsObject();
+  HttpsCallableResult._fromJsObject(
+      functions_interop.HttpsCallableResultJsImpl jsObject)
+      : _data = _dartify(jsObject.data),
+        super.fromJsObject(jsObject);
 
   static final _expando = Expando<HttpsCallableResult>();
   final dynamic _data;
 
   /// Creates a new HttpsCallableResult from a [jsObject].
   static HttpsCallableResult getInstance(
-    functions_interop.HttpsCallableResultJsImpl jsObject,
-  ) {
+      functions_interop.HttpsCallableResultJsImpl jsObject) {
     return _expando[jsObject] ??= HttpsCallableResult._fromJsObject(jsObject);
   }
 
@@ -173,20 +161,19 @@ class HttpsCallableResult
 
 class HttpsCallableStreamResult
     extends JsObjectWrapper<functions_interop.HttpsStreamIterableResult> {
-  HttpsCallableStreamResult._fromJsObject(super.jsObject)
-    : _data = _dartify(jsObject.value),
-      super.fromJsObject();
+  HttpsCallableStreamResult._fromJsObject(
+      functions_interop.HttpsStreamIterableResult jsObject)
+      : _data = _dartify(jsObject.value),
+        super.fromJsObject(jsObject);
 
   static final _expando = Expando<HttpsCallableStreamResult>();
   final dynamic _data;
 
   /// Creates a new HttpsCallableResult from a [jsObject].
   static HttpsCallableStreamResult getInstance(
-    functions_interop.HttpsStreamIterableResult jsObject,
-  ) {
-    return _expando[jsObject] ??= HttpsCallableStreamResult._fromJsObject(
-      jsObject,
-    );
+      functions_interop.HttpsStreamIterableResult jsObject) {
+    return _expando[jsObject] ??=
+        HttpsCallableStreamResult._fromJsObject(jsObject);
   }
 
   dynamic get data {

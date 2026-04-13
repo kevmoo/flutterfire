@@ -10,19 +10,19 @@ class Pointer {
     if (_path.isEmpty) {
       _path = '/';
     } else {
-      String parsedPath = _path;
+      String _parsedPath = _path;
 
       // Remove trailing slashes
       if (_path.length > 1 && _path.endsWith('/')) {
-        parsedPath = parsedPath.substring(0, parsedPath.length - 1);
+        _parsedPath = _parsedPath.substring(0, _parsedPath.length - 1);
       }
 
       // Remove starting slashes
       if (_path.startsWith('/') && _path.length > 1) {
-        parsedPath = parsedPath.substring(1, parsedPath.length);
+        _parsedPath = _parsedPath.substring(1, _parsedPath.length);
       }
 
-      _path = parsedPath;
+      _path = _parsedPath;
     }
   }
 

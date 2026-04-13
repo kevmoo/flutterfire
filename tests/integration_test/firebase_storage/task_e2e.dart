@@ -32,7 +32,7 @@ void setupTaskTests() {
         task = null;
       });
 
-      Future<void> testPauseTask(String type) async {
+      Future<void> _testPauseTask(String type) async {
         List<TaskSnapshot> snapshots = [];
         FirebaseException? streamError;
         expect(task!.snapshot.state, TaskState.running);
@@ -100,17 +100,15 @@ void setupTaskTests() {
             file = await createFile('ok.jpeg');
             task = downloadRef.writeToFile(file);
           } else {
-            task = downloadRef.putBlob(
-              createBlob('some content to write to blob'),
-            );
+            task = downloadRef
+                .putBlob(createBlob('some content to write to blob'));
           }
-          await testPauseTask('Download');
+          await _testPauseTask('Download');
         },
         retry: 2,
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
-        skip:
-            !kIsWeb &&
+        skip: !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.windows ||
                 defaultTargetPlatform == TargetPlatform.android ||
                 defaultTargetPlatform == TargetPlatform.macOS),
@@ -121,14 +119,13 @@ void setupTaskTests() {
         'successfully pauses and resumes a upload task',
         () async {
           task = uploadRef.putString('This is an upload task!');
-          await testPauseTask('Upload');
+          await _testPauseTask('Upload');
         },
         retry: 2,
         // This task is flaky on mac, skip for now.
         // TODO(russellwheatley): Windows works on example app, but fails on tests.
         // Clue is in bytesTransferred + totalBytes which both equal: -3617008641903833651
-        skip:
-            !kIsWeb &&
+        skip: !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.macOS ||
                 defaultTargetPlatform == TargetPlatform.windows ||
                 defaultTargetPlatform == TargetPlatform.android),
@@ -171,177 +168,186 @@ void setupTaskTests() {
         },
       );
 
-      test(
-        'handles errors, e.g. if permission denied for `await Task`',
-        () async {
-          List<int> list = utf8.encode('hello world');
-          Uint8List data = Uint8List.fromList(list);
-          UploadTask task = storage.ref('/uploadNope.jpeg').putData(data);
-          try {
-            await task;
-          } catch (e) {
-            expect(e, isA<FirebaseException>());
-            FirebaseException exception = e as FirebaseException;
-            expect(exception.plugin, 'firebase_storage');
-            expect(exception.code, 'unauthorized');
-            expect(
-              exception.message,
-              'User is not authorized to perform the desired action.',
-            );
-          }
-
-          expect(task.snapshot.state, TaskState.error);
-        },
-      );
-    });
-
-    group('snapshot', () {
-      test('returns the latest snapshot for download task', () async {
-        Task downloadTask;
-        if (!kIsWeb) {
-          file = await createFile('ok.jpeg');
-          downloadTask = downloadRef.writeToFile(file);
-        } else {
-          downloadTask = downloadRef.putBlob(
-            createBlob('some content to write to blob'),
+      test('handles errors, e.g. if permission denied for `await Task`',
+          () async {
+        List<int> list = utf8.encode('hello world');
+        Uint8List data = Uint8List.fromList(list);
+        UploadTask task = storage.ref('/uploadNope.jpeg').putData(data);
+        try {
+          await task;
+        } catch (e) {
+          expect(e, isA<FirebaseException>());
+          FirebaseException exception = e as FirebaseException;
+          expect(exception.plugin, 'firebase_storage');
+          expect(exception.code, 'unauthorized');
+          expect(
+            exception.message,
+            'User is not authorized to perform the desired action.',
           );
         }
 
-        expect(downloadTask.snapshot, isNotNull);
-
-        TaskSnapshot completedSnapshot = await downloadTask;
-        final snapshot = downloadTask.snapshot;
-
-        expect(snapshot, isA<TaskSnapshot>());
-        expect(snapshot.state, TaskState.success);
-        expect(snapshot.bytesTransferred, completedSnapshot.bytesTransferred);
-        expect(snapshot.totalBytes, completedSnapshot.totalBytes);
-        expect(snapshot.metadata, isA<FullMetadata?>());
-      }, retry: 2);
-
-      test('returns the latest snapshot for upload task', () async {
-        final uploadTask = uploadRef.putString('This is an upload task!');
-        expect(uploadTask.snapshot, isNotNull);
-
-        TaskSnapshot completedSnapshot = await uploadTask;
-        final snapshot = uploadTask.snapshot;
-        expect(snapshot, isA<TaskSnapshot>());
-        expect(snapshot.bytesTransferred, completedSnapshot.bytesTransferred);
-        expect(snapshot.totalBytes, completedSnapshot.totalBytes);
-        expect(snapshot.metadata, isA<FullMetadata?>());
-      }, retry: 2);
+        expect(task.snapshot.state, TaskState.error);
+      });
     });
 
-    group('cancel()', () {
-      late Task task;
-
-      Future<void> testCancelTaskSnapshotEvents(Task task) async {
-        List<TaskSnapshot> snapshots = [];
-        expect(task.snapshot.state, TaskState.running);
-        final Completer<FirebaseException> errorReceived =
-            Completer<FirebaseException>();
-        final Completer<bool> started = Completer<bool>();
-
-        task.snapshotEvents.listen(
-          (TaskSnapshot snapshot) {
-            if (!started.isCompleted) {
-              started.complete(true);
-            }
-            snapshots.add(snapshot);
-          },
-          onError: (error) {
-            errorReceived.complete(error);
-          },
-        );
-
-        await started.future;
-
-        bool canceled = await task.cancel();
-        expect(canceled, isTrue);
-        expect(task.snapshot.state, TaskState.canceled);
-
-        final streamError = await errorReceived.future;
-
-        expect(streamError, isNotNull);
-        expect(streamError.code, 'canceled');
-        // Expecting there to only be running states, canceled should not get sent as an event.
-        expect(
-          snapshots.every((snapshot) => snapshot.state == TaskState.running),
-          isTrue,
-        );
-
-        await expectLater(
-          task,
-          throwsA(
-            isA<FirebaseException>().having((e) => e.code, 'code', 'canceled'),
-          ),
-        );
-      }
-
-      Future<void> testCancelTaskLastEvent(Task task) async {
-        expect(task.snapshot.state, TaskState.running);
-
-        bool canceled = await task.cancel();
-        expect(canceled, isTrue);
-        expect(task.snapshot.state, TaskState.canceled);
-      }
-
+    group('snapshot', () {
       test(
-        'successfully cancels download task using snapshotEvents',
+        'returns the latest snapshot for download task',
         () async {
-          file = await createFile('ok.txt');
-          // Need to put a large file in emulator first to test cancel.
-          final initialPut = downloadRef.putFile(file);
+          Task downloadTask;
+          if (!kIsWeb) {
+            file = await createFile('ok.jpeg');
+            downloadTask = downloadRef.writeToFile(file);
+          } else {
+            downloadTask = downloadRef
+                .putBlob(createBlob('some content to write to blob'));
+          }
 
-          await initialPut;
-          task = downloadRef.writeToFile(file);
+          expect(downloadTask.snapshot, isNotNull);
 
-          await testCancelTaskSnapshotEvents(task);
+          TaskSnapshot completedSnapshot = await downloadTask;
+          final snapshot = downloadTask.snapshot;
+
+          expect(snapshot, isA<TaskSnapshot>());
+          expect(snapshot.state, TaskState.success);
+          expect(snapshot.bytesTransferred, completedSnapshot.bytesTransferred);
+          expect(snapshot.totalBytes, completedSnapshot.totalBytes);
+          expect(snapshot.metadata, isA<FullMetadata?>());
         },
-        // There's no DownloadTask on web.
-        // Windows `task.cancel()` is returning "false", same code on example app works as intended
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
         retry: 2,
       );
 
       test(
-        'successfully cancels download task and provides the last `canceled` event',
+        'returns the latest snapshot for upload task',
         () async {
-          file = await createFile('ok.txt');
-          final initialPut = downloadRef.putFile(file);
+          final uploadTask = uploadRef.putString('This is an upload task!');
+          expect(uploadTask.snapshot, isNotNull);
 
-          await initialPut;
-          task = downloadRef.writeToFile(file);
-          await testCancelTaskLastEvent(task);
-        },
-        // There's no DownloadTask on web.
-        // Windows `task.cancel()` is returning "false", same code on example app works as intended
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
-        retry: 2,
-      );
-
-      test(
-        'successfully cancels upload task using snapshotEvents',
-        () async {
-          task = uploadRef.putString('A' * 20000000);
-          await testCancelTaskSnapshotEvents(task);
+          TaskSnapshot completedSnapshot = await uploadTask;
+          final snapshot = uploadTask.snapshot;
+          expect(snapshot, isA<TaskSnapshot>());
+          expect(snapshot.bytesTransferred, completedSnapshot.bytesTransferred);
+          expect(snapshot.totalBytes, completedSnapshot.totalBytes);
+          expect(snapshot.metadata, isA<FullMetadata?>());
         },
         retry: 2,
-        // Windows `task.cancel()` is returning "false", same code on example app works as intended
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
-
-      test(
-        'successfully cancels upload task and provides the last `canceled` event',
-        () async {
-          task = uploadRef.putString('A' * 20000000);
-          await testCancelTaskLastEvent(task);
-        },
-        retry: 2,
-        // Windows `task.cancel()` is returning "false", same code on example app works as intended
-        skip: defaultTargetPlatform == TargetPlatform.windows,
       );
     });
+
+    group(
+      'cancel()',
+      () {
+        late Task task;
+
+        Future<void> _testCancelTaskSnapshotEvents(Task task) async {
+          List<TaskSnapshot> snapshots = [];
+          expect(task.snapshot.state, TaskState.running);
+          final Completer<FirebaseException> errorReceived =
+              Completer<FirebaseException>();
+          final Completer<bool> started = Completer<bool>();
+
+          task.snapshotEvents.listen(
+            (TaskSnapshot snapshot) {
+              if (!started.isCompleted) {
+                started.complete(true);
+              }
+              snapshots.add(snapshot);
+            },
+            onError: (error) {
+              errorReceived.complete(error);
+            },
+          );
+
+          await started.future;
+
+          bool canceled = await task.cancel();
+          expect(canceled, isTrue);
+          expect(task.snapshot.state, TaskState.canceled);
+
+          final streamError = await errorReceived.future;
+
+          expect(streamError, isNotNull);
+          expect(streamError.code, 'canceled');
+          // Expecting there to only be running states, canceled should not get sent as an event.
+          expect(
+            snapshots.every((snapshot) => snapshot.state == TaskState.running),
+            isTrue,
+          );
+
+          await expectLater(
+            task,
+            throwsA(
+              isA<FirebaseException>()
+                  .having((e) => e.code, 'code', 'canceled'),
+            ),
+          );
+        }
+
+        Future<void> _testCancelTaskLastEvent(Task task) async {
+          expect(task.snapshot.state, TaskState.running);
+
+          bool canceled = await task.cancel();
+          expect(canceled, isTrue);
+          expect(task.snapshot.state, TaskState.canceled);
+        }
+
+        test(
+          'successfully cancels download task using snapshotEvents',
+          () async {
+            file = await createFile('ok.txt');
+            // Need to put a large file in emulator first to test cancel.
+            final initialPut = downloadRef.putFile(file);
+
+            await initialPut;
+            task = downloadRef.writeToFile(file);
+
+            await _testCancelTaskSnapshotEvents(task);
+          },
+          // There's no DownloadTask on web.
+          // Windows `task.cancel()` is returning "false", same code on example app works as intended
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+          retry: 2,
+        );
+
+        test(
+          'successfully cancels download task and provides the last `canceled` event',
+          () async {
+            file = await createFile('ok.txt');
+            final initialPut = downloadRef.putFile(file);
+
+            await initialPut;
+            task = downloadRef.writeToFile(file);
+            await _testCancelTaskLastEvent(task);
+          },
+          // There's no DownloadTask on web.
+          // Windows `task.cancel()` is returning "false", same code on example app works as intended
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+          retry: 2,
+        );
+
+        test(
+          'successfully cancels upload task using snapshotEvents',
+          () async {
+            task = uploadRef.putString('A' * 20000000);
+            await _testCancelTaskSnapshotEvents(task);
+          },
+          retry: 2,
+          // Windows `task.cancel()` is returning "false", same code on example app works as intended
+          skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
+
+        test(
+          'successfully cancels upload task and provides the last `canceled` event',
+          () async {
+            task = uploadRef.putString('A' * 20000000);
+            await _testCancelTaskLastEvent(task);
+          },
+          retry: 2,
+          // Windows `task.cancel()` is returning "false", same code on example app works as intended
+          skip: defaultTargetPlatform == TargetPlatform.windows,
+        );
+      },
+    );
 
     group('snapshotEvents', () {
       test('loop through successful `snapshotEvents`', () async {
@@ -356,9 +362,8 @@ void setupTaskTests() {
 
       test('failed `snapshotEvents` loop', () async {
         final snapshots = <TaskSnapshot>[];
-        UploadTask task = storage
-            .ref('/uploadNope.jpeg')
-            .putString('This will fail');
+        UploadTask task =
+            storage.ref('/uploadNope.jpeg').putString('This will fail');
         try {
           // ignore: prefer_foreach
           await for (final event in task.snapshotEvents) {
@@ -376,51 +381,47 @@ void setupTaskTests() {
         }
       });
 
-      test(
-        'listen to successful snapshotEvents, ensure `onDone` is called',
-        () async {
-          final Completer<bool> onDoneReceived = Completer<bool>();
-          final snapshots = <TaskSnapshot>[];
-          final task = uploadRef.putString('This is an upload task!');
+      test('listen to successful snapshotEvents, ensure `onDone` is called',
+          () async {
+        final Completer<bool> onDoneReceived = Completer<bool>();
+        final snapshots = <TaskSnapshot>[];
+        final task = uploadRef.putString('This is an upload task!');
 
-          task.snapshotEvents.listen(
-            snapshots.add,
-            onDone: () {
-              onDoneReceived.complete(true);
-            },
-          );
+        task.snapshotEvents.listen(
+          snapshots.add,
+          onDone: () {
+            onDoneReceived.complete(true);
+          },
+        );
 
-          final response = await onDoneReceived.future;
-          expect(response, isTrue);
-          expect(snapshots.last.state, TaskState.success);
-        },
-      );
+        final response = await onDoneReceived.future;
+        expect(response, isTrue);
+        expect(snapshots.last.state, TaskState.success);
+      });
 
-      test(
-        'listen to failed snapshotEvents, ensure `onDone` is called',
-        () async {
-          final snapshots = <TaskSnapshot>[];
-          final task = storage
-              .ref('/uploadNope.jpeg')
-              .putString('This is an upload task!');
-          final Completer<bool> onDoneReceived = Completer<bool>();
-          FirebaseException? streamError;
-          task.snapshotEvents.listen(
-            snapshots.add,
-            onError: (e) {
-              streamError = e;
-            },
-            onDone: () {
-              onDoneReceived.complete(true);
-            },
-          );
+      test('listen to failed snapshotEvents, ensure `onDone` is called',
+          () async {
+        final snapshots = <TaskSnapshot>[];
+        final task = storage
+            .ref('/uploadNope.jpeg')
+            .putString('This is an upload task!');
+        final Completer<bool> onDoneReceived = Completer<bool>();
+        FirebaseException? streamError;
+        task.snapshotEvents.listen(
+          snapshots.add,
+          onError: (e) {
+            streamError = e;
+          },
+          onDone: () {
+            onDoneReceived.complete(true);
+          },
+        );
 
-          final response = await onDoneReceived.future;
-          expect(response, isTrue);
-          expect(snapshots.last.state, TaskState.running);
-          expect(streamError, isA<FirebaseException>());
-        },
-      );
+        final response = await onDoneReceived.future;
+        expect(response, isTrue);
+        expect(snapshots.last.state, TaskState.running);
+        expect(streamError, isA<FirebaseException>());
+      });
     });
   });
 }

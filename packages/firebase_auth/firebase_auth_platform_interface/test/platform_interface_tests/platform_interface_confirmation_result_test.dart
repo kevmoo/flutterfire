@@ -14,9 +14,8 @@ void main() {
     late TestConfirmationResultPlatform confirmationResultPlatform;
 
     setUpAll(() async {
-      confirmationResultPlatform = TestConfirmationResultPlatform(
-        kMockVerificationId,
-      );
+      confirmationResultPlatform =
+          TestConfirmationResultPlatform(kMockVerificationId);
     });
 
     test('Constructor', () {
@@ -48,5 +47,5 @@ void main() {
 }
 
 class TestConfirmationResultPlatform extends ConfirmationResultPlatform {
-  TestConfirmationResultPlatform(super.verificationId);
+  TestConfirmationResultPlatform(String verificationId) : super(verificationId);
 }

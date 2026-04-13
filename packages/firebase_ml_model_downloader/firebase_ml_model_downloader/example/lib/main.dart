@@ -12,7 +12,9 @@ const kModelName = "mobilenet_v1_1_0_224";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -33,11 +35,9 @@ class _MyAppState extends State<MyApp> {
   FirebaseCustomModel? model;
 
   /// Initially get the lcoal model if found, and asynchronously get the latest one in background.
-  Future<void> initWithLocalModel() async {
+  initWithLocalModel() async {
     final newModel = await FirebaseModelDownloader.instance.getModel(
-      kModelName,
-      FirebaseModelDownloadType.localModelUpdateInBackground,
-    );
+        kModelName, FirebaseModelDownloadType.localModelUpdateInBackground);
 
     setState(() {
       model = newModel;
@@ -49,7 +49,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.amber),
       home: Scaffold(
-        appBar: AppBar(title: const Text('Plugin example app')),
+        appBar: AppBar(
+          title: const Text('Plugin example app'),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Center(
@@ -80,12 +82,10 @@ class _MyAppState extends State<MyApp> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          final newModel = await FirebaseModelDownloader
-                              .instance
-                              .getModel(
-                                kModelName,
-                                FirebaseModelDownloadType.latestModel,
-                              );
+                          final newModel =
+                              await FirebaseModelDownloader.instance.getModel(
+                                  kModelName,
+                                  FirebaseModelDownloadType.latestModel);
 
                           setState(() {
                             model = newModel;

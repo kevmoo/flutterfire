@@ -13,12 +13,12 @@ import 'utils/encode_utility.dart';
 /// A web specific implementation of [WriteBatch].
 class WriteBatchWeb extends WriteBatchPlatform {
   final firestore_interop.Firestore _webFirestoreDelegate;
-  final firestore_interop.WriteBatch _webWriteBatchDelegate;
+  firestore_interop.WriteBatch _webWriteBatchDelegate;
 
   /// Constructor.
   WriteBatchWeb(this._webFirestoreDelegate)
-    : _webWriteBatchDelegate = _webFirestoreDelegate.batch()!,
-      super();
+      : _webWriteBatchDelegate = _webFirestoreDelegate.batch()!,
+        super();
 
   @override
   Future<void> commit() {
@@ -31,23 +31,18 @@ class WriteBatchWeb extends WriteBatchPlatform {
   }
 
   @override
-  void set(
-    String documentPath,
-    Map<String, dynamic> data, [
-    SetOptions? options,
-  ]) {
-    _webWriteBatchDelegate.set(
-      _webFirestoreDelegate.doc(documentPath),
-      EncodeUtility.encodeMapData(data)!,
-      convertSetOptions(options),
-    );
+  void set(String documentPath, Map<String, dynamic> data,
+      [SetOptions? options]) {
+    _webWriteBatchDelegate.set(_webFirestoreDelegate.doc(documentPath),
+        EncodeUtility.encodeMapData(data)!, convertSetOptions(options));
   }
 
   @override
-  void update(String documentPath, Map<FieldPath, dynamic> data) {
-    _webWriteBatchDelegate.update(
-      _webFirestoreDelegate.doc(documentPath),
-      EncodeUtility.encodeMapDataFieldPath(data)!,
-    );
+  void update(
+    String documentPath,
+    Map<FieldPath, dynamic> data,
+  ) {
+    _webWriteBatchDelegate.update(_webFirestoreDelegate.doc(documentPath),
+        EncodeUtility.encodeMapDataFieldPath(data)!);
   }
 }

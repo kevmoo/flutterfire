@@ -60,7 +60,10 @@ void setupDataSnapshotTests() {
         2,
         true,
         ['foo'],
-        {0: 'hello', 1: 'foo'},
+        {
+          0: 'hello',
+          1: 'foo',
+        }
       ];
       await ref.set(data);
       final s = await ref.get();
@@ -156,7 +159,11 @@ void setupDataSnapshotTests() {
 
     test('children returns the children in order', () async {
       final ref = getRef('children');
-      await ref.set({'a': 3, 'b': 2, 'c': 1});
+      await ref.set({
+        'a': 3,
+        'b': 2,
+        'c': 1,
+      });
       // Use .once() instead of .get() because the REST API used by .get()
       // does not guarantee ordered results from the emulator.
       final event = await ref.orderByValue().once();

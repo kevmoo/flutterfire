@@ -9,7 +9,7 @@ part of '../firebase_performance.dart';
 /// You can get an instance by calling [FirebasePerformance.instance].
 class FirebasePerformance extends FirebasePluginPlatform {
   FirebasePerformance._({required this.app})
-    : super(app.name, 'plugins.flutter.io/firebase_performance');
+      : super(app.name, 'plugins.flutter.io/firebase_performance');
 
   // Cached and lazily loaded instance of [FirebasePerformancePlatform] to avoid
   // creating a [MethodChannelFirebasePerformance] when not needed or creating an
@@ -22,8 +22,7 @@ class FirebasePerformance extends FirebasePluginPlatform {
     return FirebasePerformance.instanceFor(app: defaultAppInstance);
   }
 
-  static final Map<String, FirebasePerformance> _firebasePerformanceInstances =
-      {};
+  static Map<String, FirebasePerformance> _firebasePerformanceInstances = {};
 
   /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
   FirebaseApp app;

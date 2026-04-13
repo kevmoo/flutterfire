@@ -37,29 +37,24 @@ final class TemplateChatSession {
     this._toolConfig,
     this._maxTurns,
   ) : _autoFunctions = _tools
-          ?.expand((tool) => tool.templateAutoFunctionDeclarations)
-          .fold(<String, TemplateAutoFunctionDeclaration>{}, (map, function) {
-            map?[function.name] = function;
-            return map;
-          });
+            ?.expand((tool) => tool.templateAutoFunctionDeclarations)
+            .fold(<String, TemplateAutoFunctionDeclaration>{}, (map, function) {
+          map?[function.name] = function;
+          return map;
+        });
 
   final Future<GenerateContentResponse> Function(
-    Iterable<Content> content,
-    String templateId, {
-    required Map<String, Object?> inputs,
-    List<TemplateTool>? tools,
-    TemplateToolConfig? templateToolConfig,
-  })
-  _templateHistoryGenerateContent;
+      Iterable<Content> content, String templateId,
+      {required Map<String, Object?> inputs,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? templateToolConfig}) _templateHistoryGenerateContent;
 
   final Stream<GenerateContentResponse> Function(
-    Iterable<Content> content,
-    String templateId, {
-    required Map<String, Object?> inputs,
-    List<TemplateTool>? tools,
-    TemplateToolConfig? templateToolConfig,
-  })
-  _templateHistoryGenerateContentStream;
+          Iterable<Content> content, String templateId,
+          {required Map<String, Object?> inputs,
+          List<TemplateTool>? tools,
+          TemplateToolConfig? templateToolConfig})
+      _templateHistoryGenerateContentStream;
 
   final String _templateId;
   final Map<String, Object?> _inputs;
@@ -102,8 +97,7 @@ final class TemplateChatSession {
         );
 
         final functionCalls = response.functionCalls;
-        final shouldAutoExecute =
-            _autoFunctions != null &&
+        final shouldAutoExecute = _autoFunctions != null &&
             _autoFunctions.isNotEmpty &&
             functionCalls.isNotEmpty &&
             functionCalls.every((c) => _autoFunctions.containsKey(c.name));
@@ -132,9 +126,8 @@ final class TemplateChatSession {
           } catch (e) {
             result = e.toString();
           }
-          functionResponses.add(
-            FunctionResponse(functionCall.name, {'result': result}),
-          );
+          functionResponses
+              .add(FunctionResponse(functionCall.name, {'result': result}));
         }
         requestHistory.add(Content('function', functionResponses));
         turn++;
@@ -177,22 +170,18 @@ final class TemplateChatSession {
             controller.add(response);
           }
           if (turnChunks.isEmpty) break;
-          final aggregatedContent = historyAggregate(
-            turnChunks.map((r) {
-              final content = r.candidates.firstOrNull?.content;
-              if (content == null) {
-                throw Exception('No content in response candidate');
-              }
-              return content;
-            }).toList(),
-          );
+          final aggregatedContent = historyAggregate(turnChunks.map((r) {
+            final content = r.candidates.firstOrNull?.content;
+            if (content == null) {
+              throw Exception('No content in response candidate');
+            }
+            return content;
+          }).toList());
 
-          final functionCalls = aggregatedContent.parts
-              .whereType<FunctionCall>()
-              .toList();
+          final functionCalls =
+              aggregatedContent.parts.whereType<FunctionCall>().toList();
 
-          final shouldAutoExecute =
-              _autoFunctions != null &&
+          final shouldAutoExecute = _autoFunctions != null &&
               _autoFunctions.isNotEmpty &&
               functionCalls.isNotEmpty &&
               functionCalls.every((c) => _autoFunctions.containsKey(c.name));
@@ -204,9 +193,8 @@ final class TemplateChatSession {
           }
 
           requestHistory.add(aggregatedContent);
-          final functionResponseFutures = functionCalls.map((
-            functionCall,
-          ) async {
+          final functionResponseFutures =
+              functionCalls.map((functionCall) async {
             final function = _autoFunctions[functionCall.name];
 
             Object? result;
@@ -217,9 +205,8 @@ final class TemplateChatSession {
             }
             return FunctionResponse(functionCall.name, {'result': result});
           });
-          final functionResponseParts = await Future.wait(
-            functionResponseFutures,
-          );
+          final functionResponseParts =
+              await Future.wait(functionResponseFutures);
           requestHistory.add(Content.functionResponses(functionResponseParts));
           turn++;
         }
@@ -244,21 +231,19 @@ extension StartTemplateChatExtension on TemplateGenerativeModel {
   /// final response = await chat.sendMessage(Content.text('Hello there.'));
   /// print(response.text);
   /// ```
-  TemplateChatSession startChat(
-    String templateId, {
-    required Map<String, Object?> inputs,
-    List<Content>? history,
-    List<TemplateTool>? tools,
-    TemplateToolConfig? toolConfig,
-    int? maxTurns,
-  }) => TemplateChatSession._(
-    templateGenerateContentWithHistory,
-    templateGenerateContentWithHistoryStream,
-    templateId,
-    inputs,
-    history ?? [],
-    tools ?? [],
-    toolConfig,
-    maxTurns ?? 5,
-  );
+  TemplateChatSession startChat(String templateId,
+          {required Map<String, Object?> inputs,
+          List<Content>? history,
+          List<TemplateTool>? tools,
+          TemplateToolConfig? toolConfig,
+          int? maxTurns}) =>
+      TemplateChatSession._(
+          templateGenerateContentWithHistory,
+          templateGenerateContentWithHistoryStream,
+          templateId,
+          inputs,
+          history ?? [],
+          tools ?? [],
+          toolConfig,
+          maxTurns ?? 5);
 }

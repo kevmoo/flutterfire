@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -81,13 +81,14 @@ class TwitterAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [TwitterAuthProvider.credential].
 class TwitterAuthCredential extends OAuthCredential {
-  TwitterAuthCredential._({required String accessToken, required String secret})
-    : super(
-        providerId: _kProviderId,
-        signInMethod: _kProviderId,
-        accessToken: accessToken,
-        secret: secret,
-      );
+  TwitterAuthCredential._({
+    required String accessToken,
+    required String secret,
+  }) : super(
+            providerId: _kProviderId,
+            signInMethod: _kProviderId,
+            accessToken: accessToken,
+            secret: secret);
 
   factory TwitterAuthCredential._credential({
     required String accessToken,

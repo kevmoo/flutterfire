@@ -15,7 +15,10 @@ final _api = FirebaseDatabaseHostApi();
 /// Represents a query over the data at a particular location.
 class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   /// Create a [MethodChannelQuery] from [DatabaseReferencePlatform]
-  MethodChannelOnDisconnect({required super.database, required super.ref});
+  MethodChannelOnDisconnect({
+    required DatabasePlatform database,
+    required DatabaseReferencePlatform ref,
+  }) : super(database: database, ref: ref);
 
   /// Gets the Pigeon app object from the database
   DatabasePigeonFirebaseApp get _pigeonApp {
@@ -60,7 +63,10 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   @override
   Future<void> cancel() async {
     try {
-      await _api.onDisconnectCancel(_pigeonApp, ref.path);
+      await _api.onDisconnectCancel(
+        _pigeonApp,
+        ref.path,
+      );
     } catch (e, s) {
       convertPlatformException(e, s);
     }

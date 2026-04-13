@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: constant_identifier_names
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -71,7 +69,7 @@ const String CONTENT_TYPE = 'content_type';
 const String ITEM_NAME = 'item_name';
 const String ACHIEVEMENT_ID = 'achievement_id';
 
-final item = AnalyticsEventItem(
+final ITEM = AnalyticsEventItem(
   affiliation: 'affil',
   coupon: 'coup',
   creativeName: 'creativeName',
@@ -118,7 +116,7 @@ void main() {
     group('AnalyticsEventItem', () {
       test('Should properly toString', () {
         expect(
-          item.toString(),
+          ITEM.toString(),
           equals(
             'AnalyticsEventItem({a: b, affiliation: affil, currency: USD, coupon: coup, creative_name: creativeName, creative_slot: creativeSlot, discount: 2.22, index: 3, item_brand: itemBrand, item_category: itemCategory, item_category2: itemCategory2, item_category3: itemCategory3, item_category4: itemCategory4, item_category5: itemCategory5, item_id: itemId, item_list_id: itemListId, item_list_name: itemListName, item_name: itemName, item_variant: itemVariant, location_id: locationId, price: 9.99, promotion_id: promotionId, promotion_name: promotionName, quantity: 1})',
           ),
@@ -157,27 +155,39 @@ void main() {
       }
 
       testRequiresValueAndCurrencyTogether('logAddToCart', () {
-        return analytics!.logAddToCart(value: 123.90);
+        return analytics!.logAddToCart(
+          value: 123.90,
+        );
       });
 
       testRequiresValueAndCurrencyTogether('logRemoveFromCart', () {
-        return analytics!.logRemoveFromCart(value: 123.90);
+        return analytics!.logRemoveFromCart(
+          value: 123.90,
+        );
       });
 
       testRequiresValueAndCurrencyTogether('logAddToWishlist', () {
-        return analytics!.logAddToWishlist(value: 123.90);
+        return analytics!.logAddToWishlist(
+          value: 123.90,
+        );
       });
 
       testRequiresValueAndCurrencyTogether('logBeginCheckout', () {
-        return analytics!.logBeginCheckout(value: 123.90);
+        return analytics!.logBeginCheckout(
+          value: 123.90,
+        );
       });
 
       testRequiresValueAndCurrencyTogether('logGenerateLead', () {
-        return analytics!.logGenerateLead(value: 123.90);
+        return analytics!.logGenerateLead(
+          value: 123.90,
+        );
       });
 
       testRequiresValueAndCurrencyTogether('logViewItem', () {
-        return analytics!.logViewItem(value: 123.90);
+        return analytics!.logViewItem(
+          value: 123.90,
+        );
       });
 
       test('logEvent with items rejects invalid item parameter types', () {
@@ -185,7 +195,10 @@ void main() {
           () => analytics!.logEvent(
             name: 'custom_event',
             items: [
-              AnalyticsEventItem(itemId: 'id', parameters: {'invalid': true}),
+              AnalyticsEventItem(
+                itemId: 'id',
+                parameters: {'invalid': true},
+              ),
             ],
           ),
           throwsA(isA<AssertionError>()),
@@ -227,10 +240,8 @@ void main() {
         );
         // reserved prefix
         expect(
-          analytics!.setUserProperty(
-            name: 'firebase_test',
-            value: 'test-value',
-          ),
+          analytics!
+              .setUserProperty(name: 'firebase_test', value: 'test-value'),
           throwsArgumentError,
         );
       });

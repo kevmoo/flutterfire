@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runDocumentChangeTests() {
@@ -18,14 +19,13 @@ void runDocumentChangeTests() {
     Future<CollectionReference<Map<String, dynamic>>> initializeTest(
       String id,
     ) async {
-      CollectionReference<Map<String, dynamic>> collection = firestore
-          .collection('flutter-tests/$id/query-tests');
+      CollectionReference<Map<String, dynamic>> collection =
+          firestore.collection('flutter-tests/$id/query-tests');
 
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
-      await Future.forEach(snapshot.docs, (
-        DocumentSnapshot<Map<String, dynamic>> documentSnapshot,
-      ) {
+      await Future.forEach(snapshot.docs,
+          (DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
         return documentSnapshot.reference.delete();
       });
       return collection;
@@ -41,15 +41,15 @@ void runDocumentChangeTests() {
         await expectLater(
           doc1.snapshots(),
           emits(
-            isA<DocumentSnapshot<Map<String, dynamic>>>().having(
-              (q) => q.exists,
-              'exists',
-              false,
-            ),
+            isA<DocumentSnapshot<Map<String, dynamic>>>()
+                .having((q) => q.exists, 'exists', false),
           ),
         );
 
-        await doc1.set(<String, Object?>{'key': null, 'key2': 42});
+        await doc1.set(<String, Object?>{
+          'key': null,
+          'key2': 42,
+        });
 
         await expectLater(
           doc1.snapshots(),
@@ -57,13 +57,16 @@ void runDocumentChangeTests() {
             isA<DocumentSnapshot<Map<String, dynamic>>>()
                 .having((q) => q.exists, 'exists', true)
                 .having((q) => q.data(), 'data()', <String, Object?>{
-                  'key': null,
-                  'key2': 42,
-                }),
+              'key': null,
+              'key2': 42,
+            }),
           ),
         );
 
-        await doc1.set({'key': null, 'key2': null});
+        await doc1.set({
+          'key': null,
+          'key2': null,
+        });
 
         await expectLater(
           doc1.snapshots(),
@@ -71,9 +74,9 @@ void runDocumentChangeTests() {
             isA<DocumentSnapshot<Map<String, dynamic>>>()
                 .having((q) => q.exists, 'exists', true)
                 .having((q) => q.data(), 'data()', <String, Object?>{
-                  'key': null,
-                  'key2': null,
-                }),
+              'key': null,
+              'key2': null,
+            }),
           ),
         );
       },
@@ -94,9 +97,8 @@ void runDocumentChangeTests() {
         final snapshots = <QuerySnapshot<Map<String, dynamic>>>[];
         final receivedAll = Completer<void>();
 
-        StreamSubscription subscription = collection.snapshots().listen((
-          snapshot,
-        ) {
+        StreamSubscription subscription =
+            collection.snapshots().listen((snapshot) {
           snapshots.add(snapshot);
           if (snapshots.length >= 2 && !receivedAll.isCompleted) {
             receivedAll.complete();
@@ -130,8 +132,7 @@ void runDocumentChangeTests() {
         expect(removeChange.type, equals(DocumentChangeType.removed));
         expect(removeChange.doc.data()!['name'], equals('doc1'));
       },
-      skip:
-          defaultTargetPlatform == TargetPlatform.windows ||
+      skip: defaultTargetPlatform == TargetPlatform.windows ||
           defaultTargetPlatform == TargetPlatform.android,
     );
 
@@ -151,15 +152,13 @@ void runDocumentChangeTests() {
         final snapshots = <QuerySnapshot<Map<String, dynamic>>>[];
         final receivedAll = Completer<void>();
 
-        StreamSubscription subscription = collection
-            .orderBy('value')
-            .snapshots()
-            .listen((snapshot) {
-              snapshots.add(snapshot);
-              if (snapshots.length >= 2 && !receivedAll.isCompleted) {
-                receivedAll.complete();
-              }
-            });
+        StreamSubscription subscription =
+            collection.orderBy('value').snapshots().listen((snapshot) {
+          snapshots.add(snapshot);
+          if (snapshots.length >= 2 && !receivedAll.isCompleted) {
+            receivedAll.complete();
+          }
+        });
 
         // Wait for the initial snapshot before modifying
         await Future.delayed(const Duration(milliseconds: 500));
@@ -171,10 +170,10 @@ void runDocumentChangeTests() {
         // Verify first snapshot (all 3 docs added)
         expect(snapshots[0].docs.length, equals(3));
         expect(snapshots[0].docChanges.length, equals(3));
-        snapshots[0].docChanges.asMap().forEach((
-          int index,
-          DocumentChange<Map<String, dynamic>> change,
-        ) {
+        snapshots[0]
+            .docChanges
+            .asMap()
+            .forEach((int index, DocumentChange<Map<String, dynamic>> change) {
           expect(change.oldIndex, equals(-1));
           expect(change.newIndex, equals(index));
           expect(change.type, equals(DocumentChangeType.added));

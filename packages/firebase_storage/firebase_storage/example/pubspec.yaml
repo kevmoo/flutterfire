@@ -1,10 +1,9 @@
 name: firebase_storage_example
-description: Demonstrates how to use the firebase_storage plugin.
 resolution: workspace
+description: Demonstrates how to use the firebase_storage plugin.
 
 environment:
-  sdk: ^3.10.0
-  flutter: '>=3.27.0'
+  sdk: '>=3.6.0 <4.0.0'
 
 dependencies:
   firebase_core: ^4.6.0
@@ -12,8 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^1.1.2
-  image_picker_for_web: ^3.0.6
-  web: ^1.1.1
+  image_picker_for_web: ^3.0.5
+  web: ^1.0.0
 
 flutter:
   uses-material-design: true

@@ -2,12 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// ignore_for_file: deprecated_member_use, one_member_abstracts
+// ignore_for_file: one_member_abstracts
 
 import 'package:pigeon/pigeon.dart';
 
-@ConfigurePigeon(
-  PigeonOptions(
+@Configure(
+  Options(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
     dartTestOut: 'test/pigeon/test_api.dart',
@@ -27,14 +27,16 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-class PigeonMultiFactorSession {
-  const PigeonMultiFactorSession({required this.id});
+class MultiFactorSession {
+  const MultiFactorSession({
+    required this.id,
+  });
 
   final String id;
 }
 
-class PigeonPhoneMultiFactorAssertion {
-  const PigeonPhoneMultiFactorAssertion({
+class PhoneMultiFactorAssertion {
+  const PhoneMultiFactorAssertion({
     required this.verificationId,
     required this.verificationCode,
   });
@@ -43,8 +45,8 @@ class PigeonPhoneMultiFactorAssertion {
   final String verificationCode;
 }
 
-class PigeonMultiFactorInfo {
-  const PigeonMultiFactorInfo({
+class MultiFactorInfo {
+  const MultiFactorInfo({
     this.displayName,
     required this.enrollmentTimestamp,
     this.factorId,
@@ -61,8 +63,8 @@ class PigeonMultiFactorInfo {
 
 // We prefix the class name with `Auth` to avoid a conflict with
 // other classes in other packages.
-class AuthPigeonFirebaseApp {
-  const AuthPigeonFirebaseApp({
+class AuthFirebaseApp {
+  const AuthFirebaseApp({
     required this.appName,
     required this.tenantId,
     required this.customAuthDomain,
@@ -98,22 +100,28 @@ enum ActionCodeInfoOperation {
   revertSecondFactorAddition,
 }
 
-class PigeonActionCodeInfoData {
-  const PigeonActionCodeInfoData({this.email, this.previousEmail});
+class ActionCodeInfoData {
+  const ActionCodeInfoData({
+    this.email,
+    this.previousEmail,
+  });
 
   final String? email;
   final String? previousEmail;
 }
 
-class PigeonActionCodeInfo {
-  const PigeonActionCodeInfo({required this.operation, required this.data});
+class ActionCodeInfo {
+  const ActionCodeInfo({
+    required this.operation,
+    required this.data,
+  });
 
   final ActionCodeInfoOperation operation;
-  final PigeonActionCodeInfoData data;
+  final ActionCodeInfoData data;
 }
 
-class PigeonAdditionalUserInfo {
-  const PigeonAdditionalUserInfo({
+class AdditionalUserInfo {
+  const AdditionalUserInfo({
     required this.isNewUser,
     required this.providerId,
     required this.username,
@@ -128,8 +136,8 @@ class PigeonAdditionalUserInfo {
   final Map<String?, Object?>? profile;
 }
 
-class PigeonAuthCredential {
-  const PigeonAuthCredential({
+class AuthCredential {
+  const AuthCredential({
     required this.providerId,
     required this.signInMethod,
     required this.nativeId,
@@ -142,8 +150,8 @@ class PigeonAuthCredential {
   final String? accessToken;
 }
 
-class PigeonUserInfo {
-  const PigeonUserInfo({
+class UserInfo {
+  const UserInfo({
     required this.uid,
     required this.email,
     required this.displayName,
@@ -172,27 +180,30 @@ class PigeonUserInfo {
   final int? lastSignInTimestamp;
 }
 
-class PigeonUserDetails {
-  const PigeonUserDetails({required this.userInfo, required this.providerData});
+class UserDetails {
+  const UserDetails({
+    required this.userInfo,
+    required this.providerData,
+  });
 
-  final PigeonUserInfo userInfo;
+  final UserInfo userInfo;
   final List<Map<Object?, Object?>?> providerData;
 }
 
-class PigeonUserCredential {
-  const PigeonUserCredential({
+class UserCredential {
+  const UserCredential({
     required this.user,
     required this.additionalUserInfo,
     required this.credential,
   });
 
-  final PigeonUserDetails? user;
-  final PigeonAdditionalUserInfo? additionalUserInfo;
-  final PigeonAuthCredential? credential;
+  final UserDetails? user;
+  final AdditionalUserInfo? additionalUserInfo;
+  final AuthCredential? credential;
 }
 
-class PigeonAuthCredentialInput {
-  const PigeonAuthCredentialInput({
+class AuthCredentialInput {
+  const AuthCredentialInput({
     required this.providerId,
     required this.signInMethod,
     required this.token,
@@ -205,8 +216,8 @@ class PigeonAuthCredentialInput {
   final String? accessToken;
 }
 
-class PigeonActionCodeSettings {
-  const PigeonActionCodeSettings({
+class ActionCodeSettings {
+  const ActionCodeSettings({
     required this.url,
     required this.dynamicLinkDomain,
     required this.linkDomain,
@@ -227,8 +238,8 @@ class PigeonActionCodeSettings {
   final String? linkDomain;
 }
 
-class PigeonFirebaseAuthSettings {
-  const PigeonFirebaseAuthSettings({
+class FirebaseAuthSettings {
+  const FirebaseAuthSettings({
     required this.appVerificationDisabledForTesting,
     required this.userAccessGroup,
     required this.phoneNumber,
@@ -243,8 +254,8 @@ class PigeonFirebaseAuthSettings {
   final bool? forceRecaptchaFlow;
 }
 
-class PigeonSignInProvider {
-  const PigeonSignInProvider({
+class SignInProvider {
+  const SignInProvider({
     required this.providerId,
     required this.scopes,
     required this.customParameters,
@@ -255,8 +266,8 @@ class PigeonSignInProvider {
   final Map<String?, String?>? customParameters;
 }
 
-class PigeonVerifyPhoneNumberRequest {
-  const PigeonVerifyPhoneNumberRequest({
+class VerifyPhoneNumberRequest {
+  const VerifyPhoneNumberRequest({
     required this.phoneNumber,
     required this.timeout,
     required this.forceResendingToken,
@@ -276,121 +287,147 @@ class PigeonVerifyPhoneNumberRequest {
 @HostApi(dartHostTestHandler: 'TestFirebaseAuthHostApi')
 abstract class FirebaseAuthHostApi {
   @async
-  String registerIdTokenListener(AuthPigeonFirebaseApp app);
+  String registerIdTokenListener(
+    AuthFirebaseApp app,
+  );
 
   @async
-  String registerAuthStateListener(AuthPigeonFirebaseApp app);
+  String registerAuthStateListener(
+    AuthFirebaseApp app,
+  );
 
   @async
-  void useEmulator(AuthPigeonFirebaseApp app, String host, int port);
+  void useEmulator(
+    AuthFirebaseApp app,
+    String host,
+    int port,
+  );
 
   @async
-  void applyActionCode(AuthPigeonFirebaseApp app, String code);
+  void applyActionCode(
+    AuthFirebaseApp app,
+    String code,
+  );
 
   @async
-  PigeonActionCodeInfo checkActionCode(AuthPigeonFirebaseApp app, String code);
+  ActionCodeInfo checkActionCode(
+    AuthFirebaseApp app,
+    String code,
+  );
 
   @async
   void confirmPasswordReset(
-    AuthPigeonFirebaseApp app,
+    AuthFirebaseApp app,
     String code,
     String newPassword,
   );
 
   @async
-  PigeonUserCredential createUserWithEmailAndPassword(
-    AuthPigeonFirebaseApp app,
+  UserCredential createUserWithEmailAndPassword(
+    AuthFirebaseApp app,
     String email,
     String password,
   );
 
   @async
-  PigeonUserCredential signInAnonymously(AuthPigeonFirebaseApp app);
+  UserCredential signInAnonymously(
+    AuthFirebaseApp app,
+  );
 
   @async
-  PigeonUserCredential signInWithCredential(
-    AuthPigeonFirebaseApp app,
+  UserCredential signInWithCredential(
+    AuthFirebaseApp app,
     Map<String, Object> input,
   );
 
   @async
-  PigeonUserCredential signInWithCustomToken(
-    AuthPigeonFirebaseApp app,
+  UserCredential signInWithCustomToken(
+    AuthFirebaseApp app,
     String token,
   );
 
   @async
-  PigeonUserCredential signInWithEmailAndPassword(
-    AuthPigeonFirebaseApp app,
+  UserCredential signInWithEmailAndPassword(
+    AuthFirebaseApp app,
     String email,
     String password,
   );
 
   @async
-  PigeonUserCredential signInWithEmailLink(
-    AuthPigeonFirebaseApp app,
+  UserCredential signInWithEmailLink(
+    AuthFirebaseApp app,
     String email,
     String emailLink,
   );
 
   @async
-  PigeonUserCredential signInWithProvider(
-    AuthPigeonFirebaseApp app,
-    PigeonSignInProvider signInProvider,
+  UserCredential signInWithProvider(
+    AuthFirebaseApp app,
+    SignInProvider signInProvider,
   );
 
   @async
-  void signOut(AuthPigeonFirebaseApp app);
+  void signOut(
+    AuthFirebaseApp app,
+  );
 
   @async
   List<String> fetchSignInMethodsForEmail(
-    AuthPigeonFirebaseApp app,
+    AuthFirebaseApp app,
     String email,
   );
 
   @async
   void sendPasswordResetEmail(
-    AuthPigeonFirebaseApp app,
+    AuthFirebaseApp app,
     String email,
-    PigeonActionCodeSettings? actionCodeSettings,
+    ActionCodeSettings? actionCodeSettings,
   );
 
   @async
   void sendSignInLinkToEmail(
-    AuthPigeonFirebaseApp app,
+    AuthFirebaseApp app,
     String email,
-    PigeonActionCodeSettings actionCodeSettings,
+    ActionCodeSettings actionCodeSettings,
   );
 
   @async
-  String setLanguageCode(AuthPigeonFirebaseApp app, String? languageCode);
+  String setLanguageCode(
+    AuthFirebaseApp app,
+    String? languageCode,
+  );
 
   @async
   void setSettings(
-    AuthPigeonFirebaseApp app,
-    PigeonFirebaseAuthSettings settings,
+    AuthFirebaseApp app,
+    FirebaseAuthSettings settings,
   );
 
   @async
-  String verifyPasswordResetCode(AuthPigeonFirebaseApp app, String code);
+  String verifyPasswordResetCode(
+    AuthFirebaseApp app,
+    String code,
+  );
 
   @async
   String verifyPhoneNumber(
-    AuthPigeonFirebaseApp app,
-    PigeonVerifyPhoneNumberRequest request,
+    AuthFirebaseApp app,
+    VerifyPhoneNumberRequest request,
   );
   @async
   void revokeTokenWithAuthorizationCode(
-    AuthPigeonFirebaseApp app,
+    AuthFirebaseApp app,
     String authorizationCode,
   );
 
   @async
-  void initializeRecaptchaConfig(AuthPigeonFirebaseApp app);
+  void initializeRecaptchaConfig(
+    AuthFirebaseApp app,
+  );
 }
 
-class PigeonIdTokenResult {
-  const PigeonIdTokenResult({
+class IdTokenResult {
+  const IdTokenResult({
     required this.token,
     required this.expirationTimestamp,
     required this.authTimestamp,
@@ -409,8 +446,8 @@ class PigeonIdTokenResult {
   final String? signInSecondFactor;
 }
 
-class PigeonUserProfile {
-  const PigeonUserProfile({
+class UserProfile {
+  const UserProfile({
     required this.displayName,
     required this.photoUrl,
     required this.displayNameChanged,
@@ -426,73 +463,86 @@ class PigeonUserProfile {
 @HostApi(dartHostTestHandler: 'TestFirebaseAuthUserHostApi')
 abstract class FirebaseAuthUserHostApi {
   @async
-  void delete(AuthPigeonFirebaseApp app);
+  void delete(
+    AuthFirebaseApp app,
+  );
 
   @async
-  PigeonIdTokenResult getIdToken(AuthPigeonFirebaseApp app, bool forceRefresh);
+  IdTokenResult getIdToken(
+    AuthFirebaseApp app,
+    bool forceRefresh,
+  );
 
   @async
-  PigeonUserCredential linkWithCredential(
-    AuthPigeonFirebaseApp app,
+  UserCredential linkWithCredential(
+    AuthFirebaseApp app,
     Map<String, Object> input,
   );
 
   @async
-  PigeonUserCredential linkWithProvider(
-    AuthPigeonFirebaseApp app,
-    PigeonSignInProvider signInProvider,
+  UserCredential linkWithProvider(
+    AuthFirebaseApp app,
+    SignInProvider signInProvider,
   );
 
   @async
-  PigeonUserCredential reauthenticateWithCredential(
-    AuthPigeonFirebaseApp app,
+  UserCredential reauthenticateWithCredential(
+    AuthFirebaseApp app,
     Map<String, Object> input,
   );
 
   @async
-  PigeonUserCredential reauthenticateWithProvider(
-    AuthPigeonFirebaseApp app,
-    PigeonSignInProvider signInProvider,
+  UserCredential reauthenticateWithProvider(
+    AuthFirebaseApp app,
+    SignInProvider signInProvider,
   );
 
   @async
-  PigeonUserDetails reload(AuthPigeonFirebaseApp app);
+  UserDetails reload(
+    AuthFirebaseApp app,
+  );
 
   @async
   void sendEmailVerification(
-    AuthPigeonFirebaseApp app,
-    PigeonActionCodeSettings? actionCodeSettings,
+    AuthFirebaseApp app,
+    ActionCodeSettings? actionCodeSettings,
   );
 
   @async
-  PigeonUserCredential unlink(AuthPigeonFirebaseApp app, String providerId);
+  UserCredential unlink(
+    AuthFirebaseApp app,
+    String providerId,
+  );
 
   @async
-  PigeonUserDetails updateEmail(AuthPigeonFirebaseApp app, String newEmail);
+  UserDetails updateEmail(
+    AuthFirebaseApp app,
+    String newEmail,
+  );
 
   @async
-  PigeonUserDetails updatePassword(
-    AuthPigeonFirebaseApp app,
+  UserDetails updatePassword(
+    AuthFirebaseApp app,
     String newPassword,
   );
 
   @async
-  PigeonUserDetails updatePhoneNumber(
-    AuthPigeonFirebaseApp app,
+  UserDetails updatePhoneNumber(
+    AuthFirebaseApp app,
     Map<String, Object> input,
   );
 
   @async
-  PigeonUserDetails updateProfile(
-    AuthPigeonFirebaseApp app,
-    PigeonUserProfile profile,
+  UserDetails updateProfile(
+    AuthFirebaseApp app,
+    UserProfile profile,
   );
 
   @async
   void verifyBeforeUpdateEmail(
-    AuthPigeonFirebaseApp app,
+    AuthFirebaseApp app,
     String newEmail,
-    PigeonActionCodeSettings? actionCodeSettings,
+    ActionCodeSettings? actionCodeSettings,
   );
 }
 
@@ -500,40 +550,47 @@ abstract class FirebaseAuthUserHostApi {
 abstract class MultiFactorUserHostApi {
   @async
   void enrollPhone(
-    AuthPigeonFirebaseApp app,
-    PigeonPhoneMultiFactorAssertion assertion,
+    AuthFirebaseApp app,
+    PhoneMultiFactorAssertion assertion,
     String? displayName,
   );
 
   @async
   void enrollTotp(
-    AuthPigeonFirebaseApp app,
+    AuthFirebaseApp app,
     String assertionId,
     String? displayName,
   );
 
   @async
-  PigeonMultiFactorSession getSession(AuthPigeonFirebaseApp app);
+  MultiFactorSession getSession(
+    AuthFirebaseApp app,
+  );
 
   @async
-  void unenroll(AuthPigeonFirebaseApp app, String factorUid);
+  void unenroll(
+    AuthFirebaseApp app,
+    String factorUid,
+  );
 
   @async
-  List<PigeonMultiFactorInfo> getEnrolledFactors(AuthPigeonFirebaseApp app);
+  List<MultiFactorInfo> getEnrolledFactors(
+    AuthFirebaseApp app,
+  );
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
 abstract class MultiFactoResolverHostApi {
   @async
-  PigeonUserCredential resolveSignIn(
+  UserCredential resolveSignIn(
     String resolverId,
-    PigeonPhoneMultiFactorAssertion? assertion,
+    PhoneMultiFactorAssertion? assertion,
     String? totpAssertionId,
   );
 }
 
-class PigeonTotpSecret {
-  const PigeonTotpSecret({
+class TotpSecret {
+  const TotpSecret({
     required this.codeIntervalSeconds,
     required this.codeLength,
     required this.enrollmentCompletionDeadline,
@@ -551,13 +608,21 @@ class PigeonTotpSecret {
 @HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
 abstract class MultiFactorTotpHostApi {
   @async
-  PigeonTotpSecret generateSecret(String sessionId);
+  TotpSecret generateSecret(
+    String sessionId,
+  );
 
   @async
-  String getAssertionForEnrollment(String secretKey, String oneTimePassword);
+  String getAssertionForEnrollment(
+    String secretKey,
+    String oneTimePassword,
+  );
 
   @async
-  String getAssertionForSignIn(String enrollmentId, String oneTimePassword);
+  String getAssertionForSignIn(
+    String enrollmentId,
+    String oneTimePassword,
+  );
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
@@ -570,11 +635,14 @@ abstract class MultiFactorTotpSecretHostApi {
   );
 
   @async
-  void openInOtpApp(String secretKey, String qrCodeUrl);
+  void openInOtpApp(
+    String secretKey,
+    String qrCodeUrl,
+  );
 }
 
-/// Only used to generate the object interface that are use outside of the Pigeon interface
+/// Only used to generate the object interface that are use outside of the  interface
 @HostApi()
 abstract class GenerateInterfaces {
-  void pigeonInterface(PigeonMultiFactorInfo info);
+  void pigeonInterface(MultiFactorInfo info);
 }

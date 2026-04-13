@@ -53,7 +53,9 @@ void main() {
       ).thenAnswer((_) => mockRemoteConfigPlatform);
 
       when(
-        mockRemoteConfigPlatform.delegateFor(app: anyNamed('app')),
+        mockRemoteConfigPlatform.delegateFor(
+          app: anyNamed('app'),
+        ),
       ).thenAnswer((_) => mockRemoteConfigPlatform);
 
       when(
@@ -62,35 +64,28 @@ void main() {
         ),
       ).thenAnswer((_) => mockRemoteConfigPlatform);
 
-      when(
-        mockRemoteConfigPlatform.lastFetchTime,
-      ).thenReturn(mockLastFetchTime);
+      when(mockRemoteConfigPlatform.lastFetchTime)
+          .thenReturn(mockLastFetchTime);
 
-      when(
-        mockRemoteConfigPlatform.lastFetchStatus,
-      ).thenReturn(mockLastFetchStatus);
+      when(mockRemoteConfigPlatform.lastFetchStatus)
+          .thenReturn(mockLastFetchStatus);
 
-      when(
-        mockRemoteConfigPlatform.settings,
-      ).thenReturn(mockRemoteConfigSettings);
+      when(mockRemoteConfigPlatform.settings)
+          .thenReturn(mockRemoteConfigSettings);
 
-      when(
-        mockRemoteConfigPlatform.setConfigSettings(any),
-      ).thenAnswer((_) => Future.value());
+      when(mockRemoteConfigPlatform.setConfigSettings(any))
+          .thenAnswer((_) => Future.value());
 
-      when(
-        mockRemoteConfigPlatform.activate(),
-      ).thenAnswer((_) => Future.value(true));
+      when(mockRemoteConfigPlatform.activate())
+          .thenAnswer((_) => Future.value(true));
 
-      when(
-        mockRemoteConfigPlatform.ensureInitialized(),
-      ).thenAnswer((_) => Future.value());
+      when(mockRemoteConfigPlatform.ensureInitialized())
+          .thenAnswer((_) => Future.value());
 
       when(mockRemoteConfigPlatform.fetch()).thenAnswer((_) => Future.value());
 
-      when(
-        mockRemoteConfigPlatform.fetchAndActivate(),
-      ).thenAnswer((_) => Future.value(true));
+      when(mockRemoteConfigPlatform.fetchAndActivate())
+          .thenAnswer((_) => Future.value(true));
 
       when(mockRemoteConfigPlatform.getAll()).thenReturn(mockParameters);
 
@@ -102,13 +97,11 @@ void main() {
 
       when(mockRemoteConfigPlatform.getString('foo')).thenReturn('bar');
 
-      when(
-        mockRemoteConfigPlatform.getValue('foo'),
-      ).thenReturn(mockRemoteConfigValue);
+      when(mockRemoteConfigPlatform.getValue('foo'))
+          .thenReturn(mockRemoteConfigValue);
 
-      when(
-        mockRemoteConfigPlatform.setDefaults(any),
-      ).thenAnswer((_) => Future.value());
+      when(mockRemoteConfigPlatform.setDefaults(any))
+          .thenAnswer((_) => Future.value());
     });
 
     test('doubleInstance', () async {
@@ -243,7 +236,8 @@ class MockFirebaseRemoteConfig extends Mock
     with
         // ignore: prefer_mixin
         MockPlatformInterfaceMixin
-    implements TestFirebaseRemoteConfigPlatform {
+    implements
+        TestFirebaseRemoteConfigPlatform {
   MockFirebaseRemoteConfig() {
     TestFirebaseRemoteConfigPlatform();
   }
@@ -260,9 +254,11 @@ class MockFirebaseRemoteConfig extends Mock
   @override
   FirebaseRemoteConfigPlatform setInitialValues({Map? remoteConfigValues}) {
     return super.noSuchMethod(
-      Invocation.method(#setInitialValues, [], {
-        #remoteConfigValues: remoteConfigValues,
-      }),
+      Invocation.method(
+        #setInitialValues,
+        [],
+        {#remoteConfigValues: remoteConfigValues},
+      ),
       returnValue: TestFirebaseRemoteConfigPlatform(),
       returnValueForMissingStub: TestFirebaseRemoteConfigPlatform(),
     );
@@ -371,7 +367,10 @@ class MockFirebaseRemoteConfig extends Mock
   RemoteConfigValue getValue(String key) {
     return super.noSuchMethod(
       Invocation.method(#getValue, [key]),
-      returnValue: RemoteConfigValue(<int>[], ValueSource.valueStatic),
+      returnValue: RemoteConfigValue(
+        <int>[],
+        ValueSource.valueStatic,
+      ),
       returnValueForMissingStub: RemoteConfigValue(
         <int>[],
         ValueSource.valueStatic,

@@ -3,7 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of '../firebase_storage.dart';
+part of firebase_storage;
 
 /// Class returned as a result of calling a list method ([list] or [listAll])
 /// on a [Reference].
@@ -12,7 +12,7 @@ class ListResult {
     ListResultPlatform.verify(_delegate);
   }
 
-  final ListResultPlatform _delegate;
+  ListResultPlatform _delegate;
 
   /// The [FirebaseStorage] instance for this result.
   final FirebaseStorage storage;
@@ -23,8 +23,7 @@ class ListResult {
   List<Reference> get items {
     return _delegate.items
         .map<Reference>(
-          (referencePlatform) => Reference._(storage, referencePlatform),
-        )
+            (referencePlatform) => Reference._(storage, referencePlatform))
         .toList();
   }
 
@@ -42,8 +41,7 @@ class ListResult {
   List<Reference> get prefixes {
     return _delegate.prefixes
         .map<Reference>(
-          (referencePlatform) => Reference._(storage, referencePlatform),
-        )
+            (referencePlatform) => Reference._(storage, referencePlatform))
         .toList();
   }
 }

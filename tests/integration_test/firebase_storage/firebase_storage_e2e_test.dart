@@ -22,10 +22,8 @@ void main() {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      await FirebaseStorage.instance.useStorageEmulator(
-        testEmulatorHost,
-        testEmulatorPort,
-      );
+      await FirebaseStorage.instance
+          .useStorageEmulator(testEmulatorHost, testEmulatorPort);
 
       // Add a write only file
       await FirebaseStorage.instance

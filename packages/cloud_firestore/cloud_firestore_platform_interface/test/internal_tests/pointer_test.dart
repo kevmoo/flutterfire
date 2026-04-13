@@ -37,9 +37,7 @@ void main() {
 
     test('documentPath() fails if path is already a document', () {
       expect(
-        () => Pointer('foo/bar').documentPath('bar'),
-        throwsAssertionError,
-      );
+          () => Pointer('foo/bar').documentPath('bar'), throwsAssertionError);
     });
 
     test('collectionPath() returns a valid collection', () {

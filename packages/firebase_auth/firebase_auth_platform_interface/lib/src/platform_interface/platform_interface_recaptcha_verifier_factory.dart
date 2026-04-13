@@ -30,8 +30,9 @@ enum RecaptchaVerifierTheme {
 typedef RecaptchaVerifierOnSuccess = void Function();
 
 /// Called when the reCAPTCHA widget errors (such as a network error).
-typedef RecaptchaVerifierOnError =
-    void Function(FirebaseAuthException exception);
+typedef RecaptchaVerifierOnError = void Function(
+  FirebaseAuthException exception,
+);
 
 /// Called when the time to complete the reCAPTCHA widget expires.
 typedef RecaptchaVerifierOnExpired = void Function();

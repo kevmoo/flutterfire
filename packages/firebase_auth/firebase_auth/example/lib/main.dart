@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in_dartio/google_sign_in_dartio.dart';
 
@@ -51,7 +52,7 @@ Future<void> main() async {
 ///
 /// Returns a [MaterialApp].
 class AuthExampleApp extends StatelessWidget {
-  const AuthExampleApp({super.key});
+  const AuthExampleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

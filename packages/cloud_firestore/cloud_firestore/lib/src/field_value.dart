@@ -50,7 +50,7 @@ class FieldValue extends FieldValuePlatform {
   static FieldValue increment(num value) =>
       FieldValue._(_factory.increment(value));
 
-  final dynamic _delegate;
+  dynamic _delegate;
 
   @override
   String toString() => '$FieldValue($_delegate)';

@@ -3,51 +3,84 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
-import 'package:firebase_core_dart/firebase_core_dart.dart';
-import 'package:test/test.dart';
+import 'package:_flutterfire_internals/src/interop_shimmer.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('guardWebExceptions', () {
-    test(
-      'preserves stacktrace on futures that fail with native error',
-      () async {
-        final current = StackTrace.current;
-        try {
-          await guardWebExceptions(
-            () => Future.error(_NativeError('test-code', 'test-message'), current),
-            plugin: 'test',
-          );
-          fail('dead code');
-        } catch (err, stack) {
-          expect(stack, current);
-          expect(err, isA<FirebaseException>());
-          final fe = err as FirebaseException;
-          expect(fe.code, 'test-code');
-          expect(fe.message, 'test-message');
-        }
-      },
-    );
+  group('guardWebException', () {
+    test('preserves stacktrace on futures that fail with FirebaseError',
+        () async {
+      final current = StackTrace.current;
+      try {
+        await guardWebExceptions(
+          () => Future.error(_FirebaseError(), current),
+          plugin: 'test',
+          codeParser: (c) => c,
+        );
+        fail('dead code');
+      } catch (err, stack) {
+        expect(stack, current);
+      }
+    });
+
+    test('preserves stacktrace on streams that fail with FirebaseError',
+        () async {
+      final current = StackTrace.current;
+      try {
+        await guardWebExceptions(
+          () => Stream.error(_FirebaseError(), current),
+          plugin: 'test',
+          codeParser: (c) => c,
+        ).first;
+        fail('dead code');
+      } catch (err, stack) {
+        expect(stack, current);
+      }
+    });
+
+    test('preserves stacktrace on functions that throw a FirebaseError',
+        () async {
+      final current = StackTrace.current;
+      try {
+        guardWebExceptions<void>(
+          () => Error.throwWithStackTrace(_FirebaseError(), current),
+          plugin: 'test',
+          codeParser: (c) => c,
+        );
+        fail('dead code');
+      } catch (err, stack) {
+        expect(stack, current);
+      }
+    });
 
     test(
-      'propagates plain Dart errors from Futures',
-      () async {
-        await expectLater(
-          guardWebExceptions(
-            () => Future<void>.error(ArgumentError('test')),
-            plugin: 'test',
-          ),
-          throwsA(isA<ArgumentError>()),
-        );
-      },
-    );
+        'propagates plain Dart errors from Futures (e.g. ArgumentError on web)',
+        () async {
+      await expectLater(
+        guardWebExceptions(
+          () => Future<void>.error(ArgumentError('test')),
+          plugin: 'test',
+          codeParser: (c) => c,
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    });
   });
 }
 
-class _NativeError {
-  _NativeError(this.code, this.message);
-  final String code;
-  final String message;
+class _FirebaseError implements JSError {
+  @override
+  String get code => '';
 
   @override
-  String toString() => 'NativeError($code, $message)';
+  String get message => '';
+
+  @override
+  String get name => '';
+
+  @override
+  String get serverResponse => '';
+
+  @override
+  String get stack => '';
 }

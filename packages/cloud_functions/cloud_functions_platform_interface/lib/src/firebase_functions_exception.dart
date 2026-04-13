@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:meta/meta.dart';
 
 /// Generic exception related to Cloud Functions. Check the error code
 /// and message for more details.
@@ -11,12 +12,16 @@ class FirebaseFunctionsException extends FirebaseException
     implements Exception {
   // ignore: public_member_api_docs
   @protected
-  const FirebaseFunctionsException({
-    required String super.message,
-    required String super.code,
-    super.stackTrace,
+  FirebaseFunctionsException({
+    required String message,
+    required String code,
+    StackTrace? stackTrace,
     this.details,
-  }) : super(plugin: 'firebase_functions');
+  }) : super(
+            plugin: 'firebase_functions',
+            message: message,
+            code: code,
+            stackTrace: stackTrace);
 
   /// Additional data provided with the exception.
   final dynamic details;

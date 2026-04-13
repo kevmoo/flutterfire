@@ -1,7 +1,7 @@
 name: firebase_core_dart
+resolution: workspace
 description: Pure Dart shared core for Firebase plugins.
 version: 0.1.0-wip
-resolution: workspace
 publish_to: none
 
 environment:

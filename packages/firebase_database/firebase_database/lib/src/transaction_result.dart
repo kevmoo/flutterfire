@@ -6,7 +6,7 @@ part of '../firebase_database.dart';
 
 /// Instances of this class represent the outcome of a transaction.
 class TransactionResult {
-  final TransactionResultPlatform _delegate;
+  TransactionResultPlatform _delegate;
 
   TransactionResult._(this._delegate) {
     TransactionResultPlatform.verify(_delegate);

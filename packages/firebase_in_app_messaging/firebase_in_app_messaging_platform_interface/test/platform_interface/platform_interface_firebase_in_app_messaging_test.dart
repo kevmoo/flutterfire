@@ -36,19 +36,17 @@ void main() {
       );
     });
 
-    test(
-      'setAutomaticDataCollectionEnabled throws if not implemented',
-      () async {
-        await expectLater(
-          () => platform!.setAutomaticDataCollectionEnabled(true),
-          throwsA(isA<UnimplementedError>()),
-        );
-      },
-    );
+    test('setAutomaticDataCollectionEnabled throws if not implemented',
+        () async {
+      await expectLater(
+        () => platform!.setAutomaticDataCollectionEnabled(true),
+        throwsA(isA<UnimplementedError>()),
+      );
+    });
   });
 }
 
 class TestFirebaseInAppMessagingPlatform
     extends FirebaseInAppMessagingPlatform {
-  TestFirebaseInAppMessagingPlatform(FirebaseApp super.app);
+  TestFirebaseInAppMessagingPlatform(FirebaseApp app) : super(app);
 }

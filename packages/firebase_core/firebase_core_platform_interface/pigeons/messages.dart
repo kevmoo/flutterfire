@@ -6,10 +6,9 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: '../firebase_core/lib/src/pigeon/messages.pigeon.dart',
-    dartPackageName: 'firebase_core',
+    dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
-    dartTestOut: '../firebase_core/lib/src/pigeon/test_api.dart',
+    dartTestOut: 'lib/src/pigeon/test_api.dart',
     javaOut:
         '../firebase_core/android/src/main/java/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.java',
     javaOptions: JavaOptions(
@@ -105,11 +104,19 @@ abstract class FirebaseCoreHostApi {
 @HostApi(dartHostTestHandler: 'TestFirebaseAppHostApi')
 abstract class FirebaseAppHostApi {
   @async
-  void setAutomaticDataCollectionEnabled(String appName, bool enabled);
+  void setAutomaticDataCollectionEnabled(
+    String appName,
+    bool enabled,
+  );
 
   @async
-  void setAutomaticResourceManagementEnabled(String appName, bool enabled);
+  void setAutomaticResourceManagementEnabled(
+    String appName,
+    bool enabled,
+  );
 
   @async
-  void delete(String appName);
+  void delete(
+    String appName,
+  );
 }

@@ -16,8 +16,8 @@ void runWriteBatchTests() {
     Future<CollectionReference<Map<String, dynamic>>> initializeTest(
       String id,
     ) async {
-      CollectionReference<Map<String, dynamic>> collection = firestore
-          .collection('flutter-tests/$id/query-tests');
+      CollectionReference<Map<String, dynamic>> collection =
+          firestore.collection('flutter-tests/$id/query-tests');
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
       await Future.forEach(snapshot.docs, (
@@ -33,9 +33,7 @@ void runWriteBatchTests() {
           await initializeTest('with-converter-batch');
       WriteBatch batch = firestore.batch();
 
-      DocumentReference<int> doc = collection
-          .doc('doc1')
-          .withConverter(
+      DocumentReference<int> doc = collection.doc('doc1').withConverter(
             fromFirestore: (snapshot, options) {
               return snapshot.data()!['value'] as int;
             },
@@ -99,21 +97,16 @@ void runWriteBatchTests() {
           await initializeTest('write-batch-ops');
       WriteBatch batch = firestore.batch();
 
-      DocumentReference<Map<String, dynamic>> doc1 = collection.doc(
-        'doc1',
-      ); // delete
-      DocumentReference<Map<String, dynamic>> doc2 = collection.doc(
-        'doc2',
-      ); // set
-      DocumentReference<Map<String, dynamic>> doc3 = collection.doc(
-        'doc3',
-      ); // update
-      DocumentReference<Map<String, dynamic>> doc4 = collection.doc(
-        'doc4',
-      ); // update w/ merge
-      DocumentReference<Map<String, dynamic>> doc5 = collection.doc(
-        'doc5',
-      ); // update w/ mergeFields
+      DocumentReference<Map<String, dynamic>> doc1 =
+          collection.doc('doc1'); // delete
+      DocumentReference<Map<String, dynamic>> doc2 =
+          collection.doc('doc2'); // set
+      DocumentReference<Map<String, dynamic>> doc3 =
+          collection.doc('doc3'); // update
+      DocumentReference<Map<String, dynamic>> doc4 =
+          collection.doc('doc4'); // update w/ merge
+      DocumentReference<Map<String, dynamic>> doc5 =
+          collection.doc('doc5'); // update w/ mergeFields
 
       await Future.wait([
         doc1.set({'foo': 'bar'}),
@@ -128,9 +121,11 @@ void runWriteBatchTests() {
       batch.update(doc3, <String, dynamic>{'bar': 'ben'});
       batch.set(doc4, <String, dynamic>{'bar': 'ben'}, SetOptions(merge: true));
 
-      batch.set(doc5, <String, dynamic>{
-        'bar': 'ben',
-      }, SetOptions(mergeFields: ['bar']));
+      batch.set(
+        doc5,
+        <String, dynamic>{'bar': 'ben'},
+        SetOptions(mergeFields: ['bar']),
+      );
 
       await batch.commit();
 

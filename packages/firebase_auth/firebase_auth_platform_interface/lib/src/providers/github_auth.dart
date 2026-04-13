@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -41,7 +41,9 @@ class GithubAuthProvider extends AuthProvider {
 
   /// Create a new [GithubAuthCredential] from a provided [accessToken];
   static OAuthCredential credential(String accessToken) {
-    return GithubAuthCredential._credential(accessToken);
+    return GithubAuthCredential._credential(
+      accessToken,
+    );
   }
 
   /// This corresponds to the sign-in method identifier.
@@ -54,7 +56,7 @@ class GithubAuthProvider extends AuthProvider {
     return _kProviderId;
   }
 
-  final List<String> _scopes = [];
+  List<String> _scopes = [];
   Map<String, String> _parameters = {};
 
   /// Returns the currently assigned scopes to this provider instance.
@@ -86,12 +88,12 @@ class GithubAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [GithubAuthProvider.credential].
 class GithubAuthCredential extends OAuthCredential {
-  GithubAuthCredential._({required String accessToken})
-    : super(
-        providerId: _kProviderId,
-        signInMethod: _kProviderId,
-        accessToken: accessToken,
-      );
+  GithubAuthCredential._({
+    required String accessToken,
+  }) : super(
+            providerId: _kProviderId,
+            signInMethod: _kProviderId,
+            accessToken: accessToken);
 
   factory GithubAuthCredential._credential(String accessToken) {
     return GithubAuthCredential._(accessToken: accessToken);

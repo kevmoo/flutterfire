@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -54,29 +54,21 @@ abstract class EmailAuthProvider extends AuthProvider {
 /// [EmailAuthProvider.credential].
 class EmailAuthCredential extends AuthCredential {
   EmailAuthCredential._(
-    String signInMethod, {
+    String _signInMethod, {
     required this.email,
     this.password,
     this.emailLink,
-  }) : super(providerId: _kProviderId, signInMethod: signInMethod);
+  }) : super(providerId: _kProviderId, signInMethod: _signInMethod);
 
   factory EmailAuthCredential._credential(String email, String password) {
-    return EmailAuthCredential._(
-      _kProviderId,
-      email: email,
-      password: password,
-    );
+    return EmailAuthCredential._(_kProviderId,
+        email: email, password: password);
   }
 
   factory EmailAuthCredential._credentialWithLink(
-    String email,
-    String emailLink,
-  ) {
-    return EmailAuthCredential._(
-      _kLinkProviderId,
-      email: email,
-      emailLink: emailLink,
-    );
+      String email, String emailLink) {
+    return EmailAuthCredential._(_kLinkProviderId,
+        email: email, emailLink: emailLink);
   }
 
   /// The user's email address.

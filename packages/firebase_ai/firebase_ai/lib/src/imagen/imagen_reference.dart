@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'package:meta/meta.dart';
 
 import 'imagen_content.dart';
 import 'imagen_edit.dart';
@@ -87,7 +88,10 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
     ImagenMaskConfig? maskConfig,
     super.image,
     super.referenceId,
-  }) : super._(referenceType: _ReferenceType.mask, referenceConfig: maskConfig);
+  }) : super._(
+          referenceType: _ReferenceType.mask,
+          referenceConfig: maskConfig,
+        );
 }
 
 /// A raw image.
@@ -99,8 +103,10 @@ sealed class ImagenMaskReference extends ImagenReferenceImage {
 )
 final class ImagenRawImage extends ImagenReferenceImage {
   // ignore: public_member_api_docs
-  ImagenRawImage({required ImagenInlineImage image, super.referenceId})
-    : super._(image: image, referenceType: _ReferenceType.raw);
+  ImagenRawImage({
+    required ImagenInlineImage image,
+    super.referenceId,
+  }) : super._(image: image, referenceType: _ReferenceType.raw);
 }
 
 /// A raw mask.
@@ -117,12 +123,12 @@ final class ImagenRawMask extends ImagenMaskReference {
     double? dilation,
     super.referenceId,
   }) : super(
-         image: mask,
-         maskConfig: ImagenMaskConfig(
-           maskMode: ImagenMaskMode.userProvided,
-           maskDilation: dilation,
-         ),
-       );
+          image: mask,
+          maskConfig: ImagenMaskConfig(
+            maskMode: ImagenMaskMode.userProvided,
+            maskDilation: dilation,
+          ),
+        );
 }
 
 /// A semantic mask.
@@ -139,12 +145,12 @@ final class ImagenSemanticMask extends ImagenMaskReference {
     double? dilation,
     super.referenceId,
   }) : super(
-         maskConfig: ImagenMaskConfig(
-           maskMode: ImagenMaskMode.semantic,
-           maskDilation: dilation,
-           maskClasses: classes,
-         ),
-       );
+          maskConfig: ImagenMaskConfig(
+            maskMode: ImagenMaskMode.semantic,
+            maskDilation: dilation,
+            maskClasses: classes,
+          ),
+        );
 }
 
 /// A background mask.
@@ -156,13 +162,15 @@ final class ImagenSemanticMask extends ImagenMaskReference {
 )
 final class ImagenBackgroundMask extends ImagenMaskReference {
   // ignore: public_member_api_docs
-  ImagenBackgroundMask({double? dilation, super.referenceId})
-    : super(
-        maskConfig: ImagenMaskConfig(
-          maskMode: ImagenMaskMode.background,
-          maskDilation: dilation,
-        ),
-      );
+  ImagenBackgroundMask({
+    double? dilation,
+    super.referenceId,
+  }) : super(
+          maskConfig: ImagenMaskConfig(
+            maskMode: ImagenMaskMode.background,
+            maskDilation: dilation,
+          ),
+        );
 }
 
 /// A foreground mask.
@@ -174,13 +182,15 @@ final class ImagenBackgroundMask extends ImagenMaskReference {
 )
 final class ImagenForegroundMask extends ImagenMaskReference {
   // ignore: public_member_api_docs
-  ImagenForegroundMask({double? dilation, super.referenceId})
-    : super(
-        maskConfig: ImagenMaskConfig(
-          maskMode: ImagenMaskMode.foreground,
-          maskDilation: dilation,
-        ),
-      );
+  ImagenForegroundMask({
+    double? dilation,
+    super.referenceId,
+  }) : super(
+          maskConfig: ImagenMaskConfig(
+            maskMode: ImagenMaskMode.foreground,
+            maskDilation: dilation,
+          ),
+        );
 }
 
 /// A subject reference.
@@ -198,13 +208,13 @@ final class ImagenSubjectReference extends ImagenReferenceImage {
     ImagenSubjectReferenceType? subjectType,
     required super.referenceId,
   }) : super._(
-         image: image,
-         referenceConfig: ImagenSubjectConfig(
-           description: description,
-           type: subjectType,
-         ),
-         referenceType: _ReferenceType.subject,
-       );
+          image: image,
+          referenceConfig: ImagenSubjectConfig(
+            description: description,
+            type: subjectType,
+          ),
+          referenceType: _ReferenceType.subject,
+        );
 }
 
 /// A style reference.
@@ -221,10 +231,12 @@ final class ImagenStyleReference extends ImagenReferenceImage {
     String? description,
     required super.referenceId,
   }) : super._(
-         image: image,
-         referenceConfig: ImagenStyleConfig(description: description),
-         referenceType: _ReferenceType.style,
-       );
+          image: image,
+          referenceConfig: ImagenStyleConfig(
+            description: description,
+          ),
+          referenceType: _ReferenceType.style,
+        );
 }
 
 /// A control reference.
@@ -238,18 +250,19 @@ final class ImagenControlReference extends ImagenReferenceImage {
   // ignore: public_member_api_docs
   ImagenControlReference({
     required ImagenControlType controlType,
-    super.image,
+    ImagenInlineImage? image,
     bool? enableComputation,
     int? superpixelRegionSize,
     int? superpixelRuler,
     super.referenceId,
   }) : super._(
-         referenceConfig: ImagenControlConfig(
-           controlType: controlType,
-           enableComputation: enableComputation,
-           superpixelRegionSize: superpixelRegionSize,
-           superpixelRuler: superpixelRuler,
-         ),
-         referenceType: _ReferenceType.control,
-       );
+          image: image,
+          referenceConfig: ImagenControlConfig(
+            controlType: controlType,
+            enableComputation: enableComputation,
+            superpixelRegionSize: superpixelRegionSize,
+            superpixelRuler: superpixelRuler,
+          ),
+          referenceType: _ReferenceType.control,
+        );
 }

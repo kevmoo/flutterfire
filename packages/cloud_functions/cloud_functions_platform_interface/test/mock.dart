@@ -5,7 +5,8 @@
 
 import 'package:cloud_functions_platform_interface/src/firebase_functions_exception.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/method_channel_firebase_functions.dart';
-import 'package:firebase_core/test.dart';
+import 'package:firebase_core_platform_interface/test.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
@@ -22,11 +23,10 @@ void setupFirebaseFunctionsMocks([Callback? customHandlers]) {
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(MethodChannelFirebaseFunctions.channel, (
-          call,
-        ) async {
-          return await methodCallCallback(call);
-        });
+        .setMockMethodCallHandler(MethodChannelFirebaseFunctions.channel,
+            (call) async {
+      return await methodCallCallback(call);
+    });
 
 Future<void> testExceptionHandling(String type, Function testMethod) async {
   try {
@@ -36,8 +36,7 @@ Future<void> testExceptionHandling(String type, Function testMethod) async {
       return;
     }
     fail(
-      'testExceptionHandling: $testMethod threw unexpected FirebaseFunctionsException',
-    );
+        'testExceptionHandling: $testMethod threw unexpected FirebaseFunctionsException');
   } catch (e) {
     fail('testExceptionHandling: $testMethod threw invalid exception $e');
   }

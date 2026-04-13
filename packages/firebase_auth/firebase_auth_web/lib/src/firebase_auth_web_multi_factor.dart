@@ -14,7 +14,8 @@ import 'utils/web_utils.dart';
 
 /// Web delegate implementation of [UserPlatform].
 class MultiFactorWeb extends MultiFactorPlatform {
-  MultiFactorWeb(super.auth, this._webMultiFactorUser);
+  MultiFactorWeb(FirebaseAuthPlatform auth, this._webMultiFactorUser)
+      : super(auth);
 
   final multi_factor_interop.MultiFactorUser _webMultiFactorUser;
 
@@ -32,7 +33,10 @@ class MultiFactorWeb extends MultiFactorPlatform {
   }) async {
     final webAssertion = assertion as MultiFactorAssertionWeb;
     await guardAuthExceptions(
-      () => _webMultiFactorUser.enroll(webAssertion.assertion, displayName),
+      () => _webMultiFactorUser.enroll(
+        webAssertion.assertion,
+        displayName,
+      ),
     );
   }
 
@@ -48,9 +52,9 @@ class MultiFactorWeb extends MultiFactorPlatform {
       );
     }
 
-    await guardAuthExceptions(
-      () => _webMultiFactorUser.unenroll(uidToUnenroll),
-    );
+    await guardAuthExceptions(() => _webMultiFactorUser.unenroll(
+          uidToUnenroll,
+        ));
   }
 
   @override
@@ -61,19 +65,21 @@ class MultiFactorWeb extends MultiFactorPlatform {
 }
 
 class MultiFactorAssertionWeb extends MultiFactorAssertionPlatform {
-  MultiFactorAssertionWeb(this.assertion) : super();
+  MultiFactorAssertionWeb(
+    this.assertion,
+  ) : super();
 
   final multi_factor_interop.MultiFactorAssertion assertion;
 }
 
 class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
   MultiFactorResolverWeb(
-    super.hints,
-    super.session,
+    List<MultiFactorInfo> hints,
+    MultiFactorSession session,
     this._auth,
     this._webMultiFactorResolver,
     this._webAuth,
-  );
+  ) : super(hints, session);
 
   final multi_factor_interop.MultiFactorResolver _webMultiFactorResolver;
   final auth_interop.Auth? _webAuth;
@@ -88,12 +94,19 @@ class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
       () => _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
     );
 
-    return UserCredentialWeb(_auth, userCredential, _webAuth);
+    return UserCredentialWeb(
+      _auth,
+      userCredential,
+      _webAuth,
+    );
   }
 }
 
 class MultiFactorSessionWeb extends MultiFactorSession {
-  MultiFactorSessionWeb(super.id, this.webSession);
+  MultiFactorSessionWeb(
+    String id,
+    this.webSession,
+  ) : super(id);
 
   final multi_factor_interop.MultiFactorSession webSession;
 }
@@ -103,7 +116,9 @@ class PhoneMultiFactorGeneratorWeb extends PhoneMultiFactorGeneratorPlatform {
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
   @override
-  MultiFactorAssertionPlatform getAssertion(PhoneAuthCredential credential) {
+  MultiFactorAssertionPlatform getAssertion(
+    PhoneAuthCredential credential,
+  ) {
     final verificationId = credential.verificationId;
     final verificationCode = credential.smsCode;
 
@@ -114,39 +129,46 @@ class PhoneMultiFactorGeneratorWeb extends PhoneMultiFactorGeneratorPlatform {
       throw ArgumentError('verificationId must not be null');
     }
 
-    final cred = auth.PhoneAuthProvider.credential(
-      verificationId,
-      verificationCode,
-    );
+    final cred =
+        auth.PhoneAuthProvider.credential(verificationId, verificationCode);
 
     return MultiFactorAssertionWeb(
-      multi_factor_interop.PhoneMultiFactorGenerator.assertion(cred),
-    );
+        multi_factor_interop.PhoneMultiFactorGenerator.assertion(cred));
   }
 }
 
 class TotpSecretWeb extends TotpSecretPlatform {
   TotpSecretWeb(
-    this.webSecret,
-    super.codeIntervalSeconds,
-    super.codeLength,
-    super.enrollmentCompletionDeadline,
-    super.hashingAlgorithm,
-    super.secretKey,
-  );
+      this.webSecret,
+      super.codeIntervalSeconds,
+      super.codeLength,
+      super.enrollmentCompletionDeadline,
+      super.hashingAlgorithm,
+      super.secretKey);
 
   final multi_factor_interop.TotpSecret webSecret;
 
   @override
+
   /// Generate a TOTP secret for the authenticated user.
   @override
-  Future<String> generateQrCodeUrl({String? accountName, String? issuer}) {
-    return Future.value(webSecret.generateQrCodeUrl(accountName, issuer));
+  Future<String> generateQrCodeUrl({
+    String? accountName,
+    String? issuer,
+  }) {
+    return Future.value(
+      webSecret.generateQrCodeUrl(
+        accountName,
+        issuer,
+      ),
+    );
   }
 
   /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
   @override
-  Future<void> openInOtpApp(String qrCodeUrl) async {
+  Future<void> openInOtpApp(
+    String qrCodeUrl,
+  ) async {
     throw UnimplementedError('openInOtpApp() is not available on Web');
   }
 }
@@ -155,20 +177,21 @@ class TotpMultiFactorGeneratorWeb extends TotpMultiFactorGeneratorPlatform {
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
   @override
-  Future<TotpSecretPlatform> generateSecret(MultiFactorSession session) async {
-    final webMultiFactorSession = session as MultiFactorSessionWeb;
-    final webSecret =
+  Future<TotpSecretPlatform> generateSecret(
+    MultiFactorSession session,
+  ) async {
+    final _webMultiFactorSession = session as MultiFactorSessionWeb;
+    final _webSecret =
         await multi_factor_interop.TotpMultiFactorGenerator.generateSecret(
-          webMultiFactorSession.webSession,
-        );
+            _webMultiFactorSession.webSession);
 
     return TotpSecretWeb(
-      webSecret,
-      webSecret.codeInterval,
-      webSecret.codeLength,
-      webSecret.enrollmentCompletionDeadline,
-      webSecret.hashingAlgorithm,
-      webSecret.secretKey,
+      _webSecret,
+      _webSecret.codeInterval,
+      _webSecret.codeLength,
+      _webSecret.enrollmentCompletionDeadline,
+      _webSecret.hashingAlgorithm,
+      _webSecret.secretKey,
     );
   }
 
@@ -179,12 +202,12 @@ class TotpMultiFactorGeneratorWeb extends TotpMultiFactorGeneratorPlatform {
     TotpSecretPlatform secret,
     String oneTimePassword,
   ) async {
-    final webSecret = secret as TotpSecretWeb;
+    final _webSecret = secret as TotpSecretWeb;
     final totpAssertion =
         multi_factor_interop.TotpMultiFactorGenerator.assertionForEnrollment(
-          webSecret.webSecret,
-          oneTimePassword,
-        );
+      _webSecret.webSecret,
+      oneTimePassword,
+    );
     return MultiFactorAssertionWeb(totpAssertion);
   }
 
@@ -197,9 +220,9 @@ class TotpMultiFactorGeneratorWeb extends TotpMultiFactorGeneratorPlatform {
   ) async {
     final totpAssertion =
         multi_factor_interop.TotpMultiFactorGenerator.assertionForSignIn(
-          enrollmentId,
-          oneTimePassword,
-        );
+      enrollmentId,
+      oneTimePassword,
+    );
     return MultiFactorAssertionWeb(totpAssertion);
   }
 }

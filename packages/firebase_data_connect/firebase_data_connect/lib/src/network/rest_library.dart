@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../common/common_library.dart';

@@ -23,14 +23,11 @@ abstract class FirebasePlatform extends PlatformInterface {
   ///
   /// Platform-specific plugins should override this with their own class
   /// that extends [FirebasePlatform] when they register themselves.
-  static FirebasePlatform get instance {
-    if (_instance == null) {
-      throw coreNotInitialized();
-    }
-    return _instance!;
-  }
+  ///
+  /// Defaults to [MethodChannelFirebase].
+  static FirebasePlatform get instance => _instance;
 
-  static FirebasePlatform? _instance;
+  static FirebasePlatform _instance = MethodChannelFirebase();
 
   static set instance(FirebasePlatform instance) {
     PlatformInterface.verify(instance, _token);

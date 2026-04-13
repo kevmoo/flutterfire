@@ -5,6 +5,7 @@
 
 import 'package:cloud_functions_platform_interface/src/firebase_functions_exception.dart';
 import 'package:cloud_functions_platform_interface/src/method_channel/utils/exception.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -23,52 +24,11 @@ void main() {
     });
 
     test(
-      'should catch a [PlatformException] and throw a [FirebaseFunctionsException]',
-      () async {
-        PlatformException platformException = PlatformException(
-          code: 'foo',
-          message: testMessage,
-        );
-
-        expect(
-          () => convertPlatformException(platformException, StackTrace.empty),
-          throwsA(
-            isA<FirebaseFunctionsException>()
-                .having((e) => e.code, 'code', 'unknown')
-                .having((e) => e.message, 'message', testMessage)
-                .having((e) => e.details, 'details', isNull),
-          ),
-        );
-      },
-    );
-
-    test(
-      'should override code and message if provided to additional details',
-      () async {
-        String code = 'baz';
-        PlatformException platformException = PlatformException(
-          code: 'foo',
-          message: 'bar',
-          details: {'code': code, 'message': testMessage},
-        );
-
-        expect(
-          () => convertPlatformException(platformException, StackTrace.empty),
-          throwsA(
-            isA<FirebaseFunctionsException>()
-                .having((e) => e.code, 'code', code)
-                .having((e) => e.message, 'message', testMessage)
-                .having((e) => e.details, 'details', isNull),
-          ),
-        );
-      },
-    );
-
-    test('should provide additionalData as details', () async {
+        'should catch a [PlatformException] and throw a [FirebaseFunctionsException]',
+        () async {
       PlatformException platformException = PlatformException(
-        code: 'UNKNOWN',
+        code: 'foo',
         message: testMessage,
-        details: {'additionalData': testAdditionalData},
       );
 
       expect(
@@ -77,15 +37,47 @@ void main() {
           isA<FirebaseFunctionsException>()
               .having((e) => e.code, 'code', 'unknown')
               .having((e) => e.message, 'message', testMessage)
+              .having((e) => e.details, 'details', isNull),
+        ),
+      );
+    });
+
+    test('should override code and message if provided to additional details',
+        () async {
+      String code = 'baz';
+      PlatformException platformException = PlatformException(
+          code: 'foo',
+          message: 'bar',
+          details: {'code': code, 'message': testMessage});
+
+      expect(
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
+          isA<FirebaseFunctionsException>()
+              .having((e) => e.code, 'code', code)
+              .having((e) => e.message, 'message', testMessage)
+              .having((e) => e.details, 'details', isNull),
+        ),
+      );
+    });
+
+    test('should provide additionalData as details', () async {
+      PlatformException platformException = PlatformException(
+          code: 'UNKNOWN',
+          message: testMessage,
+          details: {'additionalData': testAdditionalData});
+
+      expect(
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
+          isA<FirebaseFunctionsException>()
+              .having((e) => e.code, 'code', 'unknown')
+              .having((e) => e.message, 'message', testMessage)
               .having(
-                (e) => e.details,
-                'details',
-                isA<Map<String, dynamic>>().having(
-                  (e) => e['foo'],
-                  'additionalData',
-                  'bar',
-                ),
-              ),
+                  (e) => e.details,
+                  'details',
+                  isA<Map<String, dynamic>>()
+                      .having((e) => e['foo'], 'additionalData', 'bar')),
         ),
       );
     });

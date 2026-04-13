@@ -3,6 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:flutter/foundation.dart';
 
 /// Interface that defines the required continue/state URL with optional
 /// Android and iOS bundle identifiers.
@@ -54,13 +55,16 @@ class ActionCodeSettings {
       'url': url,
       'linkDomain': linkDomain,
       'handleCodeInApp': handleCodeInApp,
-      if (iOSBundleId != null) 'iOS': {'bundleId': iOSBundleId},
+      if (iOSBundleId != null)
+        'iOS': {
+          'bundleId': iOSBundleId,
+        },
       if (androidPackageName != null)
         'android': {
           'packageName': androidPackageName,
           'minimumVersion': androidMinimumVersion,
           'installApp': androidInstallApp,
-        },
+        }
     };
   }
 

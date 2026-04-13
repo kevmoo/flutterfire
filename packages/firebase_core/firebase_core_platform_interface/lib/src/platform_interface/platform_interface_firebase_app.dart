@@ -26,7 +26,7 @@ class FirebaseAppPlatform extends PlatformInterface {
   final FirebaseOptions options;
 
   /// Returns whether this instance is the default Firebase app.
-  bool get isDefault => name == defaultFirebaseAppName;
+  bool get _isDefault => name == defaultFirebaseAppName;
 
   /// Returns true if automatic data collection is enabled for this app.
   bool get isAutomaticDataCollectionEnabled {
@@ -37,7 +37,9 @@ class FirebaseAppPlatform extends PlatformInterface {
 
   /// Deletes the current FirebaseApp.
   Future<void> delete() async {
-    throw UnimplementedError('delete() has not been implemented.');
+    throw UnimplementedError(
+      'delete() has not been implemented.',
+    );
   }
 
   /// Sets whether automatic data collection is enabled or disabled for this app.

@@ -29,9 +29,7 @@ void main() {
     test('EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD', () {
       expect(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD, isA<String>());
       expect(
-        EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD,
-        equals('password'),
-      );
+          EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD, equals('password'));
     });
 
     test('EmailAuthProvider.PROVIDER_ID', () {
@@ -42,9 +40,7 @@ void main() {
     group('EmailAuthProvider.credential()', () {
       test('creates a new [EmailAuthCredential]', () {
         final result = EmailAuthProvider.credential(
-          email: kMockEmail,
-          password: kMockPassword,
-        );
+            email: kMockEmail, password: kMockPassword);
         expect(result, isA<AuthCredential>());
         expect(result.token, isNull);
         expect(result.signInMethod, equals('password'));
@@ -54,9 +50,7 @@ void main() {
     group('EmailAuthProvider.credentialWithLink()', () {
       test('creates a new [EmailAuthCredential]', () {
         final result = EmailAuthProvider.credentialWithLink(
-          email: kMockEmail,
-          emailLink: kMockEmailLink,
-        );
+            email: kMockEmail, emailLink: kMockEmailLink);
         expect(result, isA<AuthCredential>());
         expect(result.token, isNull);
         expect(result.signInMethod, equals('emailLink'));

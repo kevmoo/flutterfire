@@ -1,18 +1,17 @@
-// ignore_for_file: require_trailing_commas
-// Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2022, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:_flutterfire_internals/_flutterfire_internals.dart'
+    as internals;
 
-import 'package:_flutterfire_internals/_flutterfire_internals.dart';
-
-Future<R> convertWebExceptions<R>(
-  FutureOr<R> Function() action, {
-  String plugin = 'firebase_analytics',
-}) {
-  return guardWebExceptions(
-    () async => action(),
-    plugin: plugin,
+/// Will return a [FirebaseException] from a thrown web error.
+/// Any other errors will be propagated as normal.
+R convertWebExceptions<R>(R Function() cb) {
+  return internals.guardWebExceptions(
+    cb,
+    plugin: 'firebase_analytics',
+    codeParser: (code) => code.replaceFirst('analytics/', ''),
   );
 }

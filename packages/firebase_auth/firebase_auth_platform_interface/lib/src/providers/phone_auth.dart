@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -45,17 +45,20 @@ class PhoneAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [PhoneAuthProvider.credential].
 class PhoneAuthCredential extends AuthCredential {
-  PhoneAuthCredential._({this.verificationId, this.smsCode, super.token})
-    : super(providerId: _kProviderId, signInMethod: _kProviderId);
+  PhoneAuthCredential._({
+    this.verificationId,
+    this.smsCode,
+    int? token,
+  }) : super(
+          providerId: _kProviderId,
+          signInMethod: _kProviderId,
+          token: token,
+        );
 
   factory PhoneAuthCredential._credential(
-    String verificationId,
-    String smsCode,
-  ) {
+      String verificationId, String smsCode) {
     return PhoneAuthCredential._(
-      verificationId: verificationId,
-      smsCode: smsCode,
-    );
+        verificationId: verificationId, smsCode: smsCode);
   }
 
   factory PhoneAuthCredential._credentialFromToken(

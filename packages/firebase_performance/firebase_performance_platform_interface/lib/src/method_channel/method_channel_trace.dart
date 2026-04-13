@@ -41,10 +41,8 @@ class MethodChannelTrace extends TracePlatform {
         metrics: _metrics,
         attributes: _attributes,
       );
-      await MethodChannelFirebasePerformance.pigeonChannel.stopTrace(
-        _traceHandle!,
-        attributes,
-      );
+      await MethodChannelFirebasePerformance.pigeonChannel
+          .stopTrace(_traceHandle!, attributes);
       _hasStopped = true;
     } catch (e, s) {
       convertPlatformException(e, s);

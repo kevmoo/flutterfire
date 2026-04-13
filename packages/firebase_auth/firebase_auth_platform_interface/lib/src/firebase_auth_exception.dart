@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:meta/meta.dart';
 import 'auth_credential.dart';
 
 /// Generic exception related to Firebase Authentication. Check the error code
@@ -11,14 +12,14 @@ import 'auth_credential.dart';
 class FirebaseAuthException extends FirebaseException implements Exception {
   // ignore: public_member_api_docs
   @protected
-  const FirebaseAuthException({
-    super.message,
-    required String super.code,
+  FirebaseAuthException({
+    String? message,
+    required String code,
     this.email,
     this.credential,
     this.phoneNumber,
     this.tenantId,
-  }) : super(plugin: 'firebase_auth');
+  }) : super(plugin: 'firebase_auth', message: message, code: code);
 
   /// The email of the user's account used for sign-in/linking.
   final String? email;

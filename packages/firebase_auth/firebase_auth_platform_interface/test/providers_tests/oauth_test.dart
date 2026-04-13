@@ -49,9 +49,8 @@ void main() {
         final Map<String, String> kCustomOAuthParameters = {
           'allow_signup': 'false',
         };
-        final result = oAuthProvider.setCustomParameters(
-          kCustomOAuthParameters,
-        );
+        final result =
+            oAuthProvider.setCustomParameters(kCustomOAuthParameters);
         expect(result, isA<OAuthProvider>());
         expect(result.parameters['allow_signup'], isA<String>());
         expect(result.parameters['allow_signup'], equals('false'));
@@ -65,11 +64,10 @@ void main() {
       const String kMockRawNonce = 'test-raw-nonce';
       test('creates a new [OAuthCredential]', () {
         final result = oAuthProvider.credential(
-          accessToken: kMockAccessToken,
-          secret: kMockSecret,
-          idToken: kMockIdToken,
-          rawNonce: kMockRawNonce,
-        );
+            accessToken: kMockAccessToken,
+            secret: kMockSecret,
+            idToken: kMockIdToken,
+            rawNonce: kMockRawNonce);
 
         expect(result, isA<AuthCredential>());
         expect(result.token, isNull);
@@ -85,5 +83,5 @@ void main() {
 }
 
 class TestOAuthProvider extends OAuthProvider {
-  TestOAuthProvider(super.providerId);
+  TestOAuthProvider(String providerId) : super(providerId);
 }

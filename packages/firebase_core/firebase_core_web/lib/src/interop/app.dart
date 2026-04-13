@@ -16,7 +16,7 @@ import 'core.dart' as core_interop;
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.app>.
 class App extends JsObjectWrapper<AppJsImpl> {
-  App._fromJsObject(super.jsObject) : super.fromJsObject();
+  App._fromJsObject(AppJsImpl jsObject) : super.fromJsObject(jsObject);
 
   static final _expando = Expando<App>();
 

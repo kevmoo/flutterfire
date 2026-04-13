@@ -6,7 +6,8 @@
 import 'package:firebase_app_installations/firebase_app_installations.dart';
 import 'package:firebase_app_installations_platform_interface/firebase_app_installations_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core/test.dart';
+import 'package:firebase_core_platform_interface/test.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -23,12 +24,12 @@ void main() {
     setUpAll(() async {
       await Firebase.initializeApp();
       installations = FirebaseInstallations.instance;
-      when(
-        mockInstallations.delegateFor(app: anyNamed('app')),
-      ).thenAnswer((_) => mockInstallations);
-      when(
-        mockInstallations.getId(),
-      ).thenAnswer((_) => Future.value('some-id'));
+      when(mockInstallations.delegateFor(
+        app: anyNamed('app'),
+      )).thenAnswer((_) => mockInstallations);
+      when(mockInstallations.getId()).thenAnswer(
+        (_) => Future.value('some-id'),
+      );
     });
 
     test('getId', () async {
@@ -56,7 +57,8 @@ class MockFirebaseInstallations extends Mock
     with
         // ignore: prefer_mixin
         MockPlatformInterfaceMixin
-    implements TestFirebaseAppInstallationsPlatform {
+    implements
+        TestFirebaseAppInstallationsPlatform {
   @override
   TestFirebaseAppInstallationsPlatform delegateFor({FirebaseApp? app}) {
     return super.noSuchMethod(
@@ -97,7 +99,7 @@ class MockFirebaseInstallations extends Mock
 
 class TestFirebaseAppInstallationsPlatform
     extends FirebaseAppInstallationsPlatform {
-  TestFirebaseAppInstallationsPlatform(super.app);
+  TestFirebaseAppInstallationsPlatform(FirebaseApp? app) : super(app);
 
   @override
   TestFirebaseAppInstallationsPlatform delegateFor({FirebaseApp? app}) {

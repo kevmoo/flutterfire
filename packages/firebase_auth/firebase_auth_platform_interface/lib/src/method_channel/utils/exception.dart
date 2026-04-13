@@ -8,44 +8,37 @@ import 'package:firebase_auth_platform_interface/src/method_channel/method_chann
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/pigeon_helper.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
-import 'package:firebase_core_dart/firebase_core_dart.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 
-/// Catches a native exception and converts it into a [FirebaseAuthException]
+/// Catches a [PlatformException] and converts it into a [FirebaseAuthException]
 /// if it was intentionally caught on the native platform.
 Never convertPlatformException(
   Object exception,
   StackTrace stackTrace, {
   bool fromPigeon = true,
 }) {
-  final dynamic e = exception;
-  final bool isPlatformException = _isPlatformException(e);
-
-  if (!isPlatformException) {
+  if (exception is! PlatformException) {
     Error.throwWithStackTrace(exception, stackTrace);
   }
 
   Error.throwWithStackTrace(
-    platformExceptionToFirebaseAuthException(e, fromPigeon: fromPigeon),
+    platformExceptionToFirebaseAuthException(exception, fromPigeon: fromPigeon),
     stackTrace,
   );
 }
 
-bool _isPlatformException(dynamic e) {
-  try {
-    return e.code != null && e is! FirebaseException;
-  } catch (_) {
-    return false;
-  }
-}
-
-/// Converts a native exception into a [FirebaseAuthException].
+/// Converts a [PlatformException] into a [FirebaseAuthException].
+///
+/// A [PlatformException] can only be converted to a [FirebaseAuthException] if
+/// the `details` of the exception exist. Firebase returns specific codes and
+/// messages which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseAuthException(
-  dynamic platformException, {
+  PlatformException platformException, {
   bool fromPigeon = true,
 }) {
   if (fromPigeon) {
     var code = platformException.code
-        .toString()
         .replaceAll('ERROR_', '')
         .toLowerCase()
         .replaceAll('_', '-');
@@ -67,13 +60,11 @@ FirebaseException platformExceptionToFirebaseAuthException(
     AuthCredential? credential;
     String? email;
 
-    final dynamic details = platformException.details;
-
-    if (details != null) {
-      if (details['authCredential'] != null &&
-          details['authCredential'] is PigeonAuthCredential) {
+    if (platformException.details != null) {
+      if (platformException.details['authCredential'] != null &&
+          platformException.details['authCredential'] is PigeonAuthCredential) {
         PigeonAuthCredential pigeonAuthCredential =
-            details['authCredential'];
+            platformException.details['authCredential'];
 
         credential = AuthCredential(
           providerId: pigeonAuthCredential.providerId,
@@ -83,12 +74,12 @@ FirebaseException platformExceptionToFirebaseAuthException(
         );
       }
 
-      if (details['email'] != null) {
-        email = details['email'];
+      if (platformException.details['email'] != null) {
+        email = platformException.details['email'];
       }
     }
 
-    var parsedMessage = platformException.message?.toString().split(': ').last;
+    var parsedMessage = platformException.message?.split(': ').last;
     if (parsedMessage?.endsWith(' ]') ?? false) {
       // Fixes JSON response from Auth blocking function: https://github.com/firebase/flutterfire/issues/11532
       parsedMessage = parsedMessage!.substring(0, parsedMessage.length - 2);
@@ -104,13 +95,12 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
   // Parsing code to match the format of the other platforms
 
-  final dynamic rawDetails = platformException.details;
-  Map<String, dynamic>? details = rawDetails != null
-      ? Map<String, dynamic>.from(rawDetails)
+  Map<String, dynamic>? details = platformException.details != null
+      ? Map<String, dynamic>.from(platformException.details)
       : null;
 
   String code = 'unknown';
-  String? message = platformException.message?.toString();
+  String? message = platformException.message;
   String? email;
   AuthCredential? credential;
 
@@ -153,7 +143,7 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
 // Check for custom error codes that are not returned in the normal errors by Firebase SDKs
 // The error code is only returned in a String on Android
-String? _getCustomCode(dynamic additionalData, String? message) {
+String? _getCustomCode(Map? additionalData, String? message) {
   final listOfRecognizedCode = [
     // This code happens when using Enumerate Email protection
     'INVALID_LOGIN_CREDENTIALS',
@@ -174,10 +164,9 @@ String? _getCustomCode(dynamic additionalData, String? message) {
 const kMultiFactorError = 'second-factor-required';
 
 FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
-  dynamic exception,
-) {
+    PlatformException exception) {
   const code = kMultiFactorError;
-  final String? message = exception.message?.toString();
+  final message = exception.message;
   final additionalData = exception.details as Map<Object?, Object?>?;
 
   if (additionalData == null) {
@@ -188,17 +177,25 @@ FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
   }
 
   final pigeonMultiFactorInfo =
-      (additionalData['multiFactorHints'] as List<Object?>? ?? []).nonNulls
-          .map(PigeonMultiFactorInfo.decode)
+      (additionalData['multiFactorHints'] as List<Object?>? ?? [])
+          .nonNulls
+          .map(
+            PigeonMultiFactorInfo.decode,
+          )
           .toList();
 
-  final multiFactorInfo = multiFactorInfoPigeonToObject(pigeonMultiFactorInfo);
+  final multiFactorInfo = multiFactorInfoPigeonToObject(
+    pigeonMultiFactorInfo,
+  );
 
   final auth = MethodChannelFirebaseAuth
       .methodChannelFirebaseAuthInstances[additionalData['appName']];
 
   if (auth == null) {
-    throw FirebaseAuthException(code: code, message: message);
+    throw FirebaseAuthException(
+      code: code,
+      message: message,
+    );
   }
 
   final sessionId = additionalData['multiFactorSessionId'] as String?;

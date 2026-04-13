@@ -15,12 +15,9 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class DocumentSnapshotPlatform extends PlatformInterface {
   /// Constructs a [DocumentSnapshotPlatform] using the provided [FirebaseFirestorePlatform].
   DocumentSnapshotPlatform(
-    this._firestore,
-    String path,
-    this._data,
-    this._metadata,
-  ) : _pointer = Pointer(path),
-      super(token: _token);
+      this._firestore, String path, this._data, this._metadata)
+      : _pointer = Pointer(path),
+        super(token: _token);
 
   static final Object _token = Object();
 
@@ -87,7 +84,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
       );
     }
 
-    dynamic findKeyValueInMap(String key, Map<String, dynamic> map) {
+    dynamic _findKeyValueInMap(String key, Map<String, dynamic> map) {
       if (map.containsKey(key)) {
         return map[key];
       }
@@ -108,19 +105,17 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
     Map<String, dynamic>? snapshotData = data();
 
-    dynamic findComponent(int componentIndex, Map<String, dynamic>? data) {
+    dynamic _findComponent(int componentIndex, Map<String, dynamic>? data) {
       bool isLast = componentIndex + 1 == components.length;
-      dynamic value = findKeyValueInMap(components[componentIndex], data!);
+      dynamic value = _findKeyValueInMap(components[componentIndex], data!);
 
       if (isLast) {
         return value;
       }
 
       if (value is Map) {
-        return findComponent(
-          componentIndex + 1,
-          Map<String, dynamic>.from(value),
-        );
+        return _findComponent(
+            componentIndex + 1, Map<String, dynamic>.from(value));
       } else {
         throw StateError(
           'field "$value" does not exist within the $DocumentSnapshotPlatform',
@@ -128,7 +123,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
       }
     }
 
-    return findComponent(0, snapshotData);
+    return _findComponent(0, snapshotData);
   }
 
   /// Gets a nested field by [String] or [FieldPath] from the snapshot.

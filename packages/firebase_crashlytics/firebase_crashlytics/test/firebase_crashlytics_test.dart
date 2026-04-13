@@ -6,6 +6,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_crashlytics/src/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -33,27 +34,24 @@ void main() {
       await crashlytics!.checkForUnsentReports();
 
       expect(methodCallLog, <Matcher>[
-        isMethodCall(
-          'Crashlytics#setCrashlyticsCollectionEnabled',
-          arguments: {'enabled': false},
-        ),
-        isMethodCall('Crashlytics#checkForUnsentReports', arguments: null),
+        isMethodCall('Crashlytics#setCrashlyticsCollectionEnabled',
+            arguments: {'enabled': false}),
+        isMethodCall('Crashlytics#checkForUnsentReports', arguments: null)
       ]);
     });
 
     test('crash', () async {
       crashlytics!.crash();
 
-      expect(methodCallLog, <Matcher>[
-        isMethodCall('Crashlytics#crash', arguments: null),
-      ]);
+      expect(methodCallLog,
+          <Matcher>[isMethodCall('Crashlytics#crash', arguments: null)]);
     });
 
     test('deleteUnsentReports', () async {
       await crashlytics!.deleteUnsentReports();
 
       expect(methodCallLog, <Matcher>[
-        isMethodCall('Crashlytics#deleteUnsentReports', arguments: null),
+        isMethodCall('Crashlytics#deleteUnsentReports', arguments: null)
       ]);
     });
 
@@ -61,10 +59,7 @@ void main() {
       await crashlytics!.didCrashOnPreviousExecution();
 
       expect(methodCallLog, <Matcher>[
-        isMethodCall(
-          'Crashlytics#didCrashOnPreviousExecution',
-          arguments: null,
-        ),
+        isMethodCall('Crashlytics#didCrashOnPreviousExecution', arguments: null)
       ]);
     });
 
@@ -74,31 +69,24 @@ void main() {
         const exception = 'foo exception';
         const exceptionReason = 'bar reason';
 
-        await crashlytics!.recordError(
-          exception,
-          stack,
-          reason: exceptionReason,
-        );
+        await crashlytics!
+            .recordError(exception, stack, reason: exceptionReason);
         expect(methodCallLog, <Matcher>[
-          isMethodCall(
-            'Crashlytics#recordError',
-            arguments: {
-              'exception': exception,
-              'reason': exceptionReason,
-              'information': '',
-              'fatal': false,
-              'stackTraceElements': getStackTraceElements(stack),
-              'buildId': '',
-              'loadingUnits': [],
-            },
-          ),
+          isMethodCall('Crashlytics#recordError', arguments: {
+            'exception': exception,
+            'reason': exceptionReason,
+            'information': '',
+            'fatal': false,
+            'stackTraceElements': getStackTraceElements(stack),
+            'buildId': '',
+            'loadingUnits': [],
+          })
         ]);
         // Confirm that the stack trace contains current stack.
         expect(
           methodCallLog[0].arguments['stackTraceElements'],
           contains(
-            containsPair('file', contains('firebase_crashlytics_test.dart')),
-          ),
+              containsPair('file', contains('firebase_crashlytics_test.dart'))),
         );
       });
 
@@ -106,11 +94,8 @@ void main() {
         const exception = 'foo exception';
         const exceptionReason = 'bar reason';
 
-        await crashlytics!.recordError(
-          exception,
-          null,
-          reason: exceptionReason,
-        );
+        await crashlytics!
+            .recordError(exception, null, reason: exceptionReason);
         expect(methodCallLog[0].method, 'Crashlytics#recordError');
         expect(methodCallLog[0].arguments['exception'], exception);
         expect(methodCallLog[0].arguments['reason'], exceptionReason);
@@ -119,8 +104,7 @@ void main() {
         expect(
           methodCallLog[0].arguments['stackTraceElements'],
           contains(
-            containsPair('file', contains('firebase_crashlytics_test.dart')),
-          ),
+              containsPair('file', contains('firebase_crashlytics_test.dart'))),
         );
       });
     });
@@ -151,18 +135,15 @@ void main() {
         await crashlytics!.recordFlutterError(details);
         expect(presentedError, true);
         expect(methodCallLog, <Matcher>[
-          isMethodCall(
-            'Crashlytics#recordError',
-            arguments: {
-              'exception': exception,
-              'reason': exceptionReason,
-              'fatal': false,
-              'information': '$exceptionFirstMessage\n$exceptionSecondMessage',
-              'stackTraceElements': getStackTraceElements(stack),
-              'buildId': '',
-              'loadingUnits': [],
-            },
-          ),
+          isMethodCall('Crashlytics#recordError', arguments: {
+            'exception': exception,
+            'reason': exceptionReason,
+            'fatal': false,
+            'information': '$exceptionFirstMessage\n$exceptionSecondMessage',
+            'stackTraceElements': getStackTraceElements(stack),
+            'buildId': '',
+            'loadingUnits': [],
+          })
         ]);
       } finally {
         FlutterError.presentError = oldPresentError;
@@ -174,7 +155,9 @@ void main() {
         const msg = 'foo';
         await crashlytics!.log(msg);
         expect(methodCallLog, <Matcher>[
-          isMethodCall('Crashlytics#log', arguments: {'message': msg}),
+          isMethodCall('Crashlytics#log', arguments: {
+            'message': msg,
+          })
         ]);
       });
     });
@@ -183,7 +166,7 @@ void main() {
       test('should call delegate method', () async {
         await crashlytics!.sendUnsentReports();
         expect(methodCallLog, <Matcher>[
-          isMethodCall('Crashlytics#sendUnsentReports', arguments: null),
+          isMethodCall('Crashlytics#sendUnsentReports', arguments: null)
         ]);
       });
     });
@@ -195,14 +178,14 @@ void main() {
         await crashlytics!.setCrashlyticsCollectionEnabled(true);
         expect(crashlytics!.isCrashlyticsCollectionEnabled, isTrue);
         expect(methodCallLog, <Matcher>[
-          isMethodCall(
-            'Crashlytics#setCrashlyticsCollectionEnabled',
-            arguments: {'enabled': false},
-          ),
-          isMethodCall(
-            'Crashlytics#setCrashlyticsCollectionEnabled',
-            arguments: {'enabled': true},
-          ),
+          isMethodCall('Crashlytics#setCrashlyticsCollectionEnabled',
+              arguments: {
+                'enabled': false,
+              }),
+          isMethodCall('Crashlytics#setCrashlyticsCollectionEnabled',
+              arguments: {
+                'enabled': true,
+              })
         ]);
       });
     });
@@ -212,10 +195,9 @@ void main() {
         const id = 'foo';
         await crashlytics!.setUserIdentifier(id);
         expect(methodCallLog, <Matcher>[
-          isMethodCall(
-            'Crashlytics#setUserIdentifier',
-            arguments: {'identifier': id},
-          ),
+          isMethodCall('Crashlytics#setUserIdentifier', arguments: {
+            'identifier': id,
+          })
         ]);
       });
     });
@@ -223,13 +205,9 @@ void main() {
     group('setCustomKey', () {
       test('should throw if null', () async {
         expect(
-          () => crashlytics!.setCustomKey('foo', []),
-          throwsAssertionError,
-        );
+            () => crashlytics!.setCustomKey('foo', []), throwsAssertionError);
         expect(
-          () => crashlytics!.setCustomKey('foo', {}),
-          throwsAssertionError,
-        );
+            () => crashlytics!.setCustomKey('foo', {}), throwsAssertionError);
       });
 
       test('should call delegate method', () async {
@@ -237,10 +215,10 @@ void main() {
         const value = 'bar';
         await crashlytics!.setCustomKey(key, value);
         expect(methodCallLog, <Matcher>[
-          isMethodCall(
-            'Crashlytics#setCustomKey',
-            arguments: {'key': key, 'value': value},
-          ),
+          isMethodCall('Crashlytics#setCustomKey', arguments: {
+            'key': key,
+            'value': value,
+          })
         ]);
       });
     });
@@ -248,7 +226,7 @@ void main() {
     group('getStackTraceElements', () {
       test('with symbolic stack trace', () async {
         final List<String> lines = <String>[
-          '#0      StatefulElement.build (package:flutter/src/widgets/framework.dart:3825:27)',
+          '#0      StatefulElement.build (package:flutter/src/widgets/framework.dart:3825:27)'
         ];
         final StackTrace trace = StackTrace.fromString(lines.join('\n'));
         final List<Map<String, String>> elements = getStackTraceElements(trace);
@@ -263,7 +241,7 @@ void main() {
 
       test('with symbolic stack trace and without class', () async {
         final List<String> lines = <String>[
-          '#0      main (package:firebase_crashlytics/test/main.dart:12)',
+          '#0      main (package:firebase_crashlytics/test/main.dart:12)'
         ];
         final StackTrace trace = StackTrace.fromString(lines.join('\n'));
         final List<Map<String, String>> elements = getStackTraceElements(trace);

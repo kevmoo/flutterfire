@@ -12,7 +12,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_firebase_performance.dart';
 
-// ignore: constant_identifier_names
 enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 
 /// The interface that implementations of `firebase_performance` must
@@ -47,7 +46,9 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
   }
 
   /// Create an instance with a [FirebaseApp] using an existing instance.
-  factory FirebasePerformancePlatform.instanceFor({required FirebaseApp app}) {
+  factory FirebasePerformancePlatform.instanceFor({
+    required FirebaseApp app,
+  }) {
     return FirebasePerformancePlatform.instance.delegateFor(app: app);
   }
 

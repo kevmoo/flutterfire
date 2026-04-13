@@ -7,15 +7,18 @@ import 'dart:async';
 import 'dart:js_interop';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:web/web.dart' as web;
 
 import 'src/internals.dart';
 import 'src/interop/messaging.dart' as messaging_interop;
 import 'src/utils.dart' as utils;
 
+import 'src/firebase_messaging_version.dart';
 
 /// Web implementation for [FirebaseMessagingPlatform]
 /// delegates calls to messaging web plugin.
@@ -26,17 +29,14 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   messaging_interop.Messaging? _webMessaging;
 
   messaging_interop.Messaging get _delegate {
-    _webMessaging ??= messaging_interop.getMessagingInstance(
-      core_interop.app(app.name),
-    );
+    _webMessaging ??=
+        messaging_interop.getMessagingInstance(core_interop.app(app.name));
 
     if (!_initialized) {
-      _webMessaging!.onMessage.listen((
-        messaging_interop.MessagePayload webMessagePayload,
-      ) {
-        RemoteMessage remoteMessage = RemoteMessage.fromMap(
-          utils.messagePayloadToMap(webMessagePayload),
-        );
+      _webMessaging!.onMessage
+          .listen((messaging_interop.MessagePayload webMessagePayload) {
+        RemoteMessage remoteMessage =
+            RemoteMessage.fromMap(utils.messagePayloadToMap(webMessagePayload));
         FirebaseMessagingPlatform.onMessage.add(remoteMessage);
       });
 
@@ -44,6 +44,14 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     }
 
     return _webMessaging!;
+  }
+
+  /// Called by PluginRegistry to register this plugin for Flutter Web
+  static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerLibraryVersion(_libraryName, packageVersion);
+
+    FirebaseCoreWeb.registerService('messaging');
+    FirebaseMessagingPlatform.instance = FirebaseMessagingWeb();
   }
 
   Stream<String>? _noopOnTokenRefreshStream;
@@ -112,7 +120,9 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
       return null;
     }
 
-    return convertWebExceptions(() => _delegate.getToken(vapidKey: vapidKey));
+    return convertWebExceptions(
+      () => _delegate.getToken(vapidKey: vapidKey),
+    );
   }
 
   @override

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 const _kProviderId = 'playgames.google.com';
@@ -27,8 +25,12 @@ class PlayGamesAuthProvider extends AuthProvider {
   PlayGamesAuthProvider() : super(_kProviderId);
 
   /// Create a new [PlayGamesAuthCredential] from a provided [serverAuthCode]
-  static OAuthCredential credential({required String serverAuthCode}) {
-    return PlayGamesAuthCredential._credential(serverAuthCode: serverAuthCode);
+  static OAuthCredential credential({
+    required String serverAuthCode,
+  }) {
+    return PlayGamesAuthCredential._credential(
+      serverAuthCode: serverAuthCode,
+    );
   }
 
   /// This corresponds to the sign-in method identifier.
@@ -61,12 +63,13 @@ class PlayGamesAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [PlayGamesAuthProvider.credential].
 class PlayGamesAuthCredential extends OAuthCredential {
-  PlayGamesAuthCredential._({required String serverAuthCode})
-    : super(
-        providerId: _kProviderId,
-        signInMethod: _kProviderId,
-        serverAuthCode: serverAuthCode,
-      );
+  PlayGamesAuthCredential._({
+    required String serverAuthCode,
+  }) : super(
+          providerId: _kProviderId,
+          signInMethod: _kProviderId,
+          serverAuthCode: serverAuthCode,
+        );
 
   factory PlayGamesAuthCredential._credential({
     required String serverAuthCode,

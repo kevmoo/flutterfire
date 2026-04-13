@@ -13,67 +13,82 @@ import '../e2e_test.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  group('firebase_app_installations', () {
-    setUpAll(() async {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
+  group(
+    'firebase_app_installations',
+    () {
+      setUpAll(() async {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+      });
+
+      test(
+        '.getId',
+        () async {
+          final id = await FirebaseInstallations.instance.getId();
+          expect(id, isNotEmpty);
+          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+        },
+        skip: defaultTargetPlatform == TargetPlatform.macOS,
       );
-    });
 
-    test('.getId', () async {
-      final id = await FirebaseInstallations.instance.getId();
-      expect(id, isNotEmpty);
-      // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-    }, skip: defaultTargetPlatform == TargetPlatform.macOS);
+      test(
+        'running get id in parallel',
+        () async {
+          final ids = await Future.wait([
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+            FirebaseInstallations.instance.getId(),
+          ]);
+          expect(ids, isNotNull);
+        },
+        skip: defaultTargetPlatform == TargetPlatform.macOS && isCI,
+      );
 
-    test(
-      'running get id in parallel',
-      () async {
-        final ids = await Future.wait([
-          FirebaseInstallations.instance.getId(),
-          FirebaseInstallations.instance.getId(),
-          FirebaseInstallations.instance.getId(),
-          FirebaseInstallations.instance.getId(),
-          FirebaseInstallations.instance.getId(),
-        ]);
-        expect(ids, isNotNull);
-      },
-      skip: defaultTargetPlatform == TargetPlatform.macOS && isCI,
-    );
+      test(
+        '.delete',
+        () async {
+          final id = await FirebaseInstallations.instance.getId();
 
-    test('.delete', () async {
-      final id = await FirebaseInstallations.instance.getId();
+          // Retry delete in case of delete-pending state
+          for (var attempt = 0; attempt < 5; attempt++) {
+            try {
+              await FirebaseInstallations.instance.delete();
+              break;
+            } catch (e) {
+              if (attempt == 4) rethrow;
+              await Future.delayed(const Duration(seconds: 2));
+            }
+          }
 
-      // Retry delete in case of delete-pending state
-      for (var attempt = 0; attempt < 5; attempt++) {
-        try {
-          await FirebaseInstallations.instance.delete();
-          break;
-        } catch (e) {
-          if (attempt == 4) rethrow;
-          await Future.delayed(const Duration(seconds: 2));
-        }
-      }
+          // Retry getId in case of delete-pending state
+          String? newId;
+          for (var attempt = 0; attempt < 5; attempt++) {
+            try {
+              newId = await FirebaseInstallations.instance.getId();
+              break;
+            } catch (e) {
+              if (attempt == 4) rethrow;
+              await Future.delayed(const Duration(seconds: 2));
+            }
+          }
+          expect(newId, isNot(equals(id)));
+          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+        },
+        skip: defaultTargetPlatform == TargetPlatform.macOS,
+      );
 
-      // Retry getId in case of delete-pending state
-      String? newId;
-      for (var attempt = 0; attempt < 5; attempt++) {
-        try {
-          newId = await FirebaseInstallations.instance.getId();
-          break;
-        } catch (e) {
-          if (attempt == 4) rethrow;
-          await Future.delayed(const Duration(seconds: 2));
-        }
-      }
-      expect(newId, isNot(equals(id)));
-      // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-    }, skip: defaultTargetPlatform == TargetPlatform.macOS);
-
-    test('.getToken', () async {
-      final token = await FirebaseInstallations.instance.getToken();
-      expect(token, isNotEmpty);
-      // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-    }, skip: defaultTargetPlatform == TargetPlatform.macOS);
-  });
+      test(
+        '.getToken',
+        () async {
+          final token = await FirebaseInstallations.instance.getToken();
+          expect(token, isNotEmpty);
+          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+        },
+        skip: defaultTargetPlatform == TargetPlatform.macOS,
+      );
+    },
+  );
 }

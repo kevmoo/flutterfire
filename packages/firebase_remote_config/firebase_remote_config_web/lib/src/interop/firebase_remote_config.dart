@@ -28,9 +28,11 @@ class RemoteConfig
 
   static RemoteConfig getInstance(
     remote_config_interop.RemoteConfigJsImpl jsObject,
-  ) => _expando[jsObject] ??= RemoteConfig._fromJsObject(jsObject);
+  ) =>
+      _expando[jsObject] ??= RemoteConfig._fromJsObject(jsObject);
 
-  RemoteConfig._fromJsObject(super.jsObject) : super.fromJsObject();
+  RemoteConfig._fromJsObject(remote_config_interop.RemoteConfigJsImpl jsObject)
+      : super.fromJsObject(jsObject);
 
   /// Defines configuration for the Remote Config SDK.
   RemoteConfigSettings get settings =>
@@ -49,8 +51,8 @@ class RemoteConfig
   /// remoteConfig.defaultConfig['x'] = 1;        // Runtime error: attempt to modify an unmodifiable map.
   /// ```
   Map<String, dynamic> get defaultConfig => Map.unmodifiable(
-    jsObject.defaultConfig.dartify()! as Map<String, dynamic>,
-  );
+        jsObject.defaultConfig.dartify()! as Map<String, dynamic>,
+      );
 
   set defaultConfig(Map<String, dynamic> value) {
     jsObject.defaultConfig = value.jsify()! as JSObject;
@@ -98,17 +100,16 @@ class RemoteConfig
   /// Performs fetch and activate operations, as a convenience.
   /// Returns a promise which resolves to true if the current call activated the fetched configs.
   /// If the fetched configs were already activated, the promise will resolve to false.
-  Future<bool> fetchAndActivate() async => remote_config_interop
-      .fetchAndActivate(jsObject)
-      .toDart
-      .then((value) => value.toDart);
+  Future<bool> fetchAndActivate() async =>
+      remote_config_interop.fetchAndActivate(jsObject).toDart.then(
+            (value) => value.toDart,
+          );
 
   /// Returns all config values.
   Map<String, RemoteConfigValue> getAll() {
     // Return type is Map<Object?, Object?>
-    final map =
-        remote_config_interop.getAll(jsObject).dartify()!
-            as Map<Object?, Object?>;
+    final map = remote_config_interop.getAll(jsObject).dartify()!
+        as Map<Object?, Object?>;
     // Cast the map to <String, Object?> to mirror expected return type: Record<string, Value>;
     final castMap = map.cast<String, Object?>();
     final entries = castMap.keys.map<MapEntry<String, RemoteConfigValue>>(
@@ -118,13 +119,13 @@ class RemoteConfig
   }
 
   RemoteConfigValue getValue(String key) => RemoteConfigValue(
-    utf8.encode(
-      remote_config_interop.getValue(jsObject, key.toJS).asString().toDart,
-    ),
-    getSource(
-      remote_config_interop.getValue(jsObject, key.toJS).getSource().toDart,
-    ),
-  );
+        utf8.encode(
+          remote_config_interop.getValue(jsObject, key.toJS).asString().toDart,
+        ),
+        getSource(
+          remote_config_interop.getValue(jsObject, key.toJS).getSource().toDart,
+        ),
+      );
 
   ///  Gets the value for the given key as a boolean.
   ///  Convenience method for calling `remoteConfig.getValue(key).asString()`.
@@ -148,7 +149,8 @@ class RemoteConfig
         RemoteConfigLogLevel.debug: 'debug',
         RemoteConfigLogLevel.error: 'error',
         RemoteConfigLogLevel.silent: 'silent',
-      }[value]!.toJS,
+      }[value]!
+          .toJS,
     );
   }
 
@@ -164,21 +166,19 @@ class RemoteConfig
     if (_onConfigUpdatedController == null) {
       _onConfigUpdatedController =
           StreamController<RemoteConfigUpdatePayload>.broadcast(sync: true);
-      void errorWrapper(JSObject error) {
+      final errorWrapper = (JSObject error) {
         _onConfigUpdatedController?.addError(error);
-      }
-
-      void nextWrapper(remote_config_interop.ConfigUpdateJsImpl configUpdate) {
-        _onConfigUpdatedController?.add(
-          RemoteConfigUpdatePayload._fromJsObject(configUpdate),
-        );
-      }
-
+      };
+      final nextWrapper =
+          (remote_config_interop.ConfigUpdateJsImpl configUpdate) {
+        _onConfigUpdatedController
+            ?.add(RemoteConfigUpdatePayload._fromJsObject(configUpdate));
+      };
       remote_config_interop.ConfigUpdateObserver observer =
           remote_config_interop.ConfigUpdateObserver(
-            error: errorWrapper.toJS,
-            next: nextWrapper.toJS,
-          );
+        error: errorWrapper.toJS,
+        next: nextWrapper.toJS,
+      );
 
       remote_config_interop.onConfigUpdate(jsObject, observer);
     }
@@ -203,7 +203,9 @@ ValueSource getSource(String source) {
 /// Defines configuration options for the Remote Config SDK.
 class RemoteConfigSettings
     extends JsObjectWrapper<remote_config_interop.SettingsJsImpl> {
-  RemoteConfigSettings._fromJsObject(super.jsObject) : super.fromJsObject();
+  RemoteConfigSettings._fromJsObject(
+    remote_config_interop.SettingsJsImpl jsObject,
+  ) : super.fromJsObject(jsObject);
 
   ///  Defines the maximum age in milliseconds of an entry in the config cache before
   ///  it is considered stale. Defaults to twelve hours.
@@ -240,19 +242,23 @@ enum RemoteConfigFetchStatus {
 }
 
 /// Defines levels of Remote Config logging.
-enum RemoteConfigLogLevel { debug, error, silent }
+enum RemoteConfigLogLevel {
+  debug,
+  error,
+  silent,
+}
 
 class RemoteConfigUpdatePayload
     extends JsObjectWrapper<remote_config_interop.ConfigUpdateJsImpl> {
-  RemoteConfigUpdatePayload._fromJsObject(super.jsObject)
-    : super.fromJsObject();
+  RemoteConfigUpdatePayload._fromJsObject(
+    remote_config_interop.ConfigUpdateJsImpl jsObject,
+  ) : super.fromJsObject(jsObject);
 
   Set<String> get updatedKeys {
     final updatedKeysSet = <String>{};
-    void callback(JSAny key, JSString value, JSAny set) {
+    final callback = (JSAny key, JSString value, JSAny set) {
       updatedKeysSet.add(value.toDart);
-    }
-
+    };
     jsObject.getUpdatedKeys().forEach(callback.toJS);
     return updatedKeysSet;
   }

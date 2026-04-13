@@ -5,11 +5,13 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert_auth_provider.dart';
-import 'package:firebase_auth_platform_interface/src/method_channel/utils/event_channel.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import '../../firebase_auth_platform_interface.dart';
 import 'method_channel_user.dart';
@@ -27,21 +29,22 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   /// Map of [MethodChannelFirebaseAuth] that can be get with Firebase App Name.
   static Map<String, MethodChannelFirebaseAuth>
-  methodChannelFirebaseAuthInstances = <String, MethodChannelFirebaseAuth>{};
+      methodChannelFirebaseAuthInstances =
+      <String, MethodChannelFirebaseAuth>{};
 
-  static final Map<String, MethodChannelMultiFactor> _multiFactorInstances =
+  static Map<String, MethodChannelMultiFactor> _multiFactorInstances =
       <String, MethodChannelMultiFactor>{};
 
   static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
-  _authStateChangesListeners =
+      _authStateChangesListeners =
       <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
   static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
-  _idTokenChangesListeners =
+      _idTokenChangesListeners =
       <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
   static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
-  _userChangesListeners =
+      _userChangesListeners =
       <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
   StreamController<T> _createBroadcastStream<T>() {
@@ -70,23 +73,27 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   /// Creates a new instance with a given [FirebaseApp].
   MethodChannelFirebaseAuth({required FirebaseApp app})
-    : super(appInstance: app) {
+      : super(appInstance: app) {
     _api.registerIdTokenListener(pigeonDefault).then((channelName) {
       final events = EventChannel(channelName, channel.codec);
       events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen((arguments) {
-            _handleIdTokenChangesListener(app.name, arguments);
-          });
+          .listen(
+        (arguments) {
+          _handleIdTokenChangesListener(app.name, arguments);
+        },
+      );
     });
 
     _api.registerAuthStateListener(pigeonDefault).then((channelName) {
       final events = EventChannel(channelName, channel.codec);
       events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .listen((arguments) {
-            _handleAuthStateChangesListener(app.name, arguments);
-          });
+          .listen(
+        (arguments) {
+          _handleAuthStateChangesListener(app.name, arguments);
+        },
+      );
     });
 
     // Create a app instance broadcast stream for native listener events
@@ -115,9 +122,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   // Duplicate setting of [currentUser] in [_handleAuthStateChangesListener] & [_handleIdTokenChangesListener]
   // as iOS & Android do not guarantee correct ordering
   Future<void> _handleAuthStateChangesListener(
-    String appName,
-    Map<dynamic, dynamic> arguments,
-  ) async {
+      String appName, Map<dynamic, dynamic> arguments) async {
     // ignore: close_sinks
     final streamController = _authStateChangesListeners[appName]!;
     MethodChannelFirebaseAuth instance =
@@ -138,10 +143,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final MethodChannelUser user = MethodChannelUser(
         instance,
         multiFactorInstance,
-        PigeonUserDetails.decode([
-          PigeonUserInfo.decode(userList[0]!),
-          userList[1],
-        ]),
+        PigeonUserDetails.decode(
+          [PigeonUserInfo.decode(userList[0]!), userList[1]],
+        ),
       );
 
       instance.currentUser = user;
@@ -154,17 +158,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// This handler also manages the [currentUser] along with sending events
   /// to any [userChanges] stream subscribers.
   Future<void> _handleIdTokenChangesListener(
-    String appName,
-    Map<dynamic, dynamic> arguments,
-  ) async {
+      String appName, Map<dynamic, dynamic> arguments) async {
     final StreamController<_ValueWrapper<UserPlatform>>
         // ignore: close_sinks
-        idTokenStreamController =
-        _idTokenChangesListeners[appName]!;
+        idTokenStreamController = _idTokenChangesListeners[appName]!;
     final StreamController<_ValueWrapper<UserPlatform>>
         // ignore: close_sinks
-        userChangesStreamController =
-        _userChangesListeners[appName]!;
+        userChangesStreamController = _userChangesListeners[appName]!;
     MethodChannelFirebaseAuth instance =
         methodChannelFirebaseAuthInstances[appName]!;
     MethodChannelMultiFactor? multiFactorInstance =
@@ -183,10 +183,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final MethodChannelUser user = MethodChannelUser(
         instance,
         multiFactorInstance,
-        PigeonUserDetails.decode([
-          PigeonUserInfo.decode(userList[0]!),
-          userList[1],
-        ]),
+        PigeonUserDetails.decode(
+          [PigeonUserInfo.decode(userList[0]!), userList[1]],
+        ),
       );
 
       instance.currentUser = user;
@@ -266,19 +265,15 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
-    String email,
-    String password,
-  ) async {
+      String email, String password) async {
     try {
       final result = await _api.createUserWithEmailAndPassword(
         pigeonDefault,
         email,
         password,
       );
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        this,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
 
       currentUser = userCredential.user;
       return userCredential;
@@ -292,10 +287,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     try {
       final result = await _api.signInAnonymously(pigeonDefault);
 
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        this,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
 
       currentUser = userCredential.user;
       return userCredential;
@@ -314,10 +307,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         credential.asMap(),
       );
 
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        this,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
 
       currentUser = userCredential.user;
       return userCredential;
@@ -329,12 +320,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<UserCredentialPlatform> signInWithCustomToken(String token) async {
     try {
-      final result = await _api.signInWithCustomToken(pigeonDefault, token);
-
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        this,
-        result,
+      final result = await _api.signInWithCustomToken(
+        pigeonDefault,
+        token,
       );
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
 
       currentUser = userCredential.user;
       return userCredential;
@@ -345,9 +337,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   Future<UserCredentialPlatform> signInWithEmailAndPassword(
-    String email,
-    String password,
-  ) async {
+      String email, String password) async {
     try {
       final result = await _api.signInWithEmailAndPassword(
         pigeonDefault,
@@ -355,10 +345,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         password,
       );
 
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        this,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
 
       currentUser = userCredential.user;
       return userCredential;
@@ -369,9 +357,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   Future<UserCredentialPlatform> signInWithEmailLink(
-    String email,
-    String emailLink,
-  ) async {
+      String email, String emailLink) async {
     try {
       final result = await _api.signInWithEmailLink(
         pigeonDefault,
@@ -379,10 +365,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         emailLink,
       );
 
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        this,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
 
       currentUser = userCredential.user;
       return userCredential;
@@ -412,10 +396,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         ),
       );
 
-      MethodChannelUserCredential userCredential = MethodChannelUserCredential(
-        this,
-        result,
-      );
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, result);
 
       currentUser = userCredential.user;
       return userCredential;
@@ -463,17 +445,17 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Stream<UserPlatform?> authStateChanges() async* {
     yield currentUser;
-    yield* _authStateChangesListeners[app.name]!.stream.map(
-      (event) => event.value,
-    );
+    yield* _authStateChangesListeners[app.name]!
+        .stream
+        .map((event) => event.value);
   }
 
   @override
   Stream<UserPlatform?> idTokenChanges() async* {
     yield currentUser;
-    yield* _idTokenChangesListeners[app.name]!.stream.map(
-      (event) => event.value,
-    );
+    yield* _idTokenChangesListeners[app.name]!
+        .stream
+        .map((event) => event.value);
   }
 
   @override
@@ -535,10 +517,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<void> setLanguageCode(String? languageCode) async {
     try {
-      final newLanguageCode = await _api.setLanguageCode(
-        pigeonDefault,
-        languageCode,
-      );
+      final newLanguageCode =
+          await _api.setLanguageCode(pigeonDefault, languageCode);
 
       this.languageCode = newLanguageCode;
     } catch (e, stack) {
@@ -563,15 +543,15 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
     try {
       await _api.setSettings(
-        pigeonDefault,
-        PigeonFirebaseAuthSettings(
-          appVerificationDisabledForTesting: appVerificationDisabledForTesting,
-          userAccessGroup: userAccessGroup,
-          phoneNumber: phoneNumber,
-          smsCode: smsCode,
-          forceRecaptchaFlow: forceRecaptchaFlow,
-        ),
-      );
+          pigeonDefault,
+          PigeonFirebaseAuthSettings(
+            appVerificationDisabledForTesting:
+                appVerificationDisabledForTesting,
+            userAccessGroup: userAccessGroup,
+            phoneNumber: phoneNumber,
+            smsCode: smsCode,
+            forceRecaptchaFlow: forceRecaptchaFlow,
+          ));
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -627,40 +607,38 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         ),
       );
 
-      EventChannel(
-        eventChannelName,
-      ).receiveGuardedBroadcastStream(onError: convertPlatformException).listen(
-        (arguments) {
-          final name = arguments['name'];
-          if (name == 'Auth#phoneVerificationCompleted') {
-            final int token = arguments['token'];
-            final String? smsCode = arguments['smsCode'];
+      EventChannel(eventChannelName)
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
+          .listen((arguments) {
+        final name = arguments['name'];
+        if (name == 'Auth#phoneVerificationCompleted') {
+          final int token = arguments['token'];
+          final String? smsCode = arguments['smsCode'];
 
-            PhoneAuthCredential phoneAuthCredential =
-                PhoneAuthProvider.credentialFromToken(token, smsCode: smsCode);
-            verificationCompleted(phoneAuthCredential);
-          } else if (name == 'Auth#phoneVerificationFailed') {
-            final Map<dynamic, dynamic>? error = arguments['error'];
-            final Map<dynamic, dynamic>? details = error?['details'];
+          PhoneAuthCredential phoneAuthCredential =
+              PhoneAuthProvider.credentialFromToken(token, smsCode: smsCode);
+          verificationCompleted(phoneAuthCredential);
+        } else if (name == 'Auth#phoneVerificationFailed') {
+          final Map<dynamic, dynamic>? error = arguments['error'];
+          final Map<dynamic, dynamic>? details = error?['details'];
 
-            FirebaseAuthException exception = FirebaseAuthException(
-              message: details?['message'] ?? error?['message'],
-              code: details?['code'] ?? error?['code'] ?? 'unknown',
-            );
+          FirebaseAuthException exception = FirebaseAuthException(
+            message: details?['message'] ?? error?['message'],
+            code: details?['code'] ?? error?['code'] ?? 'unknown',
+          );
 
-            verificationFailed(exception);
-          } else if (name == 'Auth#phoneCodeSent') {
-            final String verificationId = arguments['verificationId'];
-            final int? forceResendingToken = arguments['forceResendingToken'];
+          verificationFailed(exception);
+        } else if (name == 'Auth#phoneCodeSent') {
+          final String verificationId = arguments['verificationId'];
+          final int? forceResendingToken = arguments['forceResendingToken'];
 
-            codeSent(verificationId, forceResendingToken);
-          } else if (name == 'Auth#phoneCodeAutoRetrievalTimeout') {
-            final String verificationId = arguments['verificationId'];
+          codeSent(verificationId, forceResendingToken);
+        } else if (name == 'Auth#phoneCodeAutoRetrievalTimeout') {
+          final String verificationId = arguments['verificationId'];
 
-            codeAutoRetrievalTimeout(verificationId);
-          }
-        },
-      );
+          codeAutoRetrievalTimeout(verificationId);
+        }
+      });
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -668,8 +646,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   Future<void> revokeTokenWithAuthorizationCode(
-    String authorizationCode,
-  ) async {
+      String authorizationCode) async {
     if (defaultTargetPlatform == TargetPlatform.macOS ||
         defaultTargetPlatform == TargetPlatform.iOS) {
       try {

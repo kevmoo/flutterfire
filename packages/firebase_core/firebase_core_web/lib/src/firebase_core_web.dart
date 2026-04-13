@@ -27,18 +27,19 @@ class FirebaseWebService {
   });
 }
 
-typedef EnsurePluginInitialized =
-    Future<void> Function(firebase.App firebaseApp)?;
+typedef EnsurePluginInitialized = Future<void> Function(
+  firebase.App firebaseApp,
+)?;
 
 /// The entry point for accessing Firebase.
 ///
 /// You can get an instance by calling [FirebaseCore.instance].
 class FirebaseCoreWeb extends FirebasePlatform {
-  static final Map<String, FirebaseWebService> _services = {
+  static Map<String, FirebaseWebService> _services = {
     'core': FirebaseWebService._('app', override: 'core'),
   };
 
-  static final Map<String, String> _libraryVersions = {};
+  static Map<String, String> _libraryVersions = {};
 
   /// Internally registers a Firebase Service to be initialized.
   static void registerService(
@@ -57,6 +58,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
   }
 
   static const String _libraryName = 'flutter-fire-core';
+
+  /// Registers that [FirebaseCoreWeb] is the platform implementation.
+  static void registerWith(Registrar registrar) {
+    FirebasePlatform.instance = FirebaseCoreWeb();
+  }
 
   /// Registers a library's name and version for platform logging purposes if needed.
   static void _registerVersionIfNeeded(
@@ -103,9 +109,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// You must ensure the Firebase script is injected before using the service.
   List<String> get _ignoredServiceScripts {
     try {
-      JSObject? ignored = globalContext.getProperty(
-        'flutterfire_ignore_scripts'.toJS,
-      );
+      JSObject? ignored =
+          globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
 
       // Cannot be done with Dart 3.2 constraints
       // ignore: invalid_runtime_check_with_js_interop_types
@@ -139,23 +144,25 @@ class FirebaseCoreWeb extends FirebasePlatform {
         'TrustedTypes available. Creating policy: $trustedTypePolicyName'.toJS,
       );
       try {
-        final web.TrustedTypePolicy policy = web.window.trustedTypes
-            .createPolicy(
-              trustedTypePolicyName,
-              web.TrustedTypePolicyOptions(
-                createScriptURL: ((JSString url) => src).toJS,
-                createScript:
-                    ((JSString script, JSString? type) => script).toJS,
-              ),
-            );
+        final web.TrustedTypePolicy policy =
+            web.window.trustedTypes.createPolicy(
+          trustedTypePolicyName,
+          web.TrustedTypePolicyOptions(
+            createScriptURL: ((JSString url) => src).toJS,
+            createScript: ((JSString script, JSString? type) => script).toJS,
+          ),
+        );
         final trustedUrl = policy.createScriptURLNoArgs(src);
         final stringUrl = (trustedUrl as JSObject).callMethod('toString'.toJS);
-        final trustedScript = policy.createScript('''
+        final trustedScript = policy.createScript(
+          '''
             window.ff_trigger_$windowVar = async (callback) => {
               console.debug("Initializing Firebase $windowVar");
               callback(await import("$stringUrl"));
             };
-          ''', null);
+          ''',
+          null,
+        );
 
         script.trustedScript = trustedScript;
 
@@ -165,8 +172,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
       }
     } else {
       final stringUrl = src;
-      script.text =
-          '''
+      script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
         console.debug("Initializing Firebase $windowVar");
         callback(await import("$stringUrl"));
@@ -256,10 +262,12 @@ class FirebaseCoreWeb extends FirebasePlatform {
     await _initializeCore();
     guardNotInitialized(() => firebase.SDK_VERSION);
 
-    assert(() {
-      if (firebase.SDK_VERSION != supportedFirebaseJsSdkVersion) {
-        // ignore: avoid_print
-        print('''
+    assert(
+      () {
+        if (firebase.SDK_VERSION != supportedFirebaseJsSdkVersion) {
+          // ignore: avoid_print
+          print(
+            '''
             WARNING: FlutterFire for Web is explicitly tested against Firebase JS SDK version "$supportedFirebaseJsSdkVersion"
             but your currently specifying "${firebase.SDK_VERSION}" by either the imported Firebase JS SDKs in your web/index.html
             file or by providing an override - this may lead to unexpected issues in your application. It is recommended that you change all of the versions of the
@@ -274,11 +282,13 @@ class FirebaseCoreWeb extends FirebasePlatform {
             If you import the Firebase scripts in index.html, instead allow FlutterFire to manage this for you by removing
             any Firebase scripts in your web/index.html file:
                 e.g. remove: <script src="https://www.gstatic.com/firebasejs/${firebase.SDK_VERSION}/firebase-app.js"></script>
-          ''');
-      }
+          ''',
+          );
+        }
 
-      return true;
-    }());
+        return true;
+      }(),
+    );
 
     firebase.App? app;
 
@@ -411,7 +421,9 @@ R guardNotInitialized<R>(R Function() cb) {
     final value = cb();
 
     if (value is Future) {
-      return value.catchError(_handleException) as R;
+      return value.catchError(
+        _handleException,
+      ) as R;
     }
 
     return value;

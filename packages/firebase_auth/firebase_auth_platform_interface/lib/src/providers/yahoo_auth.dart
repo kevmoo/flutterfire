@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, require_trailing_commas
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -41,7 +41,9 @@ class YahooAuthProvider extends AuthProvider {
 
   /// Create a new [YahooAuthCredential] from a provided [accessToken];
   static OAuthCredential credential(String accessToken) {
-    return YahooAuthCredential._credential(accessToken);
+    return YahooAuthCredential._credential(
+      accessToken,
+    );
   }
 
   /// This corresponds to the sign-in method identifier.
@@ -54,7 +56,7 @@ class YahooAuthProvider extends AuthProvider {
     return _kProviderId;
   }
 
-  final List<String> _scopes = [];
+  List<String> _scopes = [];
   Map<dynamic, dynamic> _parameters = {};
 
   /// Returns the currently assigned scopes to this provider instance.
@@ -86,12 +88,12 @@ class YahooAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [YahooAuthProvider.credential].
 class YahooAuthCredential extends OAuthCredential {
-  YahooAuthCredential._({required String accessToken})
-    : super(
-        providerId: _kProviderId,
-        signInMethod: _kProviderId,
-        accessToken: accessToken,
-      );
+  YahooAuthCredential._({
+    required String accessToken,
+  }) : super(
+            providerId: _kProviderId,
+            signInMethod: _kProviderId,
+            accessToken: accessToken);
 
   factory YahooAuthCredential._credential(String accessToken) {
     return YahooAuthCredential._(accessToken: accessToken);

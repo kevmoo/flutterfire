@@ -2,13 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
@@ -80,8 +79,7 @@ Future<void> setupFlutterNotifications() async {
   /// default FCM channel to enable heads up notifications.
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   /// Update the iOS foreground notification presentation options to allow
@@ -100,10 +98,10 @@ void showFlutterNotification(RemoteMessage message) {
   AndroidNotification? android = message.notification?.android;
   if (notification != null && android != null && !kIsWeb) {
     flutterLocalNotificationsPlugin.show(
-      id: notification.hashCode,
-      title: notification.title,
-      body: notification.body,
-      notificationDetails: NotificationDetails(
+      notification.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
         android: AndroidNotificationDetails(
           channel.id,
           channel.name,
@@ -135,8 +133,6 @@ Future<void> main() async {
 
 /// Entry point for the example application.
 class MessagingExampleApp extends StatelessWidget {
-  const MessagingExampleApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -171,8 +167,6 @@ String constructFCMPayload(String? token) {
 
 /// Renders the example application.
 class Application extends StatefulWidget {
-  const Application({super.key});
-
   @override
   State<StatefulWidget> createState() => _Application();
 }
@@ -189,11 +183,13 @@ class _Application extends State<Application> {
     // Delay getInitialMessage call by 3 seconds
     Future.delayed(const Duration(seconds: 3), () {
       FirebaseMessaging.instance.getInitialMessage().then(
-        (value) => setState(() {
-          _resolved = true;
-          initialMessage = value?.data.toString();
-        }),
-      );
+            (value) => setState(
+              () {
+                _resolved = true;
+                initialMessage = value?.data.toString();
+              },
+            ),
+          );
     });
 
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
@@ -332,9 +328,9 @@ class _Application extends State<Application> {
             ),
             ElevatedButton(
               onPressed: () {
-                FirebaseMessaging.instance.getInitialMessage().then((
-                  RemoteMessage? message,
-                ) {
+                FirebaseMessaging.instance
+                    .getInitialMessage()
+                    .then((RemoteMessage? message) {
                   if (message != null) {
                     Navigator.pushNamed(
                       context,
@@ -360,7 +356,7 @@ class MetaCard extends StatelessWidget {
   final Widget _children;
 
   // ignore: public_member_api_docs
-  const MetaCard(this._title, this._children, {super.key});
+  MetaCard(this._title, this._children);
 
   @override
   Widget build(BuildContext context) {

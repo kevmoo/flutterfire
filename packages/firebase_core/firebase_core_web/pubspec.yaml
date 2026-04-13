@@ -1,23 +1,24 @@
 name: firebase_core_web
+resolution: workspace
 description: The web implementation of firebase_core
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_web
 version: 3.5.1
-resolution: workspace
 
 environment:
-  sdk: ^3.10.0
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: '>=3.22.0'
 
 dependencies:
-  firebase_core_platform_interface: ^6.0.3
-  meta: ^1.18.0
-  web: ^1.1.1
-
-dev_dependencies:
+  firebase_core_platform_interface: any
   flutter:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
+  meta: ^1.8.0
+  web: ^1.0.0
+
+dev_dependencies:
   flutter_test:
     sdk: flutter
 
@@ -25,5 +26,5 @@ flutter:
   plugin:
     platforms:
       web:
-        pluginClass: FirebaseCoreWebRegistration
-        fileName: firebase_core_web_registration.dart
+        pluginClass: FirebaseCoreWeb
+        fileName: firebase_core_web.dart

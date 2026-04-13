@@ -20,17 +20,7 @@ class Firebase {
   static FirebasePlatform? delegatePackingProperty;
 
   static FirebasePlatform get _delegate {
-    if (delegatePackingProperty == null) {
-      try {
-        delegatePackingProperty = FirebasePlatform.instance;
-      } catch (e) {
-        // If the instance is not set, we default to MethodChannelFirebase
-        // This is the Flutter implementation.
-        FirebasePlatform.instance = MethodChannelFirebase();
-        delegatePackingProperty = FirebasePlatform.instance;
-      }
-    }
-    return delegatePackingProperty!;
+    return delegatePackingProperty ??= FirebasePlatform.instance;
   }
 
   /// Returns a list of all [FirebaseApp] instances that have been created.

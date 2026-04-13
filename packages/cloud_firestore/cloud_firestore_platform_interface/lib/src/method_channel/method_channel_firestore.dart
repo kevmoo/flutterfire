@@ -5,12 +5,13 @@
 
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_persistent_cache_index_manager.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
-import 'package:cloud_firestore_platform_interface/src/method_channel/utils/event_channel.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 
 import 'method_channel_collection_reference.dart';
 import 'method_channel_document_reference.dart';
@@ -26,7 +27,7 @@ import 'utils/firestore_message_codec.dart';
 class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   /// Create an instance of [MethodChannelFirebaseFirestore] with optional [FirebaseApp]
   MethodChannelFirebaseFirestore({FirebaseApp? app, String? databaseId})
-    : super(appInstance: app, databaseChoice: databaseId);
+      : super(appInstance: app, databaseChoice: databaseId);
 
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
@@ -120,8 +121,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           FirebaseException(
             plugin: 'cloud_firestore',
             code: 'non-existent-named-query',
-            message:
-                'Named query has not been found. '
+            message: 'Named query has not been found. '
                 'Please check it has been loaded properly via loadBundle().',
           ),
           stack,
@@ -194,13 +194,12 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         snapshotStreamSubscription =
             MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId)
                 .receiveGuardedBroadcastStream(
-                  arguments: <String, dynamic>{'firestore': this},
-                  onError: convertPlatformException,
-                )
-                .listen(
-                  (event) => controller.add(null),
-                  onError: controller.addError,
-                );
+          arguments: <String, dynamic>{'firestore': this},
+          onError: convertPlatformException,
+        ).listen(
+          (event) => controller.add(null),
+          onError: controller.addError,
+        );
       },
       onCancel: () {
         snapshotStreamSubscription?.cancel();
@@ -216,10 +215,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     Duration timeout = const Duration(seconds: 30),
     int maxAttempts = 5,
   }) async {
-    assert(
-      timeout.inMilliseconds > 0,
-      'Transaction timeout must be more than 0 milliseconds',
-    );
+    assert(timeout.inMilliseconds > 0,
+        'Transaction timeout must be more than 0 milliseconds');
 
     final String transactionId = await pigeonChannel.transactionCreate(
       pigeonApp,
@@ -237,64 +234,65 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       const StandardMethodCodec(FirestoreMessageCodec()),
     );
 
-    final snapshotStreamSubscription = eventChannel
-        .receiveGuardedBroadcastStream(
-          arguments: <String, dynamic>{
-            'firestore': this,
-            'timeout': timeout.inMilliseconds,
-            'maxAttempts': maxAttempts,
-          },
-          onError: convertPlatformException,
-        )
-        .listen((event) async {
-          if (event['error'] != null) {
-            completer.completeError(
-              FirebaseException(
-                plugin: 'cloud_firestore',
-                code: event['error']['code'],
-                message: event['error']['message'],
-              ),
-            );
-            return;
-          } else if (event['complete'] == true) {
-            completer.complete(result);
-            return;
-          }
-
-          final TransactionPlatform transaction = MethodChannelTransaction(
-            transactionId,
-            event['appName'],
-            pigeonApp,
-            databaseId,
+    final snapshotStreamSubscription =
+        eventChannel.receiveGuardedBroadcastStream(
+      arguments: <String, dynamic>{
+        'firestore': this,
+        'timeout': timeout.inMilliseconds,
+        'maxAttempts': maxAttempts,
+      },
+      onError: convertPlatformException,
+    ).listen(
+      (event) async {
+        if (event['error'] != null) {
+          completer.completeError(
+            FirebaseException(
+              plugin: 'cloud_firestore',
+              code: event['error']['code'],
+              message: event['error']['message'],
+            ),
           );
+          return;
+        } else if (event['complete'] == true) {
+          completer.complete(result);
+          return;
+        }
 
-          // If the transaction fails on Dart side, then forward the error
-          // right away and only inform native side of the error.
-          try {
-            result = await transactionHandler(transaction) as T;
-          } catch (error, stack) {
-            // Signal native that a user error occurred, and finish the
-            // transaction
-            await pigeonChannel.transactionStoreResult(
-              transactionId,
-              PigeonTransactionResult.failure,
-              null,
-            );
+        final TransactionPlatform transaction = MethodChannelTransaction(
+          transactionId,
+          event['appName'],
+          pigeonApp,
+          databaseId,
+        );
 
-            // Allow the [runTransaction] method to listen to an error.
-
-            completer.completeError(error, stack);
-
-            return;
-          }
-
-          // Send the transaction commands to Dart.
+        // If the transaction fails on Dart side, then forward the error
+        // right away and only inform native side of the error.
+        try {
+          result = await transactionHandler(transaction) as T;
+        } catch (error, stack) {
+          // Signal native that a user error occurred, and finish the
+          // transaction
           await pigeonChannel.transactionStoreResult(
             transactionId,
-            PigeonTransactionResult.success,
-            transaction.commands,
+            PigeonTransactionResult.failure,
+            null,
           );
-        });
+
+          // Allow the [runTransaction] method to listen to an error.
+
+          completer.completeError(error, stack);
+
+          return;
+        }
+
+        // Send the transaction commands to Dart.
+        await pigeonChannel.transactionStoreResult(
+          transactionId,
+          PigeonTransactionResult.success,
+          transaction.commands,
+        );
+      },
+    );
 
     return completer.future.whenComplete(snapshotStreamSubscription.cancel);
   }
@@ -323,7 +321,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   @override
   Future<void> setIndexConfiguration(String indexConfiguration) async {
     try {
-      await pigeonChannel.setIndexConfiguration(pigeonApp, indexConfiguration);
+      await pigeonChannel.setIndexConfiguration(
+        pigeonApp,
+        indexConfiguration,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -333,13 +334,18 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   PersistentCacheIndexManagerPlatform? persistentCacheIndexManager() {
     // Persistence is enabled by default, if the user has disabled it, return null.
     if (settings.persistenceEnabled == false) return null;
-    return MethodChannelPersistentCacheIndexManager(pigeonChannel, pigeonApp);
+    return MethodChannelPersistentCacheIndexManager(
+      pigeonChannel,
+      pigeonApp,
+    );
   }
 
   @override
   Future<void> setLoggingEnabled(bool enabled) async {
     try {
-      await pigeonChannel.setLoggingEnabled(enabled);
+      await pigeonChannel.setLoggingEnabled(
+        enabled,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }

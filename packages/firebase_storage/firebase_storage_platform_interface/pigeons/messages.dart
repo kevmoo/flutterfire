@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// ignore_for_file: deprecated_member_use, one_member_abstracts
+// ignore_for_file: one_member_abstracts
 
 import 'package:pigeon/pigeon.dart';
 
@@ -68,12 +68,17 @@ class PigeonStorageReference {
 }
 
 class PigeonFullMetaData {
-  const PigeonFullMetaData({required this.metadata});
+  const PigeonFullMetaData({
+    required this.metadata,
+  });
   final Map<String?, Object?>? metadata;
 }
 
 class PigeonListOptions {
-  const PigeonListOptions({required this.maxResults, this.pageToken});
+  const PigeonListOptions({
+    required this.maxResults,
+    this.pageToken,
+  });
 
   /// If set, limits the total number of `prefixes` and `items` to return.
   ///
@@ -161,14 +166,27 @@ abstract class FirebaseStorageHostApi {
     String? bucket,
   );
   @async
-  void setMaxOperationRetryTime(PigeonStorageFirebaseApp app, int time);
+  void setMaxOperationRetryTime(
+    PigeonStorageFirebaseApp app,
+    int time,
+  );
   @async
-  void setMaxUploadRetryTime(PigeonStorageFirebaseApp app, int time);
+  void setMaxUploadRetryTime(
+    PigeonStorageFirebaseApp app,
+    int time,
+  );
   @async
-  void setMaxDownloadRetryTime(PigeonStorageFirebaseApp app, int time);
+  void setMaxDownloadRetryTime(
+    PigeonStorageFirebaseApp app,
+    int time,
+  );
 
   @async
-  void useStorageEmulator(PigeonStorageFirebaseApp app, String host, int port);
+  void useStorageEmulator(
+    PigeonStorageFirebaseApp app,
+    String host,
+    int port,
+  );
 
   // APIs for Reference class
 
@@ -255,11 +273,20 @@ abstract class FirebaseStorageHostApi {
 
   // APIs for Task class
   @async
-  Map<String, Object> taskPause(PigeonStorageFirebaseApp app, int handle);
+  Map<String, Object> taskPause(
+    PigeonStorageFirebaseApp app,
+    int handle,
+  );
 
   @async
-  Map<String, Object> taskResume(PigeonStorageFirebaseApp app, int handle);
+  Map<String, Object> taskResume(
+    PigeonStorageFirebaseApp app,
+    int handle,
+  );
 
   @async
-  Map<String, Object> taskCancel(PigeonStorageFirebaseApp app, int handle);
+  Map<String, Object> taskCancel(
+    PigeonStorageFirebaseApp app,
+    int handle,
+  );
 }

@@ -22,8 +22,7 @@ import 'database_interop.dart' as database_interop;
 /// Given an AppJSImp, return the Database instance.
 Database getDatabaseInstance([App? app, String? databaseURL]) {
   return Database.getInstance(
-    database_interop.getDatabase(app?.jsObject, databaseURL?.toJS),
-  );
+      database_interop.getDatabase(app?.jsObject, databaseURL?.toJS));
 }
 
 /// Logs debugging information to the console.
@@ -67,14 +66,12 @@ class Database
 
   /// Returns a [DatabaseReference] to the root or provided [path].
   DatabaseReference ref([String? path = '/']) => DatabaseReference.getInstance(
-    database_interop.ref(jsObject, (path ?? '/').toJS),
-  );
+      database_interop.ref(jsObject, (path ?? '/').toJS));
 
   /// Returns a [DatabaseReference] from provided [url].
   /// Url must be in the same domain as the current database.
   DatabaseReference refFromURL(String url) => DatabaseReference.getInstance(
-    database_interop.refFromURL(jsObject, url.toJS),
-  );
+      database_interop.refFromURL(jsObject, url.toJS));
 }
 
 /// A DatabaseReference represents a specific location in database and
@@ -101,14 +98,14 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   /// Creates a new DatabaseReference from a [jsObject].
   static DatabaseReference getInstance(
     database_interop.ReferenceJsImpl jsObject,
-  ) => _expando[jsObject] ??= DatabaseReference._fromJsObject(jsObject);
+  ) =>
+      _expando[jsObject] ??= DatabaseReference._fromJsObject(jsObject);
 
   DatabaseReference._fromJsObject(super.jsObject) : super.fromJsObject();
 
   /// Returns child DatabaseReference from provided relative [path].
   DatabaseReference child(String path) => DatabaseReference.getInstance(
-    database_interop.child(jsObject, path.toJS),
-  );
+      database_interop.child(jsObject, path.toJS));
 
   /// Returns [OnDisconnect] object.
   OnDisconnect onDisconnect() =>
@@ -128,8 +125,8 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   ///
   /// This method returns [ThenableReference], [DatabaseReference]
   /// with a [Future] property.
-  ThenableReference push([JSAny? value]) =>
-      ThenableReference.fromJsObject(database_interop.push(jsObject, value));
+  ThenableReference push([value]) => ThenableReference.fromJsObject(
+      database_interop.push(jsObject, value?.jsify()));
 
   /// Removes data from actual database location.
   Future remove() => database_interop.remove(jsObject).toDart;
@@ -151,7 +148,7 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   /// Sets a priority for data at actual database location.
   ///
   /// The [priority] must be a [String], [num] or `null`, or the error is thrown.
-  Future setPriority(JSAny? priority) =>
+  Future setPriority(priority) =>
       database_interop.setPriority(jsObject, priority).toDart;
 
   /// Sets data [newVal] at actual database location with provided priority
@@ -162,7 +159,7 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   /// The [newVal] must be a Dart basic type or the error is thrown.
   /// The [newPriority] must be a [String], [num] or `null`, or the error
   /// is thrown.
-  Future setWithPriority(JSAny? newVal, JSAny? newPriority) => database_interop
+  Future setWithPriority(Object? newVal, newPriority) => database_interop
       .setWithPriority(jsObject, newVal?.jsify(), newPriority)
       .toDart;
 
@@ -187,9 +184,7 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
   ///
   /// Set [applyLocally] to `false` to not see intermediate states.
   Future<Transaction> transaction(
-    TransactionHandler transactionUpdate,
-    bool applyLocally,
-  ) async {
+      TransactionHandler transactionUpdate, bool applyLocally) async {
     final JSAny? Function(JSAny?) transactionUpdateWrap = ((JSAny? update) {
       final dartUpdate = update?.dartify();
       final transaction = transactionUpdate(dartUpdate);
@@ -205,8 +200,7 @@ class DatabaseReference extends Query<database_interop.ReferenceJsImpl> {
             jsObject,
             transactionUpdateWrap.toJS,
             database_interop.TransactionOptions(
-              applyLocally: applyLocally.toJS,
-            ),
+                applyLocally: applyLocally.toJS),
           )
           .toDart;
       return Transaction(
@@ -253,8 +247,11 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   /// DatabaseReference to the Query's location.
   DatabaseReference get ref => DatabaseReference.getInstance(jsObject.ref);
 
-  Stream<QueryEvent> _onValue(String appName, String hashCode) =>
-      _createStream('value', appName, hashCode);
+  Stream<QueryEvent> _onValue(String appName, String hashCode) => _createStream(
+        'value',
+        appName,
+        hashCode,
+      );
 
   /// Stream for a value event. Event is triggered once with the initial
   /// data stored at location, and then again each time the data changes.
@@ -262,7 +259,11 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
       _onValue(appName, hashCode);
 
   Stream<QueryEvent> _onChildAdded(String appName, String hashCode) =>
-      _createStream('child_added', appName, hashCode);
+      _createStream(
+        'child_added',
+        appName,
+        hashCode,
+      );
 
   /// Stream for a child_added event. Event is triggered once for each
   /// initial child at location, and then again every time a new child is added.
@@ -270,7 +271,11 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
       _onChildAdded(appName, hashCode);
 
   Stream<QueryEvent> _onChildRemoved(String appName, String hashCode) =>
-      _createStream('child_removed', appName, hashCode);
+      _createStream(
+        'child_removed',
+        appName,
+        hashCode,
+      );
 
   /// Stream for a child_removed event. Event is triggered once every time
   /// a child is removed.
@@ -278,7 +283,11 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
       _onChildRemoved(appName, hashCode);
 
   Stream<QueryEvent> _onChildChanged(String appName, String hashCode) =>
-      _createStream('child_changed', appName, hashCode);
+      _createStream(
+        'child_changed',
+        appName,
+        hashCode,
+      );
 
   /// Stream for a child_changed event. Event is triggered when the data
   /// stored in a child (or any of its descendants) changes.
@@ -286,7 +295,11 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   Stream<QueryEvent> onChildChanged(String appName, String hashCode) =>
       _onChildChanged(appName, hashCode);
   Stream<QueryEvent> _onChildMoved(String appName, String hashCode) =>
-      _createStream('child_moved', appName, hashCode);
+      _createStream(
+        'child_moved',
+        appName,
+        hashCode,
+      );
 
   /// Stream for a child_moved event. Event is triggered when a child's priority
   /// changes such that its position relative to its siblings changes.
@@ -396,12 +409,13 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   ) {
     late StreamController<QueryEvent> streamController;
     unsubscribeWindowsListener(_streamWindowsKey(appName, eventType, hashCode));
-    final callbackWrap =
-        ((database_interop.DataSnapshotJsImpl data, [String? prevChild]) {
-          streamController.add(
-            QueryEvent(DataSnapshot.getInstance(data), prevChild),
-          );
-        });
+    final callbackWrap = ((
+      database_interop.DataSnapshotJsImpl data, [
+      String? prevChild,
+    ]) {
+      streamController
+          .add(QueryEvent(DataSnapshot.getInstance(data), prevChild));
+    });
 
     final void Function(JSObject) cancelCallbackWrap = ((JSObject error) {
       streamController.addError(convertFirebaseDatabaseException(error));
@@ -454,7 +468,11 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
     void stopListen() {
       onUnsubscribe.callAsFunction();
       streamController.close();
-      removeWindowsListener(_streamWindowsKey(appName, eventType, hashCode));
+      removeWindowsListener(_streamWindowsKey(
+        appName,
+        eventType,
+        hashCode,
+      ));
     }
 
     streamController = StreamController<QueryEvent>.broadcast(
@@ -484,23 +502,23 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
 
   /// Returns a new Query ordered by the specified child [path].
   Query orderByChild(String path) => Query.fromJsObject(
-    database_interop.query(jsObject, database_interop.orderByChild(path.toJS)),
-  );
+        database_interop.query(
+          jsObject,
+          database_interop.orderByChild(path.toJS),
+        ),
+      );
 
   /// Returns a new Query ordered by key.
   Query orderByKey() => Query.fromJsObject(
-    database_interop.query(jsObject, database_interop.orderByKey()),
-  );
+      database_interop.query(jsObject, database_interop.orderByKey()));
 
   /// Returns a new Query ordered by priority.
   Query orderByPriority() => Query.fromJsObject(
-    database_interop.query(jsObject, database_interop.orderByPriority()),
-  );
+      database_interop.query(jsObject, database_interop.orderByPriority()));
 
   /// Returns a new Query ordered by child values.
   Query orderByValue() => Query.fromJsObject(
-    database_interop.query(jsObject, database_interop.orderByValue()),
-  );
+      database_interop.query(jsObject, database_interop.orderByValue()));
 
   /// Returns a Query with the starting point [value]. The starting point
   /// is inclusive.
@@ -545,7 +563,8 @@ class TransactionResult
   /// Creates a new TransactionResult from a [jsObject].
   static TransactionResult getInstance(
     database_interop.TransactionResultJsImpl jsObject,
-  ) => _expando[jsObject] ??= TransactionResult._fromJsObject(jsObject);
+  ) =>
+      _expando[jsObject] ??= TransactionResult._fromJsObject(jsObject);
 
   TransactionResult._fromJsObject(super.jsObject) : super.fromJsObject();
 
@@ -572,7 +591,8 @@ class DataSnapshot
   /// Creates a new DataSnapshot from a [jsObject].
   static DataSnapshot getInstance(
     database_interop.DataSnapshotJsImpl jsObject,
-  ) => _expando[jsObject] ??= DataSnapshot._fromJsObject(jsObject);
+  ) =>
+      _expando[jsObject] ??= DataSnapshot._fromJsObject(jsObject);
 
   DataSnapshot._fromJsObject(super.jsObject) : super.fromJsObject();
 
@@ -589,9 +609,8 @@ class DataSnapshot
   /// Enumerates the top-level children of the DataSnapshot in their query-order.
   /// [action] is called for each child DataSnapshot.
   bool forEach(void Function(DataSnapshot) action) {
-    final actionWrap = ((database_interop.DataSnapshotJsImpl d) => action(
-      DataSnapshot.getInstance(d),
-    )).toJS;
+    final actionWrap = ((database_interop.DataSnapshotJsImpl d) =>
+        action(DataSnapshot.getInstance(d))).toJS;
     return (jsObject.forEach(actionWrap)).toDart;
   }
 
@@ -654,17 +673,12 @@ class OnDisconnect
 class ThenableReference extends DatabaseReference {
   late final Future<DatabaseReference> _future =
       (jsObject as database_interop.ThenableReferenceJsImpl)
-          .then(
-            ((database_interop.ReferenceJsImpl reference) {
-              return reference;
-            }).toJS,
-          )
+          .then(((database_interop.ReferenceJsImpl reference) {
+            return reference;
+          }).toJS)
           .toDart
-          .then(
-            (value) => DatabaseReference.getInstance(
-              value as database_interop.ReferenceJsImpl,
-            ),
-          );
+          .then((value) => DatabaseReference.getInstance(
+              value as database_interop.ReferenceJsImpl));
 
   /// Creates a new ThenableReference from a [jsObject].
   ThenableReference.fromJsObject(

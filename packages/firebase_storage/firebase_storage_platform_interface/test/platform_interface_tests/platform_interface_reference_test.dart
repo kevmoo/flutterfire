@@ -23,10 +23,8 @@ void main() {
     setUpAll(() async {
       app = await Firebase.initializeApp();
       firebaseStoragePlatform = TestFirebaseStoragePlatform(app, 'foo');
-      referencePlatform = TestReferencePlatform(
-        firebaseStoragePlatform,
-        '/foo',
-      );
+      referencePlatform =
+          TestReferencePlatform(firebaseStoragePlatform, '/foo');
     });
 
     test('Constructor', () {
@@ -163,10 +161,11 @@ void main() {
 }
 
 class TestReferencePlatform extends ReferencePlatform {
-  TestReferencePlatform(super.storage, super.path);
+  TestReferencePlatform(FirebaseStoragePlatform storage, String path)
+      : super(storage, path);
 }
 
 class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
   TestFirebaseStoragePlatform(FirebaseApp? app, String bucket)
-    : super(appInstance: app, bucket: bucket);
+      : super(appInstance: app, bucket: bucket);
 }

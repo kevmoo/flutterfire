@@ -43,9 +43,9 @@ final _arbitraryImagenResponse = {
     {
       'mimeType': 'image/png',
       'bytesBase64Encoded':
-          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
-    },
-  ],
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+    }
+  ]
 };
 
 void main() {
@@ -59,10 +59,8 @@ void main() {
     const templateId = 'my-template';
     const location = 'us-central1';
 
-    TemplateGenerativeModel createModel(
-      http.Client client, {
-      bool useVertexBackend = true,
-    }) {
+    TemplateGenerativeModel createModel(http.Client client,
+        {bool useVertexBackend = true}) {
       // ignore: invalid_use_of_internal_member
       return createTestTemplateGenerativeModel(
         app: app,
@@ -75,49 +73,35 @@ void main() {
     test('generateContent can make successful request', () async {
       final mockHttp = MockClient((request) async {
         final body = jsonDecode(request.body) as Map<String, Object?>;
-        expect(
-          request.url.path,
-          endsWith('/templates/$templateId:templateGenerateContent'),
-        );
+        expect(request.url.path,
+            endsWith('/templates/$templateId:templateGenerateContent'));
         expect(body['inputs'], {'prompt': 'Some prompt'});
-        return http.Response(
-          jsonEncode(_arbitraryGenerateContentResponse),
-          200,
-          headers: {'content-type': 'application/json'},
-        );
+        return http.Response(jsonEncode(_arbitraryGenerateContentResponse), 200,
+            headers: {'content-type': 'application/json'});
       });
 
       final model = createModel(mockHttp);
-      final response = await model.generateContent(
-        templateId,
-        inputs: {'prompt': 'Some prompt'},
-      );
+      final response = await model
+          .generateContent(templateId, inputs: {'prompt': 'Some prompt'});
       expect(response.text, 'Some response');
     });
 
     test('generateContentStream can make successful request', () async {
       final mockHttp = MockClient((request) async {
         final body = jsonDecode(request.body) as Map<String, Object?>;
-        expect(
-          request.url.path,
-          endsWith('/templates/$templateId:templateStreamGenerateContent'),
-        );
+        expect(request.url.path,
+            endsWith('/templates/$templateId:templateStreamGenerateContent'));
         expect(body['inputs'], {'prompt': 'Some prompt'});
         final responsePayload = jsonEncode(_arbitraryGenerateContentResponse);
         final stream = Stream.value(utf8.encode('data: $responsePayload'));
-        final streamedResponse = http.StreamedResponse(
-          stream,
-          200,
-          headers: {'content-type': 'application/json'},
-        );
+        final streamedResponse = http.StreamedResponse(stream, 200,
+            headers: {'content-type': 'application/json'});
         return http.Response.fromStream(streamedResponse);
       });
 
       final model = createModel(mockHttp);
-      final responseStream = model.generateContentStream(
-        templateId,
-        inputs: {'prompt': 'Some prompt'},
-      );
+      final responseStream = model
+          .generateContentStream(templateId, inputs: {'prompt': 'Some prompt'});
       final response = await responseStream.first;
       expect(response.text, 'Some response');
     });
@@ -127,38 +111,28 @@ void main() {
     const templateId = 'my-imagen-template';
     const location = 'us-central1';
 
-    TemplateImagenModel createModel(
-      http.Client client, {
-      bool useVertexBackend = true,
-    }) {
+    TemplateImagenModel createModel(http.Client client,
+        {bool useVertexBackend = true}) {
       // ignore: invalid_use_of_internal_member
       return createTestTemplateImagenModel(
-        app: app,
-        location: location,
-        useVertexBackend: useVertexBackend,
-        client: client,
-      );
+          app: app,
+          location: location,
+          useVertexBackend: useVertexBackend,
+          client: client);
     }
 
     test('generateImages can make successful request', () async {
       final mockHttp = MockClient((request) async {
         final body = jsonDecode(request.body) as Map<String, Object?>;
-        expect(
-          request.url.path,
-          endsWith('/templates/$templateId:templatePredict'),
-        );
+        expect(request.url.path,
+            endsWith('/templates/$templateId:templatePredict'));
         expect(body['inputs'], {'prompt': 'A cat'});
-        return http.Response(
-          jsonEncode(_arbitraryImagenResponse),
-          200,
-          headers: {'content-type': 'application/json'},
-        );
+        return http.Response(jsonEncode(_arbitraryImagenResponse), 200,
+            headers: {'content-type': 'application/json'});
       });
       final model = createModel(mockHttp);
-      final response = await model.generateImages(
-        templateId,
-        inputs: {'prompt': 'A cat'},
-      );
+      final response =
+          await model.generateImages(templateId, inputs: {'prompt': 'A cat'});
       expect(response.images, hasLength(1));
       expect(response.images.first, isA<ImagenInlineImage>());
     });

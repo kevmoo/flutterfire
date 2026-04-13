@@ -29,32 +29,39 @@ const _apiUrlSuffixGoogleAI = 'GenerativeService/BidiGenerateContent';
 /// is in Public Preview, which means that the feature is not subject to any SLA
 /// or deprecation policy and could change in backwards-incompatible ways.
 final class LiveGenerativeModel extends BaseModel {
-  LiveGenerativeModel._({
-    required String model,
-    required String location,
-    required FirebaseApp app,
-    required bool useVertexBackend,
-    bool? useLimitedUseAppCheckTokens,
-    FirebaseAppCheck? appCheck,
-    FirebaseAuth? auth,
-    LiveGenerationConfig? liveGenerationConfig,
-    List<Tool>? tools,
-    Content? systemInstruction,
-  }) : _app = app,
-       _location = location,
-       _useVertexBackend = useVertexBackend,
-       _appCheck = appCheck,
-       _auth = auth,
-       _liveGenerationConfig = liveGenerationConfig,
-       _tools = tools,
-       _systemInstruction = systemInstruction,
-       _useLimitedUseAppCheckTokens = useLimitedUseAppCheckTokens,
-       super._(
-         serializationStrategy: VertexSerialization(),
-         modelUri: useVertexBackend
-             ? _VertexUri(model: model, app: app, location: location)
-             : _GoogleAIUri(model: model, app: app),
-       );
+  LiveGenerativeModel._(
+      {required String model,
+      required String location,
+      required FirebaseApp app,
+      required bool useVertexBackend,
+      bool? useLimitedUseAppCheckTokens,
+      FirebaseAppCheck? appCheck,
+      FirebaseAuth? auth,
+      LiveGenerationConfig? liveGenerationConfig,
+      List<Tool>? tools,
+      Content? systemInstruction})
+      : _app = app,
+        _location = location,
+        _useVertexBackend = useVertexBackend,
+        _appCheck = appCheck,
+        _auth = auth,
+        _liveGenerationConfig = liveGenerationConfig,
+        _tools = tools,
+        _systemInstruction = systemInstruction,
+        _useLimitedUseAppCheckTokens = useLimitedUseAppCheckTokens,
+        super._(
+          serializationStrategy: VertexSerialization(),
+          modelUri: useVertexBackend
+              ? _VertexUri(
+                  model: model,
+                  app: app,
+                  location: location,
+                )
+              : _GoogleAIUri(
+                  model: model,
+                  app: app,
+                ),
+        );
 
   final FirebaseApp _app;
   final String _location;
@@ -66,17 +73,14 @@ final class LiveGenerativeModel extends BaseModel {
   final Content? _systemInstruction;
   final bool? _useLimitedUseAppCheckTokens;
 
-  String _vertexAIUri() =>
-      'wss://${_modelUri.baseAuthority}/'
+  String _vertexAIUri() => 'wss://${_modelUri.baseAuthority}/'
       '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixVertexAI/'
       '$_location?key=${_app.options.apiKey}';
 
-  String _vertexAIModelString() =>
-      'projects/${_app.options.projectId}/'
+  String _vertexAIModelString() => 'projects/${_app.options.projectId}/'
       'locations/$_location/publishers/google/models/${model.name}';
 
-  String _googleAIUri() =>
-      'wss://${_modelUri.baseAuthority}/'
+  String _googleAIUri() => 'wss://${_modelUri.baseAuthority}/'
       '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixGoogleAI?key=${_app.options.apiKey}';
 
   String _googleAIModelString() =>
@@ -91,9 +95,8 @@ final class LiveGenerativeModel extends BaseModel {
   /// connection.
   Future<LiveSession> connect() async {
     final uri = _useVertexBackend ? _vertexAIUri() : _googleAIUri();
-    final modelString = _useVertexBackend
-        ? _vertexAIModelString()
-        : _googleAIModelString();
+    final modelString =
+        _useVertexBackend ? _vertexAIModelString() : _googleAIModelString();
 
     final setupJson = {
       'setup': {
@@ -104,15 +107,13 @@ final class LiveGenerativeModel extends BaseModel {
         if (_liveGenerationConfig != null) ...{
           'generation_config': _liveGenerationConfig.toJson(),
           if (_liveGenerationConfig.inputAudioTranscription != null)
-            'input_audio_transcription': _liveGenerationConfig
-                .inputAudioTranscription!
-                .toJson(),
+            'input_audio_transcription':
+                _liveGenerationConfig.inputAudioTranscription!.toJson(),
           if (_liveGenerationConfig.outputAudioTranscription != null)
-            'output_audio_transcription': _liveGenerationConfig
-                .outputAudioTranscription!
-                .toJson(),
+            'output_audio_transcription':
+                _liveGenerationConfig.outputAudioTranscription!.toJson(),
         },
-      },
+      }
     };
 
     final request = jsonEncode(setupJson);
@@ -146,15 +147,16 @@ LiveGenerativeModel createLiveGenerativeModel({
   LiveGenerationConfig? liveGenerationConfig,
   List<Tool>? tools,
   Content? systemInstruction,
-}) => LiveGenerativeModel._(
-  model: model,
-  app: app,
-  appCheck: appCheck,
-  auth: auth,
-  location: location,
-  useVertexBackend: useVertexBackend,
-  useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-  liveGenerationConfig: liveGenerationConfig,
-  tools: tools,
-  systemInstruction: systemInstruction,
-);
+}) =>
+    LiveGenerativeModel._(
+      model: model,
+      app: app,
+      appCheck: appCheck,
+      auth: auth,
+      location: location,
+      useVertexBackend: useVertexBackend,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      liveGenerationConfig: liveGenerationConfig,
+      tools: tools,
+      systemInstruction: systemInstruction,
+    );

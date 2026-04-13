@@ -8,13 +8,13 @@ import 'method_channel_firestore.dart';
 /// An implementation of [AggregateQueryPlatform] for the [MethodChannel]
 class MethodChannelAggregateQuery extends AggregateQueryPlatform {
   MethodChannelAggregateQuery(
-    super.query,
+    QueryPlatform query,
     this._pigeonParameters,
     this._path,
     this._pigeonApp,
     this._aggregateQueries,
     this._isCollectionGroupQuery,
-  );
+  ) : super(query);
 
   final FirestorePigeonFirebaseApp _pigeonApp;
   final String _path;
@@ -27,15 +27,15 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
   Future<AggregateQuerySnapshotPlatform> get({
     required AggregateSource source,
   }) async {
-    final data = await MethodChannelFirebaseFirestore.pigeonChannel
-        .aggregateQuery(
-          _pigeonApp,
-          _path,
-          _pigeonParameters,
-          source,
-          _aggregateQueries,
-          _isCollectionGroupQuery,
-        );
+    final data =
+        await MethodChannelFirebaseFirestore.pigeonChannel.aggregateQuery(
+      _pigeonApp,
+      _path,
+      _pigeonParameters,
+      source,
+      _aggregateQueries,
+      _isCollectionGroupQuery,
+    );
 
     int? count;
     List<AggregateQueryResponse> sum = [];
@@ -69,7 +69,10 @@ class MethodChannelAggregateQuery extends AggregateQueryPlatform {
       _pigeonParameters,
       _path,
       _pigeonApp,
-      [..._aggregateQueries, AggregateQuery(type: AggregateType.count)],
+      [
+        ..._aggregateQueries,
+        AggregateQuery(type: AggregateType.count),
+      ],
       _isCollectionGroupQuery,
     );
   }

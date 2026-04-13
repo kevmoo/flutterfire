@@ -18,7 +18,9 @@ import 'dart:convert';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -71,20 +73,20 @@ enum TemplateTask {
   templatePredict,
 }
 
-abstract interface class $ModelUri {
+abstract interface class _ModelUri {
   String get baseAuthority;
   String get apiVersion;
   Uri taskUri(Task task);
   ({String prefix, String name}) get model;
 }
 
-final class _VertexUri implements $ModelUri {
-  _VertexUri({
-    required String model,
-    required String location,
-    required FirebaseApp app,
-  }) : model = _normalizeModelName(model),
-       _projectUri = _vertexUri(app, location);
+final class _VertexUri implements _ModelUri {
+  _VertexUri(
+      {required String model,
+      required String location,
+      required FirebaseApp app})
+      : model = _normalizeModelName(model),
+        _projectUri = _vertexUri(app, location);
 
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
@@ -121,18 +123,17 @@ final class _VertexUri implements $ModelUri {
   @override
   Uri taskUri(Task task) {
     return _projectUri.replace(
-      pathSegments: _projectUri.pathSegments.followedBy([
-        model.prefix,
-        '${model.name}:${task.name}',
-      ]),
-    );
+        pathSegments: _projectUri.pathSegments
+            .followedBy([model.prefix, '${model.name}:${task.name}']));
   }
 }
 
-final class _GoogleAIUri implements $ModelUri {
-  _GoogleAIUri({required String model, required FirebaseApp app})
-    : model = _normalizeModelName(model),
-      _baseUri = _googleAIBaseUri(app: app);
+final class _GoogleAIUri implements _ModelUri {
+  _GoogleAIUri({
+    required String model,
+    required FirebaseApp app,
+  })  : model = _normalizeModelName(model),
+        _baseUri = _googleAIBaseUri(app: app);
 
   /// Returns the model code for a user friendly model name.
   ///
@@ -147,13 +148,10 @@ final class _GoogleAIUri implements $ModelUri {
   static const _apiVersion = 'v1beta';
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
 
-  static Uri _googleAIBaseUri({
-    String apiVersion = _apiVersion,
-    required FirebaseApp app,
-  }) => Uri.https(
-    _baseAuthority,
-    '$apiVersion/projects/${app.options.projectId}',
-  );
+  static Uri _googleAIBaseUri(
+          {String apiVersion = _apiVersion, required FirebaseApp app}) =>
+      Uri.https(
+          _baseAuthority, '$apiVersion/projects/${app.options.projectId}');
 
   final Uri _baseUri;
 
@@ -168,24 +166,21 @@ final class _GoogleAIUri implements $ModelUri {
 
   @override
   Uri taskUri(Task task) => _baseUri.replace(
-    pathSegments: _baseUri.pathSegments.followedBy([
-      model.prefix,
-      '${model.name}:${task.name}',
-    ]),
-  );
+      pathSegments: _baseUri.pathSegments
+          .followedBy([model.prefix, '${model.name}:${task.name}']));
 }
 
-abstract interface class $TemplateUri {
+abstract interface class _TemplateUri {
   String get baseAuthority;
   String get apiVersion;
   Uri templateTaskUri(TemplateTask task, String templateId);
   String templateName(String templateId);
 }
 
-final class _TemplateVertexUri implements $TemplateUri {
+final class _TemplateVertexUri implements _TemplateUri {
   _TemplateVertexUri({required String location, required FirebaseApp app})
-    : _templateUri = _vertexTemplateUri(app, location),
-      _templateName = _vertexTemplateName(app, location);
+      : _templateUri = _vertexTemplateUri(app, location),
+        _templateName = _vertexTemplateName(app, location);
 
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
@@ -215,11 +210,8 @@ final class _TemplateVertexUri implements $TemplateUri {
   @override
   Uri templateTaskUri(TemplateTask task, String templateId) {
     return _templateUri.replace(
-      pathSegments: _templateUri.pathSegments.followedBy([
-        'templates',
-        '$templateId:${task.name}',
-      ]),
-    );
+        pathSegments: _templateUri.pathSegments
+            .followedBy(['templates', '$templateId:${task.name}']));
   }
 
   @override
@@ -227,23 +219,21 @@ final class _TemplateVertexUri implements $TemplateUri {
       '$_templateName/templates/$templateId';
 }
 
-final class _TemplateGoogleAIUri implements $TemplateUri {
-  _TemplateGoogleAIUri({required FirebaseApp app})
-    : _templateUri = _googleAITemplateUri(app: app),
-      _templateName = _googleAITemplateName(app: app);
+final class _TemplateGoogleAIUri implements _TemplateUri {
+  _TemplateGoogleAIUri({
+    required FirebaseApp app,
+  })  : _templateUri = _googleAITemplateUri(app: app),
+        _templateName = _googleAITemplateName(app: app);
 
   static const _baseAuthority = 'firebasevertexai.googleapis.com';
   static const _apiVersion = 'v1beta';
   final Uri _templateUri;
   final String _templateName;
 
-  static Uri _googleAITemplateUri({
-    String apiVersion = _apiVersion,
-    required FirebaseApp app,
-  }) => Uri.https(
-    _baseAuthority,
-    '$apiVersion/projects/${app.options.projectId}',
-  );
+  static Uri _googleAITemplateUri(
+          {String apiVersion = _apiVersion, required FirebaseApp app}) =>
+      Uri.https(
+          _baseAuthority, '$apiVersion/projects/${app.options.projectId}');
 
   static String _googleAITemplateName({required FirebaseApp app}) =>
       'projects/${app.options.projectId}';
@@ -257,11 +247,8 @@ final class _TemplateGoogleAIUri implements $TemplateUri {
   @override
   Uri templateTaskUri(TemplateTask task, String templateId) {
     return _templateUri.replace(
-      pathSegments: _templateUri.pathSegments.followedBy([
-        'templates',
-        '$templateId:${task.name}',
-      ]),
-    );
+        pathSegments: _templateUri.pathSegments
+            .followedBy(['templates', '$templateId:${task.name}']));
   }
 
   @override
@@ -274,14 +261,14 @@ final class _TemplateGoogleAIUri implements $TemplateUri {
 /// This class provides the basic functionality for interacting with the
 /// Firebase AI API. It is not intended to be instantiated directly.
 abstract class BaseModel {
-  BaseModel._({
-    required SerializationStrategy serializationStrategy,
-    required $ModelUri modelUri,
-  }) : _serializationStrategy = serializationStrategy,
-       _modelUri = modelUri;
+  BaseModel._(
+      {required SerializationStrategy serializationStrategy,
+      required _ModelUri modelUri})
+      : _serializationStrategy = serializationStrategy,
+        _modelUri = modelUri;
 
   final SerializationStrategy _serializationStrategy;
-  final $ModelUri _modelUri;
+  final _ModelUri _modelUri;
 
   /// The normalized model name.
   ({String prefix, String name}) get model => _modelUri.model;
@@ -342,8 +329,8 @@ abstract class BaseApiClientModel extends BaseModel {
     required super.serializationStrategy,
     required super.modelUri,
     required ApiClient client,
-  }) : _client = client,
-       super._();
+  })  : _client = client,
+        super._();
 
   final ApiClient _client;
 
@@ -351,11 +338,9 @@ abstract class BaseApiClientModel extends BaseModel {
   ApiClient get client => _client;
 
   /// Make a unary request for [task] with JSON encodable [params].
-  Future<T> makeRequest<T>(
-    Task task,
-    Map<String, Object?> params,
-    T Function(Map<String, Object?>) parse,
-  ) => _client.makeRequest(taskUri(task), params).then(parse);
+  Future<T> makeRequest<T>(Task task, Map<String, Object?> params,
+          T Function(Map<String, Object?>) parse) =>
+      _client.makeRequest(taskUri(task), params).then(parse);
 }
 
 /// An abstract base class for models that interact with a template-based API
@@ -366,14 +351,14 @@ abstract class BaseApiClientModel extends BaseModel {
 /// making requests and parsing the responses.
 abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
   // ignore: public_member_api_docs
-  BaseTemplateApiClientModel({
-    required super.serializationStrategy,
-    required super.modelUri,
-    required super.client,
-    required $TemplateUri templateUri,
-  }) : _templateUri = templateUri;
+  BaseTemplateApiClientModel(
+      {required super.serializationStrategy,
+      required super.modelUri,
+      required super.client,
+      required _TemplateUri templateUri})
+      : _templateUri = templateUri;
 
-  final $TemplateUri _templateUri;
+  final _TemplateUri _templateUri;
 
   /// Makes a unary request to a template-based API.
   ///
@@ -381,14 +366,13 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
   /// and [inputs]. It returns a [Future] that completes with the parsed
   /// response.
   Future<T> makeTemplateRequest<T>(
-    TemplateTask task,
-    String templateId,
-    Map<String, Object?>? inputs,
-    Iterable<Content>? history,
-    List<TemplateTool>? tools,
-    TemplateToolConfig? toolConfig,
-    T Function(Map<String, Object?>) parse,
-  ) {
+      TemplateTask task,
+      String templateId,
+      Map<String, Object?>? inputs,
+      Iterable<Content>? history,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig,
+      T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
       body['inputs'] = inputs;
@@ -412,14 +396,13 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
   /// This method sends a request to the API with the given [task], [templateId],
   /// and [inputs]. It returns a [Stream] of parsed responses.
   Stream<T> streamTemplateRequest<T>(
-    TemplateTask task,
-    String templateId,
-    Map<String, Object?>? inputs,
-    Iterable<Content>? history,
-    List<TemplateTool>? tools,
-    TemplateToolConfig? toolConfig,
-    T Function(Map<String, Object?>) parse,
-  ) {
+      TemplateTask task,
+      String templateId,
+      Map<String, Object?>? inputs,
+      Iterable<Content>? history,
+      List<TemplateTool>? tools,
+      TemplateToolConfig? toolConfig,
+      T Function(Map<String, Object?>) parse) {
     Map<String, Object?> body = {};
     if (inputs != null) {
       body['inputs'] = inputs;
@@ -433,10 +416,8 @@ abstract class BaseTemplateApiClientModel extends BaseApiClientModel {
     if (toolConfig != null) {
       body['toolConfig'] = toolConfig.toJson();
     }
-    final response = _client.streamRequest(
-      templateTaskUri(task, templateId),
-      body,
-    );
+    final response =
+        _client.streamRequest(templateTaskUri(task, templateId), body);
     return response.map(parse);
   }
 

@@ -2,11 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+library firebase_auth;
+
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     show
@@ -69,3 +73,14 @@ part 'src/multi_factor.dart';
 part 'src/recaptcha_verifier.dart';
 part 'src/user.dart';
 part 'src/user_credential.dart';
+part 'src/method_channel/method_channel_user.dart';
+part 'src/method_channel/method_channel_user_credential.dart';
+part 'src/method_channel/method_channel_multi_factor.dart';
+part 'src/method_channel/method_channel_firebase_auth.dart';
+part 'src/method_channel/utils/convert_auth_provider.dart';
+part 'src/method_channel/utils/event_channel.dart';
+part 'src/method_channel/utils/exception.dart';
+part 'src/method_channel/utils/pigeon_helper.dart';
+part 'src/method_channel/utils/web_utils.dart';
+part 'src/pigeon/messages.pigeon.dart';
+part 'src/pigeon/test_api.dart';
